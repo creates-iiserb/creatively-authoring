@@ -1,0 +1,26 @@
+{
+  "name": "jquery-fadeInAmate",
+  "title": "jQuery FadeInAmate",
+  "description": "A jQuery plugin that animates fading in page elements.",
+  "author": "Jake Foraker",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jforaker/jQuery-FadeInAmate.git"
+  },
+  "homepage": "https://github.com/jforaker/jQuery-FadeInAmate",
+  "version": "0.0.1",
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-cli": "~0.1.13",
+    "grunt-contrib-jshint": "~0.8.0",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-uglify": "~0.3.2",
+    "grunt-contrib-coffee": "~0.9.0",
+    "grunt-web-server": "~1.2.3",
+    "grunt-contrib-connect": "~0.7.0",
+    "grunt-contrib-watch": "~0.6.1"
+  },
+  "scripts": {
+    "test": "grunt travis --verbose"
+  }
+}

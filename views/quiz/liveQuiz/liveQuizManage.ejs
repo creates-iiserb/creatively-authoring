@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="author_public/PaperDashBoard/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+    <script src="author_public/js/author_liveMageQuiz.js"></script>
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/> -->
+    <%- include('../../parts/allCSS'); %>
+    <link rel="stylesheet" href="author_public/css/author_quiz.css">
+    <link rel="stylesheet" href="author_public/css/author_manageLiveQuiz.css">
+    <link rel="stylesheet" href="author_public/css/author_liveQuiz.css">
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    showMathMenu: false,
+    menuSettings: { zoom: "Double-Click",zscale: "150%"},
+    CommonHTML: { linebreaks: { automatic: true } },
+    "HTML-CSS": { linebreaks: { automatic: true } },
+    SVG: { linebreaks: { automatic: true } }
+    });
+    </script>
+    <script type="text/javascript" src="author_public/plotchart/plotly-latest.min.js"></script>
+    <script type="text/javascript" src="author_public/plotchart/plotchart.js"></script>
+    <style>
+        #plyHistoryDiv ul.nav-tabs{
+            border-bottom: #ccc 1px solid !important;
+        }
+        #slider .ui-slider-range { background: #729fcf; }
+        #slider .ui-slider-handle { border-color: #729fcf; }
+        .ui-slider-horizontal {
+           height: 10px !important;
+        }
+        .ui-state-default{
+            height: 24px !important;
+            width: 24px !important;
+        }
+
+        .ui-slider-horizontal .ui-slider-handle {
+            margin-left: -10px;
+            top: -7px;
+        }
+
+        #mngLQ .sidebar, #mngLQ .main-panel {            
+            height: auto;
+            max-width: none;
+        }
+
+        #ytdIframPreview{
+            width: 100%;
+            min-height: 335px;
+            border: none;
+        }
+
+        .btnChk:focus,.btnChk:hover{
+            background-color: transparent !important;
+            border-color: #66615B !important;
+            color:#66615B !important;
+        }
+
+        .btnChk.active{
+            background-color: #66615B !important;
+            color: rgba(255, 255, 255, 0.85) !important;
+             border-color: #66615B !important;
+        }
+
+        .btnClickOnly:focus,.btnClickOnly:hover{
+            background-color: transparent !important;
+            border-color: #66615B !important;
+            color:#66615B !important;
+        }
+
+        .btnClickOnly.active{
+            background-color: transparent !important;
+            border-color: #66615B !important;
+            color:#66615B !important;
+        }
+
+        .whiteScreenLoader{
+            z-index: 5;
+            position: absolute;
+            top:0;
+            left:0;
+            height: 100%;
+            width: 100%;
+            background-color: #fff;
+        }
+
+        .classStatusResult .checkboxSt label::before{
+            background-color:#1bac5b9e !important;
+            opacity: 1;
+        }
+
+        .loadVideo,
+        .loadPDF {
+           background: #f2f2f2 url(author_public/images/preload.gif) center center no-repeat;
+        }
+
+        .showDataToStd{
+            background: #7AC29A;
+            color: #fff;
+        }
+        /* .mathGif{
+            background: #ddd url(author_public/images/contentgif.gif) center center no-repeat;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top:0;
+            left:0;
+            z-index: 999;
+            overflow: hidden;
+        } */
+    </style>
+
+</head>
+
+<body class="sidebar-mini"  ng-app="manageLiveQuizApp" ng-controller="manageLiveQuizController" ng-init="loadData('<%-token%>','<%-author%>')"
+ng-cloak>
+
+
+
+    <div class="wrapper" id="mngLQ">     
+        <div class="ld ld-ring ld-spin"></div>   
+        <%- include ../../parts/leftNavBar %>
+
+        <div class="main-panel" style="display:none;"  id="mainPanelDiv">
+            <%- include('../../parts/topNavBarPart1'); %>Live Quiz Management (Quiz Id:
+            <%-token%>)
+            <%- include('../../parts/topNavBarPart2'); %>
+        <div class="content" style="padding-top:15px;">
+            <div class="container-fluid">
+
+                
+
+                <div class="row animated zoomIn delay-2s" ng-if="!quizNotFinalize">
+                    <div class="col-md-12" style="padding-left: 28px;">
+                      <div class="errorAlert boxShadow">
+                      <p><i class="fa fa-exclamation-triangle"></i>
+                        This quiz has been finalized, you can not perform any action here.</p></div>
+                    </div>
+                </div>
+
+                <div class='row'>
+                    <div class='col-lg-5 col-sm-12 outer '>
+                        <div class="rows">
+                            <div class="col-lg-12">
+                                <div class="card card-big liveDiv sticky">
+                                <div class="card-header clearfix">
+                                    <div class="pull-left">
+                                        <form role="form" name="frmback" id="frmback" method="post" action="/author_getQuizControlData" enctype="multipart/form-data">
+                                        <input type="hidden" name="quizid" id="quizid" value="<%-token%>">
+                                        <button class="btn btn-default btn-move-left btn-icon" id="back">
+                                        <span class="btn-label">
+                                        <i class="ti-angle-left"></i>
+                                        </span>Back</button>
+                                        </form>
+
+                                    <input type="hidden" id="socketURL" value="<%-socketUrl%>">
+                                    </div>
+                                    <div class="pull-right">
+                                        <div class="row">
+                                        <div class="col-sm-12">
+
+                                       
+
+                                        <div class='col-xs-12'>
+
+                                            <button type='button'
+                                            class='btn  btn-warning btn-icon'
+                                            id='btnbQuizInst'
+                                            ng-click="showQuizInst($index)"
+                                            title="Quiz Instruction"
+                                            rel="tooltip">
+                                            Quiz Instruction
+                                            </button>
+                                           
+
+                                            <button type='button'
+                                            class='btn  btn-primary btn-icon'
+                                            title="Finalize Quiz"
+                                            ng-if="quizNotFinalize"
+                                            ng-click="openFinalizeModal()"
+                                            rel="tooltip">
+                                            Finalize Quiz
+                                            </button>
+
+                                        </div>
+
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--  data-item="{{exMeta.sections[$index].displayInstruction}}" -->
+                                <div class="card-content" id="lqContent">
+                                <uib-tabset active="activeSecTab">
+                                    <uib-tab index="$index" ng-repeat="secData in examData" ng-init="parSecIndex = $index" heading="Section {{$index+1}}"><br>
+                                    <h5 style="text-align:center;font-size:18px;">{{examMetaData.sections[$index].title}}</h5>
+                                    <!-- <h3>{{examMetaData.sections}}</h3>examMetaData.sections[sectionId].title -->
+                                    <div class="row">
+                                        <div class="col-xs-1">                                 
+                                        <button class="btn  btn-warning instBtn" id="secInst" type="button" title="Section Instruction" ng-click="showSecInst($index)" rel="tooltip">
+                                        <i class="fa fa-info"></i>
+                                        </button>
+                                        </div>
+                                        <div class="col-xs-11">
+                                        <span ng-repeat="sd in secData.value.livedata" ng-init="innerIndex=$index">
+                                        <a
+                                        ng-class="['btn','btn-info','btn-icon','btn-sm','sampleclick','smBtn',{playedQuest : isPlayedQuest(parSecIndex,innerIndex) }]"
+                                        ng-click="showQuesSample(parSecIndex,innerIndex)"
+                                        title="preview" id="ques-{{parSecIndex}}{{innerIndex}}">
+                                        {{$index+1}}</a>
+                                        </span>
+                                        </div>
+                                    </div>
+                                    </uib-tab>
+                                </uib-tabset>
+                                </div>
+                                <div class="card-content">
+
+                                </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="card card-big liveDiv sticky">
+
+                                    <div class="card-header clearfix">
+                                        <h4  class="card-title">Preview 
+                                        <small ng-if="qtype && showDiv =='question'" style="font-weight:bold;"> 
+                                        ({{qtype | uppercase}})
+                                        </small>
+                                        <span class="pull-right"> 
+                                        <!-- <button 
+                                            class="btn btn-icon  btn-fill" 
+                                            type="button"
+                                            ng-click="playHistory()"
+                                            title="Play History"
+                                            rel="tooltip">
+                                            <i class="fa fa-history"></i>
+                                        </button> -->
+
+                                        <button 
+                                        class="btn btn-icon btn-info btn-fill"
+                                        id="addInQueue"
+                                        type="button"
+                                        ng-click="addToQues()"
+                                        title="Add In Queue"
+                                        rel="tooltip">
+                                        <i class="fa fa-plus"></i>
+                                        </button>
+                                        </span>
+                                        </h4>
+
+                                        
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <span 
+                                                class="btn btn-info btn-icon btn-sm queQuesDiv"
+                                                ng-click="showQuesSample(ques.secIndex,ques.questIndex)"
+                                                ng-repeat="ques in queQuest">
+                                                {{ques.secIndex+1}}-{{ques.questIndex+1}}
+                                                <span 
+                                                class="delQueQuest" 
+                                                ng-click="deleteQueQuest($event,ques.secIndex,ques.questIndex)">
+                                                X
+                                                </span>
+                                                </span>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                <hr>
+
+                                
+                                <div  class="card-content"
+                                    style="padding:2px;" 
+                                    id="instPreviewDiv"
+                                    ng-show="showDiv=='quizInst' || showDiv=='secInst'">
+
+                                    <b ng-show="showDiv=='quizInst'">Quiz Instruction</b>
+                                    <b ng-show="showDiv=='secInst'">Section Instruction</b>
+
+                                    <div ng-show="showDiv == 'quizInst'" style="padding:2px;">
+                                                           
+                                        <div class="text-center">
+                                            <h5 class="card-title" style="margin-bottom: 6px;">
+                                                {{examMetaData.title}}
+                                            </h5>
+                                            <span class="label label-success">
+                                                Quiz ID - {{examMetaData.quizId}}
+                                            </span>
+                                        </div>
+
+                                        <div class="card-content">
+
+                                            <span math="{{loadQuizInst}}"></span>  
+                                            <br>
+
+                                            <h5 style="margin-bottom: 5px; border-bottom: 1px #cfcfca solid;">Timing</h5>
+                                        
+                                            <span>
+                                               <strong>Quiz opened at</strong> {{ examMetaData.beginTime }} <br>
+                                            </span>
+                                            <br>
+                                            
+                                            <span class="text-warning" ng-show="examMetaData.sections.length==1 && examMetaData.sections[0].partialGrading">
+                                                Partial grading is On in this quiz. You may submit, fill in the blank questions without filling all the blanks
+                                             </span>
+                                            
+                                        </div>
+                                                          
+                                       
+                                    </div>
+                                   
+
+
+                                    <div ng-show="showDiv == 'secInst'" style="padding:2px;">
+                                            <div>                                                          
+                                                <h5 class="card-title text-center">
+                                                    {{ loadInst.title }}
+                                                </h5>
+                                                    
+                                                <span math="{{loadInst.instruction}}"></span>   
+                                                <br>
+                                                <br>
+                                                <span class="text-warning" ng-show="loadInst.partialGrading">
+                                                    Partial grading is On in this section. You may submit, fill in the blank questions without filling all the blanks
+                                                 </span>
+
+                                            </div>
+                                            <div class="table-responsive table-bordered">
+                                                <table class="table mrB0">
+                                                <tr>
+                                                    <th ></th>
+                                                    <th  class="text-center text-primary">No Help Used</th>
+                                                    <th  class="text-center text-primary" ng-show="loadInst.helpAllowed<=2 && loadInst.helpAllowed>0">Hint Used</th>
+                                                    <th  class="text-center text-primary" ng-show="loadInst.helpAllowed==2">Explanation Used</th>
+                                                </tr>
+                                                <tr>
+                                                    <th class="text-center text-primary">
+                                                    Correct 
+                                                    </th>
+                                
+                                                    <td style="background-color:rgba(161, 234, 194, 0.4);">{{loadInst.gradingMatrix[0][0] }}</td>
+                                                    <td style="background-color:rgba(241, 209, 142, 0.4);" ng-show="loadInst.helpAllowed<=2 && loadInst.helpAllowed>0">{{loadInst.gradingMatrix[0][1]}}</td>
+                                                    <td style="background-color:rgba(170, 216, 228, 0.4);" ng-show="loadInst.helpAllowed==2">{{loadInst.gradingMatrix[0][2]}}</td>
+                                
+                                
+                                                </tr>
+                                                <tr>
+                                                    <th class="text-center text-primary">
+                                                    Skipped 
+                                                    </th>
+                                                    <td style="background-color:rgba(161, 234, 194, 0.4);">{{loadInst.gradingMatrix[1][0]}}</td>
+                                                    <td style="background-color:rgba(241, 209, 142, 0.4);" ng-show="loadInst.helpAllowed<=2 && loadInst.helpAllowed>0">{{loadInst.gradingMatrix[1][1]}}</td>
+                                                    <td style="background-color:rgba(170, 216, 228, 0.4);" ng-show="loadInst.helpAllowed==2">{{loadInst.gradingMatrix[1][2]}}</td>
+                                                
+                                                </tr>
+                                                <tr>
+                                                    <th class="text-center text-primary">
+                                                        Incorrect 
+                                                    </th>
+                                                    <td style="background-color:rgba(161, 234, 194, 0.4);">{{loadInst.gradingMatrix[2][0]}}</td>
+                                                    <td style="background-color:rgba(241, 209, 142, 0.4);" ng-show="loadInst.helpAllowed<=2 && loadInst.helpAllowed>0">{{loadInst.gradingMatrix[2][1]}}</td>
+                                                    <td style="background-color:rgba(170, 216, 228, 0.4);" ng-show="loadInst.helpAllowed==2">{{loadInst.gradingMatrix[2][2]}}</td>
+                                                    
+                                                </tr>
+                                                </table>
+                                
+                                            </div>
+                                    </div>
+                                </div>
+                                <div class="card-content" 
+                                    style="padding:2px; position: relative;"
+                                    ng-show="showDiv=='question'" id="scrollSt-1">
+                                    <!-- <div class="whiteScreenLoader" id="quesLoader"></div> -->
+                                
+                                    <input type="hidden" class="form-control" id="authorQues" value="{{quesIdPre}}" readonly="true">
+                                    <div ng-include="getTemplate()"></div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                          
+                    </div>
+
+                    <div class='col-lg-7 col-sm-12 outer '>
+                        <div class="card card-big liveDiv" style="min-height:80vh;">
+                        <!-- style="height:80vh;"-->
+                            <div class="card-header clearfix">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                  <h3 class="card-title" style="position:relative;">Live
+                                      <img class="liveImgIcon" ng-show="quizStatus=='ON'" ng-src="author_public/images/wifi.gif" alt="{{quizStatus=='ON'?'Quiz is live':''}}">
+
+                                      
+                                  </h3>
+                                </div>
+
+                                <div class="col-xs-4 text-center">
+                                        <div ng-show="isPlay">
+
+                                                <span 
+                                                    style="font-size: 12px;display:block;font-weight: bold;">
+                                                    {{ (isQuesComplete || ansStatsDiv) ?'Played':'Playing'  }}    
+                                                </span>
+                                                <span 
+                                                    ng-show="plyType=='question'"
+                                                    class="badge" title="Section {{plySecNum}} Question {{ plyQuesNum+1 }}">
+                                                    S{{ plySecNum}} - {{ plyQuesNum+1 }}
+                                                </span>
+        
+                                                <span class="badge"
+                                                    title="Quiz Instruction"
+                                                    ng-show="plyType=='quizInst'" >
+                                                    Quiz Instruction
+                                                </span>
+                                                <span class="badge" 
+                                                    title="Section {{ plySecNum }} Instruction"
+                                                    ng-show="plyType=='secInst'">
+                                                    Section {{plySecNum}} Instruction
+                                                </span>
+        
+        
+                                        </div>
+
+                                </div>
+                                <div class="col-xs-5 text-right">
+                                <!-- <span class="label label-success onlineQuiz"  ng-show="quizStatus=='ON'">Live</span>
+                                <span class="label label-danger" ng-show="quizStatus=='OFF'">Not Live</span> -->
+
+                                
+                                    <div style="display:inline" ng-if="quizNotFinalize">
+                                        <button type='button'
+                                        class='btn  btn-success btn-icon'
+                                        ng-click="startLiveQuiz()"
+                                        id='btnbQuizStart'
+                                        title="Quiz Start"
+                                        rel="tooltip"
+                                        ng-disabled="isStartQuiz"
+                                        ng-show="quizStatus=='OFF'">
+                                        <i class="fa fa-sign-in"></i>
+                                        Go Live
+                                        </button>
+
+                                        <button type='button'
+                                        class='btn  btn-danger btn-icon'
+                                        ng-click="stopLiveQuiz()"
+                                        ng-disabled="isStopQuiz"
+                                        id='btnbQuizExit'
+                                        title="Quiz Exit"
+                                        rel="tooltip"
+                                        ng-show="quizStatus=='ON'">
+                                        <i class="fa fa-sign-out"></i>
+                                        Stop Quiz
+                                        </button>
+                                    </div>
+                                    
+
+                                    <button type='button'
+                                    class='btn  btn-primary btn-icon'
+                                    ng-click="playHistory()"                                   
+                                    title="Play History"
+                                    rel="tooltip"
+                                    >
+                                    History
+                                    </button>
+
+                                    <!-- <button type='button'
+                                    class='btn  btn-warning btn-icon'
+                                    ng-click="openYoutubeSetting()"                                   
+                                    title="Youtube live stream setting"
+                                    rel="tooltip"
+                                    >
+                                     Live Stream
+                                    </button> -->
+                                </div>
+                            </div>
+
+                            </div>
+                            <hr>
+                            <div class="card-content">
+                                <div class="row">
+                                    <div class="col-md-4 text-center">
+
+                                            <div id="slider"></div> 
+                                            <span id="sv">01:00</span>
+                                            <strong class="noLimit" ng-show="noLimit">No time limit</strong>
+                                    </div>
+
+                                    <div class="col-md-5 text-left mT-10px">
+
+                                            <div ng-show="plyBtnDiv" >
+                                                    <button type="button"
+                                                    class="btn btn-simple btn-success btn-icon quizManageBtn"
+                                                    id="btnPlay"
+                                                    ng-click="playQuiz()"
+                                                    ng-disabled="quizStatus=='OFF' || disablePlayBtn"
+                                                    ng-show="!playPauseBtn"
+                                                    title="play"
+                                                    rel="tooltip">
+                                                    <i class="fa fa-play"></i>
+                                                    </button>
+
+                                                    <button type="button"
+                                                    class="btn btn-simple btn-danger btn-icon quizManageBtn"
+                                                    id="btnPause"
+                                                    title="stop"
+                                                    rel="tooltip"
+                                                    ng-click="stopPlay()"
+                                                    ng-disabled="quizStatus=='OFF'"
+                                                    ng-show="playPauseBtn">
+                                                    <i class="fa fa-pause"></i>
+                                                    </button>
+                                                    
+                                                    <span ng-show="disablePlayBtn" class="small text-danger">Please wait...</span>
+                                            </div>
+
+                                            <div ng-show="isDisGradeDiv">
+                                                    <button
+                                                        type="button"
+                                                        ng-disabled="isGrading"
+                                                        ng-click="grade()" 
+                                                        class="btn btn-info btn-sm disBtnHover">
+                                                      {{ !isGrading?'Grade':'Wait Grading...' }}</button>
+
+                                                      <button 
+                                                        type="button" 
+                                                        ng-disabled ="isGrading"
+                                                        ng-click="restartQuestion()"
+                                                        class="btn btn-success btn-sm disBtnHover">
+                                                        Restart</button>  
+
+                                                    <button 
+                                                        type="button" 
+                                                        ng-disabled ="isGrading"
+                                                        ng-click="discard()"
+                                                        class="btn btn-danger btn-sm disBtnHover">
+                                                        Discard</button>                        
+                                            </div>
+
+                                            <div ng-show="isSubDiv">
+                                                <button type="button" ng-click="showStatOnly()" ng-class="['btn','btn-success','btn-sm',{showDataToStd: isSubStatsShow } ]" >Show Stats</button>      
+                                                <button type="button" ng-click="restart_NewQuest()" class="btn btn-danger btn-sm">Clear</button>       
+                                            </div>
+
+                                            <!-- work with grade V isDisGradeDiv -->
+                                            <div ng-show="ansStatsDiv" class="classStatusResult">
+
+                                                <div  ng-class="['checkbox',{checkboxSt : staAnsScoreStatus.stat }]">
+                                                    <input id="checkbox1" type="checkbox" ng-model="showStat">
+                                                    <label for="checkbox1">
+                                                    Show Statistics
+                                                    </label>
+                                                </div>
+
+                                                <div ng-class="['checkbox',{checkboxSt : staAnsScoreStatus.score }]">
+                                                    <input id="checkbox3" type="checkbox" ng-model="showScore">
+                                                    <label for="checkbox3">
+                                                    Show Correct/Incorrect.
+                                                    </label>
+                                                </div>
+
+                                                <div  ng-class="['checkbox',{checkboxSt : staAnsScoreStatus.ans }]">
+                                                    <input id="checkbox2" type="checkbox" ng-model="showAns">
+                                                    <label for="checkbox2">
+                                                    Reveal answer with score.
+                                                    </label>
+                                                </div>
+
+                                               
+                                                <button type="button" ng-click="showAnwerStat()" ng-class="['btn','btn-success','btn-sm',{showDataToStd: (staAnsScoreStatus.stat || staAnsScoreStatus.ans || staAnsScoreStatus.score) } ]" >Show</button>
+                                                <button type="button" ng-click="restart_NewQuest()" class="btn btn-danger btn-sm">Clear</button>
+
+                                            </div>
+
+                                    </div>
+
+                                    <div class="col-md-3  mT-10px">
+                                        
+                                                <!-- <div class="checkbox">
+                                                    <input id="showVideo1" type="checkbox" ng-model="showVideo">
+                                                    <label for="showVideo1">
+                                                    Show Videobox
+                                                    </label>
+                                                </div>
+
+                                                <div class="checkbox">
+                                                    <input id="showChatbox1" type="checkbox" ng-model="showChatbox">
+                                                    <label for="showChatbox1">
+                                                    Show Chatbox
+                                                    </label>
+                                                </div>
+                                               
+                                                <button type="button" ng-show="quizStatus=='ON'" ng-click="toggleVideoChatbox()" class="btn btn-success btn-sm">
+                                                    Show
+                                                </button> -->
+
+
+                                                <div  ng-show="quizStatus=='ON'" class="text-right">
+
+                                                    <!-- youtube buttons -->
+                                                    <input type="checkbox" style="display:none;" ng-model="showVideo">
+                                                    <input type="checkbox" style="display:none;" ng-model="showChatbox">
+                                                    <div class="btn-group">
+                                                        <button type="button"
+                                                          title="{{showVideo?'Hide Video':'Show Video'}}"
+                                                          ng-class="['btn','btnChk','btn-default','btn-xs',{active : showVideo }]" ng-model="showVideo" ng-click="toggleVideoChatboxNew('video')" >
+                                                            <i class="fa fa-video-camera"></i>
+                                                        </button>
+                                                        <button type="button"
+                                                           title="{{showChatbox?'Hide Chatbox':'Show Chatbox'}}"
+                                                           ng-class="['btn','btnChk','btn-default','btn-xs',{active : showChatbox }]"  ng-click="toggleVideoChatboxNew('chat')" >
+                                                            <i class="fa fa-commenting-o"></i>
+                                                        </button>
+                                                        <button type="button" ng-click="openYoutubeSetting()" ng-class="['btn','btn-default','btn-xs','btnClickOnly']" title="Youtube setting">
+                                                            <i class="fa fa-cog"></i>
+                                                        </button>
+                                                    </div>
+                                                    <!-- end of youtube buttons -->
+
+                                                    <br>
+                                                    <!-- whitboard -->
+
+                                                    <input type="checkbox" style="display:none;" ng-model="showWhiteBoard">
+                                                   
+                                                    <div class="btn-group">
+                                                        <button type="button"
+                                                        title="{{showWhiteBoard?'Hide Whiteboard':'Show Whiteboard'}}" 
+                                                          ng-class="['btn','btnChk','btn-default','btn-xs',{active : showWhiteBoard }]" ng-model="showWhiteBoard" ng-click="toggleWhiteBoard()" >
+                                                          <i class="fa fa-square"></i>
+                                                        </button>
+                                                        <!-- <button type="button"
+                                                           title="Student Whiteboard"
+                                                           ng-class="['btn','btn-default','btn-xs','btnClickOnly']"
+                                                            ng-click="whitboardPopup()" >
+                                                           <i class="fa fa-eye"></i>
+                                                        </button> -->
+                                                        <button type="button" ng-click="copyToClipBoard()" ng-class="['btn','btn-default','btn-xs','btnClickOnly']" title="Copy whiteboard link" >
+                                                            <i class="fa fa-clipboard"></i>
+                                                        </button>
+                                                        
+                                                    </div>
+                                                     <!-- end of whiteboard -->
+
+                                                </div>
+                                               
+                                       
+                                    </div>
+
+
+                                </div>
+
+
+                                <div class="row" ng-show="showStatstics">
+                                    
+                                    <hr>
+                                        <div class="col-md-6">
+                                                <canvas id="statsChart" width="200" height="200"></canvas>
+    
+                                                <!-- <table class="table table-center" align="center" style="border:#ccc5b8 1px solid;border-radius:5px;">
+                                                <thead>
+                                                    <tr>
+                                                    <th></th>
+                                                    <th>No help used</th>
+                                                    <th ng-show="gradeHelpAllowed<=2 && gradeHelpAllowed>0">Hint used</th>
+                                                    <th ng-show="gradeHelpAllowed==2">Explanation used</th>
+                                                    <th>Total</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <th>Correct </th>
+                                                    <td style="background-color:rgba(161, 234, 194, 0.4);">
+                                                    {{ gradeStats[0][0] }}
+                                                    </td>
+                                                    <td ng-show="gradeHelpAllowed<=2 && gradeHelpAllowed>0" style="background-color:rgba(241, 209, 142, 0.4); ">
+                                                    {{ gradeStats[0][1] }}
+                                                    </td>
+                                                    <td ng-show="gradeHelpAllowed==2" style="background-color:rgba(170, 216, 228, 0.4);">
+                                                    {{ gradeStats[0][2] }}
+                                                    </td>
+    
+                                                    <td style="background-color:rgba(247, 244, 101, 0.4);">
+                                                    {{ gradeStats[0][3] }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Skip </th>
+                                                    <td style="background-color:rgba(161, 234, 194, 0.4);">
+                                                    {{ gradeStats[1][0] }}
+                                                    </td>
+                                                    <td ng-show="gradeHelpAllowed<=2 && gradeHelpAllowed>0" style="background-color:rgba(241, 209, 142, 0.4); ">
+                                                    {{ gradeStats[1][1] }}
+                                                    </td>
+                                                    <td ng-show="gradeHelpAllowed==2" style="background-color:rgba(170, 216, 228, 0.4);">
+                                                    {{ gradeStats[1][2] }}
+                                                    </td>
+    
+                                                    <td style="background-color:rgba(247, 244, 101, 0.4);">
+                                                    {{ gradeStats[1][3] }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Incorrect </th>
+                                                    <td style="background-color:rgba(161, 234, 194, 0.4);">
+                                                    {{ gradeStats[2][0] }}
+                                                    </td>
+                                                    <td ng-show="gradeHelpAllowed<=2 && gradeHelpAllowed>0" style="background-color:rgba(241, 209, 142, 0.4); ">
+                                                    {{ gradeStats[2][1] }}
+                                                    </td>
+                                                    <td ng-show="gradeHelpAllowed==2" style="background-color:rgba(170, 216, 228, 0.4);">
+                                                    {{ gradeStats[2][2] }}
+                                                    </td>
+    
+                                                    <td style="background-color:rgba(247, 244, 101, 0.4);">
+                                                    {{ gradeStats[2][3] }}
+                                                    </td>
+                                                </tr>
+    
+                                                </tbody>
+    
+                                                <tfoot>
+                                                    <tr>
+                                                        <th>Total </th>
+                                                        <td style="background-color:rgba(247, 244, 101, 0.4);">
+                                                        {{ gradeStats[3][0] }}
+                                                        </td>
+                                                        <td ng-show="gradeHelpAllowed<=2 && gradeHelpAllowed>0"  style="background-color:rgba(247, 244, 101, 0.4);">
+                                                        {{ gradeStats[3][1] }}
+                                                        </td>
+                                                        <td ng-show="gradeHelpAllowed==2" style="background-color:rgba(247, 244, 101, 0.4);">
+                                                        {{ gradeStats[3][2] }}
+                                                        </td>
+    
+                                                        <td style="background-color: #9e9e9e26">
+                                                        {{ gradeStats[3][3] }}
+                                                        </td>
+                                                    </tr>
+                                                </tfoot>
+                                                </table> -->
+                                        </div>
+                                        <div class="col-md-6" ng-show="gradeHelpAllowed<=2 && gradeHelpAllowed>0">
+                                                <canvas width="200" height="200"  id="answerChart" ></canvas>
+                                        </div>
+    
+                                </div>
+
+                                <div class="row" ng-show="isSubDiv">
+                                    <hr>
+                                        <div class="col-md-6">
+                                                <canvas id="subStatsChart" width="200" height="200"></canvas>
+                                        </div>
+                                        <div class="col-md-6" ng-show="gradeHelpAllowed<=2 && gradeHelpAllowed>0">
+                                                <canvas width="200" height="200"  id="subAnswerChart" ></canvas>
+                                        </div>
+                                </div>
+
+                                <div class="row">
+                                        <div class="col-md-4">
+                                                <h5>Students({{ allStds.length }}) </h5>
+                                        </div>
+                                        <div class="col-md-8 text-right">
+                                                <ul class="list-inline list-unstyled small ulMr labelStatus">
+                                                        <!-- <li> <span class="onlineBagde"></span> Online({{ countStdSt(true) }})</li> -->
+                                                        <li> <span class="onlineBagde"></span> Online({{ countStdSt(1) }})</li>
+
+                                                        <li> 
+                                                                <span class="ansGivenBagde"></span> Answered({{ countAnswerGiven() }})
+                                                        </li>
+
+                                                        <!-- <li> <span class="offlineBagde"></span> Offline({{ countStdSt(false) }})</li> -->
+                
+                                                        <li> <span class="offlineBagde"></span> Offline({{ countStdSt(0) }})</li>
+                
+                                                    </ul>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                                <div class="stdGrids">
+                                                    <div ng-repeat="x in allStds  | orderBy : ['timeTaken','-online','user'] track by $index"
+                                                    class="text-center stdGrd {{x.online ? 'onlineStd':'offlineStd' }}">
+            
+                                                    <img onerror="onImgError(this)" ng-src="https://robohash.org/{{x.user}}{{quizId}}?set=set2&&bgset=bg2&&size=50x50" class="stdImg" />
+                                                    {{x.user}}
+                                                   
+
+                                                      <span class="ansGiven" ng-show="x.hasAns"></span>
+
+                                                      <img class="ansStatus"  ng-show="x.correct==1" ng-src="author_public/images/right.png" >
+                                                      <img class="ansStatus" ng-show="x.correct==0"  ng-src="author_public/images/cross.png" >
+
+                                                    </div>
+            
+                                                </div>
+                                        </div>
+                                </div>
+
+                               
+                                   
+                                
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <%- include ../../parts/footer %>
+        </div>
+    </div>
+
+    <!-- finalize live quiz -->
+    <form action="/author_finalizeLiveQuiz" method="post" id="frmFinalize">
+       <input type="hidden" name="finalizeData" id="finalizeData">
+    </form>
+
+
+    <!-- Modal -->
+    <div id="playHistoryMdl" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Play History</h4>
+                </div>
+                <div class="modal-body" id="plyHistoryDiv">
+
+
+                    <!-- <uib-tabset>
+                            <uib-tab index="$index" ng-repeat="secData in examData" ng-init="parSecIndex = $index" heading="Section {{$index+1}}"  select="resetPlq()"><br>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                <span ng-repeat="sd in sectionPlayedQuest(parSecIndex) | orderBy:'questIndex':false" >
+                                <a
+                                ng-class="['btn','btn-info','btn-icon','btn-sm','sampleclick','smBtn']"
+                                ng-click="showHisGrade(sd)"
+                                >
+                                {{sd.questIndex+1}}</a>
+                                </span>
+                                </div>
+                            </div>
+                            </uib-tab>
+                    </uib-tabset> -->
+
+                    <!-- <div class="row" ng-if="plq.hasOwnProperty('grade') && selectPlq">
+                        <div class="col-md-12">
+                            Section {{plq.secIndex+1}} Question {{plq.questIndex+1}} was played at  {{ plq.playAt | timeDMY  }}  ({{plq.grade[3][3]}}  {{ plq.grade[3][3]>1?'participants':'participant' }}). <br>
+                        </div>
+                                  
+                        <div class="col-md-6">
+                            <canvas id="hisStatsChart" width="200" height="200"></canvas>
+                        </div>
+
+                        <div class="col-md-6" ng-show="getHelpAllowed(plq.secIndex)<=2 && getHelpAllowed(plq.secIndex)>0">
+                                <canvas  id="hisAnswerChart" width="200" height="200"></canvas>
+                        </div>                        
+                    </div>
+
+                    <div class="row" ng-if="!plq.hasOwnProperty('grade') && selectPlq">
+                            <div class="col-md-12"  >
+                                    <div class="text-center">
+                                            Section {{plq.secIndex+1}} Question {{plq.questIndex+1}} was played at  {{ plq.playAt | timeDMY  }} <br>
+                                            <strong > Statistics not available because the question was not graded.</strong> 
+                                    </div>
+                                </div>
+                    </div> -->
+
+
+                    <div class="row" ng-show="liveQuiz.playedQuest.length>0">
+                        
+                        <div class="col-md-4">
+                           
+                            <!-- <div class="btn-group">
+                                <button type="button"  ng-class="['btn','btnGrp','btn-default','btn-xs',{active : filterHis=='all' }]"  ng-click="filterHis='all'">All</button>
+                                <button type="button" ng-class="['btn','btnGrp','btn-default','btn-xs',{active : filterHis=='graded' }]" ng-click="filterHis='graded'">Graded</button>
+                                <button type="button"  ng-class="['btn','btnGrp','btn-default','btn-xs',{active : filterHis=='ungraded' }]" ng-click="filterHis='ungraded'" >Ungraded</button>
+                            </div> -->
+
+                            <table class="table table-condensed" style="background:#8080800d;">
+                              <tr>
+                                  <th>Played</th>
+                                  <th>Date</th>
+                              </tr> 
+                                  <!-- <tr dir-paginate="sd  in playedReverse | filter:filterHistoryContent  | itemsPerPage:6" current-page="currentPage" > -->
+                                    <tr 
+                                        dir-paginate="sd  in playedReverse | itemsPerPage:6"
+                                        current-page="currentPage">
+                                      <td>
+                                            <span>
+                                                <button
+                                                    type="button"
+                                                    ng-class="['btn','btn-info','btn-icon','btn-sm','sampleclick','smBtn']"
+                                                    ng-click="showHisGrade(sd)">
+                                                S{{sd.secIndex+1}}-{{sd.questIndex+1}}</button>
+                                            </span>
+                                      </td>
+                                      <td ng-bind-html="sd.playAt | dateHtml">
+                                      </td>
+                                  </tr>
+                            </table>
+                               
+                        </div>
+                        <div class="col-md-8 text-center">
+                                <img class="img-responsive" ng-show="!selectPlq"  src="author_public/images/statisticsPre.png" alt="Statistics Preview">
+
+                                <div class="row" ng-if="plq.hasOwnProperty('grade') && selectPlq">
+                                    <div class="col-md-12">
+                                        Section {{plq.secIndex+1}} Question {{plq.questIndex+1}} was played at  {{ plq.playAt | timeDMY  }}  ({{plq.grade[3][3]}}  {{ plq.grade[3][3]>1?'participants':'participant' }}). <br>
+                                    </div>
+                                              
+                                    <div class="col-md-6">
+                                        <canvas id="hisStatsChart" width="200" height="200"></canvas>
+                                    </div>
+            
+                                    <div class="col-md-6" ng-show="getHelpAllowed(plq.secIndex)<=2 && getHelpAllowed(plq.secIndex)>0">
+                                            <canvas  id="hisAnswerChart" width="200" height="200"></canvas>
+                                    </div>                        
+                                </div>
+
+                                <div ng-if="!plq.hasOwnProperty('grade') && selectPlq" style="margin:20% auto;">
+                                    <div>
+                                        Section {{plq.secIndex+1}} Question {{plq.questIndex+1}} was played at  {{ plq.playAt | timeDMY  }} <br>
+                                        <strong > Statistics not available because either this  question is info type or  was not graded.</strong>
+                                    </div>
+                                </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row" ng-show="liveQuiz.playedQuest.length==0">
+                        <div class="col-md-12 text-center">
+                          <h4>No Question Played</h4> 
+                        </div>
+                    </div>
+
+                    <div class="text-center" ng-show="liveQuiz.playedQuest.length>0">
+                        <dir-pagination-controls max-size="5" direction-links="true" boundary-links="true">
+                        </dir-pagination-controls>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- finalize modal -->
+    <div id="finalizeMdl" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+        <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Finalize Quiz</h4>
+                </div>
+                <div class="modal-body">  
+                    <div class="row">
+                        <div class="col-xs-12">
+                                <div class="radio">
+                                    <input type="radio" name="scoreReview" id="scoreReview1" ng-model="scoreReview" value="allowed,deadline">
+                                    <label for="scoreReview1">
+                                            Allow scores and review after finalization
+                                    </label>
+                                </div>                                    
+                                <div class="radio">
+                                    <input type="radio" name="scoreReview" id="scoreReview2" ng-model="scoreReview" value="unallowed,deadline">
+                                    <label for="scoreReview2">
+                                            Allow scores after finalization but do not allow review
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <input type="radio" name="scoreReview" id="scoreReview3" ng-model="scoreReview" value="unallowed,unallowed">
+                                    <label for="scoreReview3">
+                                            Do not allow scores or review
+                                    </label>
+                                </div>
+                              <br>
+                                <div class="checkbox">
+                                    <input type="checkbox" name="dropUnused" id="dropUnused" ng-model="dropUnused" >
+                                    <label for="dropUnused" class="text-danger">
+                                            Filter unused content during review
+                                    </label>
+                                </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="modal-footer">
+                        <button type="button" ng-if="quizNotFinalize" class="btn btn-primary btn-sm" ng-click="finalizeQuiz()">Finalize</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- Youtube modal -->
+    <div id="youtubeMdl" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+    <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Youtube Setting</h4>
+            </div>
+            <div class="modal-body">  
+
+                <div class="alert alert-warning alert-with-icon" data-notify="container" ng-show="liveQuiz.ytId == ''">
+                    <span data-notify="icon" class="ti-info-alt"></span>
+                    <span data-notify="message">To use video and chat feature of live quiz you need to complete youtube setting first.</span>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label>Enter youtube live stream Id</label>
+                            <input type="text" ng-model="inpYtId" class="form-control">
+                       </div>
+                    </div>
+
+                    
+                     <div class="col-xs-12" ng-show="inpYtId.trim()!=''">
+                        <div class="form-group">
+                            <label for="">Preview</label> 
+                            <iframe  id="ytdIframPreview"  allowfullscreen></iframe>
+                        </div>
+                     </div>   
+                    
+                </div>
+            </div>
+            <div class="modal-footer">
+                    <button type="button" ng-disabled="isSaveYt"  class="btn btn-primary btn-sm" ng-click="saveYoutubeSetting()">Save</button>
+            </div>
+        </div>
+
+    </div>
+    </div>
+
+    <form action="/author_showWhiteboard" method="post" id="wbFrm">
+        <input type="hidden" id="wbQuizId"  name="wbQuizId" >
+     </form>
+
+
+    <!-- chatbox -->
+    <button 
+      type="button" 
+      style="display:none;"
+      rel="tooltip" 
+      id="chatboxBtn"
+      title="chatbox"
+      ng-click="chatPopup()" class="float-btn float-btn-ytchat">
+        <i class="fa fa-commenting-o float-icon"></i>
+    </button>
+     <!--end of chatbox  -->
+
+       
+
+    
+
+</body>
+<!-- <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script> -->
+<%- include ../../parts/allJS %>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.7.9/angular-sanitize.min.js" ></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.1.3/ui-bootstrap-tpls.min.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/angular-ui-utils/0.1.1/angular-ui-utils.min.js'></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-filter/0.5.17/angular-filter.min.js" ></script> 
+ <script src="author_public/js/dirPagination.js" type="text/javascript"></script>
+<script src="author_public//js/socket-client.io.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular-cookies.js"></script>
+<script src="author_public/angularControllers/manageLiveQuizController.js?v=0.2"></script>
+
+</html>

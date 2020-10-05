@@ -1,0 +1,167 @@
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-minimize">
+            <button id="minimizeSidebar" class="btn btn-fill btn-icon"><i class="ti-more-alt"></i></button>
+        </div>
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar bar1"></span>
+                <span class="icon-bar bar2"></span>
+                <span class="icon-bar bar3"></span>
+            </button>
+            <a class="navbar-brand" href="#">
+               <%- queType %>
+            </a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown dropdown-with-icons">
+                    <a href="#" class="dropdown-toggle " data-toggle="dropdown">
+                            <i class="ti-info hidden-md hidden-lg"></i><b>Question Id: <%-token%></b>
+                        <!-- <p class="hidden-md hidden-lg">ID: <%-token%></p> -->
+                    </a>
+                    <!-- <ul class="dropdown-menu dropdown-with-icons">
+                        <li>
+                            <a href="#">
+                                 ID: <%-token%>
+                            </a>
+                        </li>
+                    </ul>
+                    <a href="#" class="dropdown-toggle " data-toggle="dropdown">
+                            <i class="ti-info"></i>
+                            <p class="hidden-md hidden-lg">Question Info</p>
+                    </a> -->
+
+                </li>
+
+
+
+                <li>
+                    <a href="/author_allrecentviewquestions" class="btn-magnify basketAnchor"   title="Recently Viewed Questions">                            
+                    <i class="fa fa-clock-o" style="font-size:1.3em;"></i>
+                    <p class="hidden-md hidden-lg">Recently Viewed</p>                   				     
+                    </a>
+                </li>
+                              
+
+                <%                
+                if(typeof isAngular == "boolean" && isAngular )
+                {
+                %>
+                    
+                <li id="LiBasket">
+                        <a  class="btn-magnify basketAnchor" href="/author_allbasketquestions" ng-cloak title="Basket of questions">                            
+                            <i class="fa fa-shopping-basket" style="font-size:1.3em;"></i>
+                            <p class="hidden-md hidden-lg">Basket</p>
+                            <span class="badge label-info basketCounter"  ng-if="basket.length" ng-cloak >{{ basket.length }}
+                            </span>					     
+                        </a>
+                </li>
+                
+                <%
+                }else
+                {
+
+                %>
+               
+                <li>
+                        <a href="/author_allbasketquestions" class="btn-magnify basketAnchor" title="Basket of questions" >                            
+                            <i class="fa fa-shopping-basket" style="font-size:1.3em;"></i>
+                            <p class="hidden-md hidden-lg">Basket</p>
+                             <%
+                              basketCounter = userMeta.counter.basket;
+                             %>
+                            <span 
+                              class="badge label-info basketCounter" 
+                              <%- ((basketCounter == 0 )? "style='display:none'" : "") %> 
+                              id="basketquestionCounter">
+                              <%-basketCounter%> 
+                            </span>					     
+                        </a>
+                </li>
+                <%
+                }
+                %>
+
+                <%if(userMeta.access.indexOf('publicRead')>-1 || userMeta.access.indexOf('admin')>-1){%>
+                    <li class="dropdown dropdown-with-icons">
+                        <a href="#" class="dropdown-toggle  btn-magnify" data-toggle="dropdown" title="Notification">  <!-- btn-rotate -->
+                            <i class="fa fa-bell-o" style="font-size:1.5em"></i>
+                            <p class="hidden-md hidden-lg">Notification</p>
+                            <%
+                                  ticketCounter = userMeta.counter.tickets;
+                                  newAuthorReq = userMeta.counter.newAuthorReq
+                                  totalCounter =  ticketCounter + newAuthorReq  ;
+                            %>
+    
+                            <span class="badge label-info basketCounter" 
+                              <%- ((totalCounter == 0 )? "style='display:none'" : "") %>  >
+                               <%-totalCounter%>
+                            </span>
+                        </a>
+                        
+                        <ul class="dropdown-menu dropdown-with-icons">
+
+                            <% if( userMeta.access.indexOf('admin') > -1){ %>
+                                <li>
+                                    <a href="/author_adminAuthorList#newRequest">
+                                        
+                                        <i class="pe-7s-mail"></i>Author  Request
+                                        <span class="badge greyColor pull-right" 
+                                            <%- ((newAuthorReq == 0 )? "style='display:none'" : "") %>  >
+                                            <%-newAuthorReq%>
+                                        </span>
+                                        
+                                    </a>
+                                </li>
+                            <% } %>
+
+                            <% if( userMeta.access.indexOf('publicRead') > -1){ %>
+                                <li>
+                                    <a href="/author_questionTickets">
+                                       
+                                        <i class="pe-7s-mail"></i> Tickets
+                                        <span class="badge greyColor pull-right" 
+                                        <%- ((ticketCounter == 0 )? "style='display:none'" : "") %>  >
+                                        <%-ticketCounter%>
+                                        </span>
+                                        
+                                    </a>
+                                </li>
+                            <% } %>
+                            
+                            
+                        </ul>
+                    </li>
+
+                <%
+                }
+                %>
+
+
+
+
+                <li class="dropdown dropdown-with-icons">
+                    <a href="#" class="dropdown-toggle btn-magnify " data-toggle="dropdown" title="User Setting">
+                        <i class="fa fa-user" style="font-size:1.5em"></i>
+                        <p class="hidden-md hidden-lg">User</p>
+                    </a>
+                    <ul class="dropdown-menu dropdown-with-icons">
+                        <li>
+                            <a href="/author_profile">
+                                <i class="pe-7s-mail"></i> Profile
+                            </a>
+                        </li>
+                        <li>
+                            <a href="author_logout" class="text-danger">
+                                <i class="pe-7s-close-circle"></i>
+                            Log out
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

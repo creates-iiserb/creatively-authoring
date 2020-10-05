@@ -1,0 +1,85 @@
+<!-- check routes -->
+<div class="card-header clearfix">
+    <div class="pull-left">
+        <h3 class="card-title">Content
+            <button type="button" rel="tooltip" data-placement="bottom" title="" class="btn btn-info btn-simple btn-xs" data-original-title="Remember to click 'Update' after you make changes or else your data will be lost.">
+                <i class="ti-help-alt fa-lg"></i>
+            </button>
+        </h3>
+        <p class="category"></p>
+    </div>
+    <div class="pull-right">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class='col-sm-4'>
+                    <form name="authfrm5" id="authfrm5" method="post"  action="<%-updateUrl%>" class='inline'>
+                        <!-- <input type="text" id="data21" name="data21" value="<%-updateUrl%>">
+                        <input type="text" id="data21e" name="data21e" value="<%-updateType%>"> -->
+                        <input type="hidden" id="data8" name="data" value="">
+                        <input type="hidden" id="data_req" name="data_req" value="">
+                        <input type="hidden" id="type" name="type" value="update_element_metadata">
+                        <input type="hidden" id="tagss" name="tagss" value="">
+                        <input type="hidden" id="shortName" name="shortName" value="<%-author%>">
+                        <input type="hidden" name="token" id="token1" value="<%-token%>">
+                        <input type="hidden" name="log_Id" id="log_Id" value="">
+                        <input type="hidden" name="log_Token" id="log_Token" value="">
+                        
+
+                        <button title="Update: Alt + u" class='btn  btn-success btn-fill btn-wd' type='submit' id='btnUpdate' accesskey="u">
+                        <i class="ti-save"></i> Update</button>
+                    </form>
+                </div>
+                <div class='col-sm-4'>
+                    <form name="authfrm4" id="authfrm4" method="post"  action="<%-commitUrl%>" class='inline'>
+                        <!-- <input type="text" id="data21" name="data21" value="<%-commitUrl%>">
+                        <input type="text" id="data21e" name="data21e" value="<%-commitType%>"> -->
+                        <input type="hidden" id="data2" name="data" value="">
+                        <input type="hidden" id="type" name="type" value="<%-commitType%>">
+                        <input type="hidden" id="token2" name="token" value="<%-token%>">
+                        <input type="hidden" id="pipe" name="pipe" value="<%-pipe%>">
+                        <input type="hidden" id="authorname" name="authorname" value="<%-author%>">
+                        <input type="hidden" name="log_Id" id="log_Id" value="">
+                        <input type="hidden" name="log_Token" id="log_Token" value="">
+                        <input type="hidden" id="data_req3" name="data_req3" value="">
+                        <button title="Commit: Alt + c" class='btn btn-warning btn-fill btn-wd' type='submit' id='btnGetCom' accesskey="c">
+                            <i class="ti-check-box"></i> Commit
+                        </button>
+                    </form>
+                </div>
+                <div class='col-sm-4'>
+                    <div class="dropdown">
+                        <a href="#" class="btn   dropdown-toggle btn-primary  btn-fill btn-wd" data-toggle="dropdown" aria-expanded="false">
+                            More<b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <form>
+                                     <!--input fileds to be used to fetch question type and token id from html/ejs page to javascript  -->
+                                    <input type="hidden" value="<%-pipe%>" id="pipe">
+                                    <input type="hidden" value="<%-token%>" id="orgid">
+                                </form>
+                                <a href="#" id="cloneQue">
+                                    <i class="ti-files"></i> 
+                                    &nbsp; Clone 
+                                </a>
+                            </li>
+                            <li>
+                                <form>
+                                     <!--input fileds to be used to fetch question type and token id from html/ejs page to javascript  -->
+                                    <input type="hidden" value="<%-pipe%>" id="pipe">
+                                    <input type="hidden" value="<%-token%>" id="orgid">
+                                    <input type="hidden" value="<%-short%>" id="author">
+                                </form>
+                                <a href="#" id='deleteQue'>
+                                    <i class="ti-trash"></i> 
+                                    &nbsp; Delete
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- </div> -->
+            </div>
+        </div>
+    </div>
+</div>

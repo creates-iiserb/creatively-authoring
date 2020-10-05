@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <%- include('../parts/allCSS'); %>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+          showMathMenu: false,
+          CommonHTML: { linebreaks: { automatic: true } },
+          "HTML-CSS": { linebreaks: { automatic: true } },
+                 SVG: { linebreaks: { automatic: true } }
+        });
+      </script>
+      <script type="text/javascript"  src="author_public/MathJax/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+
+    <script src="author_public/PaperDashBoard/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="author_public/css/author_workbook.css">
+    <link href="author_public/css/ng-tags-input.min.css" rel="stylesheet" />
+    
+    <style>
+            tags-input .tags .tag-item.selected {
+                background: #68B3C8;
+            }
+                tags-input .tags .tag-item {
+                background: #68B3C8;
+                color: #fff;
+                border-radius: 12px;
+                padding-left: 0.8em;
+            }
+            tags-input .tags .input.invalid-tag,
+            tags-input .tags .tag-item .remove-button:active {
+                color: #fff;
+            }
+            tags-input .tags .tag-item .remove-button {
+                color: #fff;
+            }
+            tags-input .tags{
+                background-color: #F3F2EE;
+                border: 1px solid #e8e7e3;
+                border-radius: 4px;
+                color: #66615b;
+                font-size: 14px;
+                padding: 4px 10px;
+                /* height: 40px; */
+                -webkit-box-shadow: none;
+                box-shadow: none;
+            }
+            .tags .input{
+                background-color: #F3F2EE !important;
+            }
+            .tags .input:focus{
+                background-color: #ffffff !important;
+            }
+            tags-input .tags.focused{
+                border: 1px solid #e8e7e3;
+                background-color: #FFFFFF;
+                -webkit-box-shadow: none;
+                box-shadow: none;
+                outline: 0 !important;
+            }
+            .text-block {
+                position: absolute;
+                bottom: 2px;
+                right: 10px;
+                /* background-color: black; */
+                /* color: white; */
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+            #timer {
+  font-family: Arial, sans-serif;
+  font-size: 20px;
+  color: #999;
+  letter-spacing: -1px;
+}
+#timer span {
+  font-size: 60px;
+  color: #333;
+  margin: 0 3px 0 15px;
+}
+#timer span:first-child {
+  margin-left: 0;
+}
+
+
+      </style>
+</head>
+
+<body class="sidebar-mini" ng-app="betaFeedbackApp" ng-controller="betaFeedbackController" ng-init="initData('<%-author%>','<%-wbId%>')" >
+    <div class="wrapper" id="wbVersionManage">
+            <div class="ld ld-ring ld-spin"></div>
+        <%- include('../parts/leftNavBar'); %>
+        <div class="main-panel"  style="display:none;" id="mainPanel">
+            <%- include('../parts/topNavBarPart1'); %> Beta Feedback Page <br> <small>(Workbook Id: <%-wbId%>)</small>
+            <%- include('../parts/topNavBarPart2'); %>
+            <div class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-10 col-md-offset-1">
+                            <!-- new design -->
+                            <div class="card">
+                                <div class="card-content">
+                                    <div class="row">
+                                        <div class="col-sm-12 ">
+                                            <div class="pull-left">
+                                                <button type="button" class="btn btn-wd btn-default btn-move-right" onclick="window.location.href='/author_getWorkbookVersionManagePage?id=<%-wbId%>'">
+                                                    <span class="btn-label">
+                                                    <i class="ti-angle-left"></i>
+                                                    </span>
+                                                    Back
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card"  ng-show="(!quesAry)">
+                                <div class="card-content">
+                                    <div class="row">
+                                        <fieldset class="col-sm-12">
+                                            <!-- <p>{{feedbackWithQues}}</p> -->
+                                            <div class="form-group text-center">
+                                                <!-- <label class="col-lg-3 control-label">Author</label> -->
+                                                <b class="text-danger">No Feedback Found !!!</b>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-content details" ng-repeat="ques in quesObj">
+                                <div class="row">
+                                  <div id="acordeon" class="col-md-12">
+                                    <div class="panel-group" id="accordion">
+                                      <div class="panel panel-border panel-default white">
+                                        <a data-toggle="collapse" href="#collapse{{$index}}">
+                                            <div class="panel-heading white">
+                                                <div class="row">
+                                                    <div class="col-md-6 pull-left" style="border-right:1px solid #F1EAE0">
+                                                        <div class="pull-left">
+                                                            <i class="fa fa-circle text-danger"   ng-show="(ques.isNew==true)"></i>&nbsp;&nbsp;
+                                                            <i class="fa fa-circle text-info" ng-show="(ques.notComplete==true && ques.isNew==false)"></i>&nbsp;&nbsp;
+                                                        </div>
+                                                        <div>
+                                                            <h4 class="panel-title text-primary"> 
+                                                                {{ques.ref}}
+                                                            </h4>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 pull-right text-right">
+                                                        <!-- <p>{{ques.isNew}}---- {{ques.notComplete}}</p> -->
+                                                    <p>
+                                                        <a id="sample" data-item="{{ques.ref}}" title="View Sample" rel="tooltip"  >
+                                                            <span class="label label-default" style="cursor: pointer">View Sample</span>
+                                                        </a>&nbsp;&nbsp;
+                                                        <i class="ti-angle-down"></i>
+                                                    </p>
+                                                    
+                                                    </div>
+                                                </div>
+                                                    <!-- <h4 class="panel-title text-info"> 
+                                                        {{ques.ref}}
+                                                        <i class="ti-angle-down"></i>
+                                                    </h4> -->
+                                                    
+                                            </div>
+                                        </a>
+                                        <div id="collapse{{$index}}" class="panel-collapse collapse in">
+                                          <div class="panel-body">
+                                            <div class="row"  ng-repeat="feedmsg in feedbackWithQues[ques.ref]">
+                                                <div class="col-md-10 col-md-offset-1">
+                                                    <!-- <button type="button" class="btn btn-simple btn-warning btn-icon" id="btnSample" title="View Sample"  data-toggle="tooltip" data-placement="top"><i class="fa fa-eye"></i></button> -->
+                                                    <!-- <span class="label label-danger"  ng-show="(feedmsg.status=='new')">{{feedmsg.status}}</span>  | orderBy:'-timeStamp'-->
+                                                    <p math="{{feedmsg.msg}}"></p>
+                                                    <div class="row">
+                                                            <button type="button" class="btn btn-simple btn-default btn-icon" id="btnRead" ng-show="(feedmsg.status=='new')" ng-click="changeFeedbackStatus('read',feedmsg.id, feedmsg.index,'<%-author%>',ques.ref,$index,feedmsg)" title="Read"  data-toggle="tooltip" data-placement="top"><i class="fa fa-eye"></i></button><!-- fa fa-eye-slash /fa fa-book -->
+                                                            <button type="button" class="btn btn-simple btn-warning btn-icon" id="btnReadClick" ng-show="(feedmsg.status!='new')" ng-click="changeFeedbackStatus('new',feedmsg.id, feedmsg.index,'<%-author%>',ques.ref,$index,feedmsg)"  title="Unread"  data-toggle="tooltip" data-placement="top"><i class="fa fa-eye"></i></button>
+                                                            <button type="button" class="btn btn-simple btn-default btn-icon" id="btnFlag" ng-show="(feedmsg.status!='flag')" ng-click="changeFeedbackStatus('flag',feedmsg.id, feedmsg.index,'<%-author%>',ques.ref,$index,feedmsg)" title="Flag" data-original-title="Flag"  rel="tooltip"><i class="fa fa-flag"></i></button><!-- fa fa-flag-o -->
+                                                            <button type="button" class="btn btn-simple btn-danger btn-icon" id="btnFlagClick" ng-show="(feedmsg.status=='flag')" ng-click="changeFeedbackStatus('new',feedmsg.id, feedmsg.index,'<%-author%>',ques.ref,$index,feedmsg)"   title="Unflag" data-original-title="Unlag"  rel="tooltip"><i class="fa fa-flag"></i></button>
+                                                            <button type="button" class="btn btn-simple btn-default btn-icon" id="btnComplete" ng-show="(feedmsg.status!='complete')" ng-click="changeFeedbackStatus('complete',feedmsg.id, feedmsg.index,'<%-author%>',ques.ref,$index,feedmsg)" title="Complete" data-original-title="Complete"  rel="tooltip"><i class="fa fa-thumbs-up"></i></button><!-- fa fa-thumbs-o-up -->
+                                                            <button type="button" class="btn btn-simple btn-success btn-icon" id="btnCompleteClick" ng-show="(feedmsg.status=='complete')" ng-click="changeFeedbackStatus('new',feedmsg.id, feedmsg.index,'<%-author%>',ques.ref,$index,feedmsg)"  title=" Not Complete" data-original-title=" Not Complete"  rel="tooltip"><i class="fa fa-thumbs-up"></i></button>
+                                                            <span class="category">{{feedmsg.timeStamp | date:'dd/MM/yyyy hh:mm:ss'}} v{{feedmsg.wbVersion}} &nbsp; <img src="https://wb.examineer.org/api/user/image/{{feedmsg.wbuser}}"  class="img-circle" height="20" width="20" alt=""/><b class="text-primary">{{feedmsg.wbuser.split('@')[0]}}</b></span>
+                                                    </div><hr style="margin-top: 0px;margin-bottom: 10px;">
+                                                </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            <!-- end of new design -->
+                            <!-- modal view sample -->
+                            <div class="">
+                                <div class="modal fade" id="bsModal3" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title" id="mySmallModalLabel">View Sample
+                                            </h4>
+                                        </div>
+                                        <div class="modal-body" id="viewModalContent">
+                                            <p></p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- modal close-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+                    <%- include('../parts/footer'); %>
+        </div>
+    </div>
+</body>
+<%- include('../parts/allJS'); %>
+<script>
+    $(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+      $("body").on("click", "#sample", function () {
+          var quesItm = $(this).attr("data-item");
+          $.ajax({
+          type: 'get',
+          url: '/author_getCommittedSampleQue?id=' + quesItm,
+          cache: false,
+          success: function (returndata) {
+              if (returndata) {
+              // $('#bsModal3 .modal-body p').modal('show'); // Please right this in your Code
+              // console.log(returndata);
+              
+                $('#bsModal3 .modal-body p').html(returndata);
+                MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+                $('#bsModal3').modal('show');
+              } else {
+              // other code
+              }
+          },
+              error: function () {
+              console.error('Failed to process ajax !');
+              }
+          });
+      });
+    });
+    </script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.1.3/ui-bootstrap-tpls.min.js"></script>
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/angular-ui-utils/0.1.1/angular-ui-utils.min.js'></script>
+<script type="text/javascript" src="author_public/js/author_workbook.js"></script>
+
+    <script src="author_public/js/ng-tags-input.min.js" type="text/javascript"></script>  
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>  
+    <script src="author_public/angularControllers/customdirective/angular-validate.min.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.7.9/angular-sanitize.min.js" integrity="sha256-nne9nFlD03jNmaV9DT9Ns51XCopbolhNWl8C2s379tU=" crossorigin="anonymous"></script>
+    <script src="author_public/ckeditor/ckeditor.js"></script>  
+    <!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.1.3/ui-bootstrap-tpls.min.js"></script> -->
+    <script src="author_public/angularControllers/wbBetaFeedbackController.js"></script>
+    <script src="author_public/angularControllers/customFilters.js"></script>
+    <script src="author_public/angularControllers/customdirective/bsSwitch.js"></script>
+</html>

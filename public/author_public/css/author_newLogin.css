@@ -1,0 +1,350 @@
+.newlbg{
+    /* background-image: url(../author_public/images/bg.png); #f4f3ef*/
+    background:#f4f3ef;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    box-sizing: border-box;
+    z-index: -1;
+    
+}
+
+.navBG {
+    background-color: #484541 !important;    
+    box-shadow: #a7a5a2 0px 6px 18px;
+    margin-bottom: 0px;
+}
+
+.mrB0px{
+    margin-bottom: 0px !important;
+}
+
+
+
+
+
+.newBrand{
+  font-size: 26px !important;
+  color:#fff !important;
+  font-weight: normal !important;
+}
+
+.newLiA li a{
+  font-size: 18px;
+}
+
+#newlogin{
+    min-height: 100vh;
+}
+
+#newlogin .mrT75px{
+    margin-top:75px;
+}
+
+#newlogin .loginFrmDiv{    
+    min-height: 100vh;
+    background: #fff;
+    box-sizing: border-box;
+    position: relative;
+    box-shadow: #a7a5a2 0px 8px 14px 3px;
+    position: relative;
+   
+}
+
+
+#newlogin .loginFrmDiv .logo{
+    margin: 50px auto 0px auto;
+}
+
+
+#newlogin .imgDiv{
+    min-height: 100vh;
+    box-sizing: border-box;
+    position: relative;
+   padding:0
+}
+
+#newlogin  img.img-center {
+   position:absolute;
+   bottom: 0px;
+   left:0px;
+   right: 0px;
+   margin:auto;
+}
+
+
+#newloging .mrT25px{
+    margin-top:25px;
+}
+
+/* form */
+#newlogin .lgFrm {
+    width: 270px;
+    margin: 45px auto;
+  }
+#newlogin .lgFrm h1 {
+    font-size: 3em;
+    font-weight: 300;
+    text-align: center;
+    color: #2196F3;
+  }
+
+#newlogin .lgFrm h5 {
+    text-align: center;
+    text-transform: uppercase;
+    color: #c6c6c6;
+}
+
+#newlogin .lgFrm hr.sep {
+    background: #2196F3;
+    box-shadow: none;
+    border: none;
+    height: 2px;
+    width: 25%;
+    margin: 0px auto 45px auto;
+}
+
+
+  
+#newlogin .lgFrm .group {
+    position: relative;
+    margin: 40px 0;
+}
+  
+
+  
+#newlogin  .lgFrm input
+{
+    background: none;
+    color: #3b3b44;
+    font-size: 18px;
+    padding: 10px 10px 10px 5px;
+    display: block;
+    width: 270px;
+    border: none;
+    border-radius: 0;
+    border-bottom: 1px solid #c6c6c6;
+}
+
+
+#newlogin .lgFrm  input:focus
+{
+    outline: none;
+}
+  
+#newlogin .lgFrm input:focus ~ label,#newlogin .lgFrm input:valid ~ label
+{
+    top: -14px;
+    font-size: 12px;
+    color: #868686;
+}
+#newlogin .lgFrm  input:focus ~ .bar:before
+{
+    width: 270px;
+}
+  
+
+  
+#newlogin .lgFrm label {
+    color: #c6c6c6;
+    font-size: 18px;
+    font-weight: normal;
+    position: absolute;
+    pointer-events: none;
+    left: 5px;
+    top: 10px;
+    transition: 300ms ease all;
+}
+  
+#newlogin .lgFrm .bar {
+    position: relative;
+    display: block;
+    width: 270px;
+}
+
+#newlogin .lgFrm .bar:before {
+    content: '';
+    height: 2px;
+    width: 0;
+    bottom: 0px;
+    position: absolute;
+    background: #bababb;
+    transition: 300ms ease all;
+    left: 0%;
+}
+
+#newlogin  .viewPas{
+    position: absolute;
+    right: 0px;
+    bottom:18px;
+    font-size: 18px;
+}
+
+#newlogin .imgDiv img{
+    margin:auto;
+    /* margin-bottom:0px;
+    bottom:0 */
+}
+
+#imglogo{
+    display: none;
+}
+
+.bodyCss{
+    overflow-x:hidden;
+}
+
+.loginImgDiv{
+height:25vh;
+text-align: center;
+/* width:25vh; */
+margin:25px;
+}
+
+.loginImgDiv img{
+    width:20vh;
+} 
+
+
+
+@media (max-width: 1352px){
+   
+   .newlbg{
+      overflow: hidden;
+   }
+
+    #newlogin .lgFrm input
+    {    
+       width: 260px;
+    }
+
+    #newlogin .lgFrm .bar {
+       
+        width: 260px;
+    }
+    
+    #newlogin .lgFrm input:focus ~ .bar:before
+    {
+       width: 260px;
+    }
+
+    #newlogin .loginBtn{
+       width: 96% !important;
+    }
+
+    #newlogin .viewPas {
+       right: 18px;
+    }
+
+}
+
+
+@media (max-width: 1313px){
+    
+    #newlogin .loginBtn{
+        width: 92% !important;
+     }
+
+}
+
+
+
+@media (max-width: 992px){
+    /* #newlogin #stdImg{
+    margin-top: 50%;
+ } */
+     #newlogin .lgFrm input
+    {    
+       width: 310px;
+    }
+
+    #newlogin .lgFrm  .bar {
+       
+        width: 310px;
+    }
+    
+    #newlogin .lgFrm  input:focus ~ .bar:before
+    {
+       width: 310px;
+    }
+
+    #newlogin .loginBtn{
+       width: 100% !important;
+    }
+
+    #newlogin .viewPas {
+       right: 5px;
+    }
+
+}
+
+
+@media (max-width: 767px){
+    /* #myCarousel */
+#newlogin #stdImg{
+    display: none;
+ }
+
+ #newlogin #imglogo{
+     display: block;
+ }
+
+ #newlogin #mainLogo{
+     display: none;
+     margin:0;
+ }
+
+ #newlogin .imgDiv{
+     min-height:auto !important;
+     /* margin-top:84px; */
+ }
+
+
+ #newlogin .loginFrmDiv{
+    min-height:75vh ;
+ }
+
+}
+
+@media (max-width: 374px){
+ 
+    #newlogin .lgFrm input
+    {    
+       width: 250px;
+    }
+
+    #newlogin .lgFrm  .bar {
+       
+        width: 250px;
+    }
+    
+    #newlogin .lgFrm  input:focus ~ .bar:before
+    {
+       width: 250px;
+    }
+
+    
+    #newlogin .viewPas {
+       right: 0px;
+    }
+
+
+}
+
+#myVideo {
+  /* position: fixed; */
+  /* right: 15px;
+  bottom:15px;
+  top:15px;
+  left:15px; */
+  bottom: 0;
+  /* min-width: 100%; 
+  min-height: 100%;*/
+  z-index: 1;
+} 

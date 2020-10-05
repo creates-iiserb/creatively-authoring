@@ -1,0 +1,117 @@
+doctype html
+html
+  head
+    title
+    style.
+      .main {
+      width: 100%;
+      font-family: calibri;
+      background-color: #f4f3ef;
+      }
+      .header {
+      color: #FFF;
+      background: #484541;
+      text-align: center;
+      font-size: 34px;
+      padding: 10px;
+      border-radius: 5px;
+      }
+      .content {
+      padding: 15px;
+      }
+      .caption {
+      color: #484541;
+      font-size: 19px;
+      }
+      .captionUser {
+      color: #484541;
+      font-size: 23px;
+      }
+      #userImg {
+      border-radius: 50%;
+      border: solid 5px #fff;
+      }
+      .summary-table {
+      margin: 0 auto;
+      border-left: solid 1px #484541;
+      border-top: solid 1px #484541;
+      }
+      .summary-table tr td {
+      border-right: solid 1px #484541;
+      border-bottom: solid 1px #484541;
+      }
+      .footer,
+      .footer a {
+      color: #FFF;
+      }
+      .footer {
+      font-size: 12px;
+      text-align: center;
+      background: #484541;
+      padding: 5px;
+      border-radius: 5px;
+      }
+      .table{
+      border:solid 1px #000000;
+      font-size:18px;
+      }
+  body
+    .main
+      .header
+        b Exam
+        | ineer
+        b(style='font-size:smaller;font-weight:900;')  . 
+        | in
+      .content
+        div(align='center')
+          p
+            b.caption(style='font-weight:normal;')
+              | Request for new examineer author account.
+          p(style='margin-bottom: 5px;')
+            br
+          center
+            h2 User Detail
+          table.table(border='1')
+            tbody
+              tr
+                th(align='left') Name
+                td #{data.fullName}
+              tr
+                th(align='left') Affiliation
+                td #{data.request.affiliation}
+              tr
+                th(align='left') Department
+                td #{data.request.department}
+              tr
+                th(align='left') Email
+                td #{data.email}
+              tr
+                th(align='left') Personal/Institution web page
+                td
+                  a(href='#{data.request.webpage}') #{data.request.webpage}
+              tr
+                th(align='left') Phone number
+                td #{data.request.phone}
+              tr
+                th(align='left') How did you hear about us ?
+                td #{data.request.hearAboutUs}
+              tr
+                th(align='left') Courses you taught or plan to teach 
+                td #{data.request.courseTaught}
+          p
+            b.caption(style='font-weight:normal;')
+              | You can accept or reject this request. Click 
+              a(href='https://author.examineer.in') examineer.in
+              |  to go to examineer
+          p(style='margin-bottom: 5px;')
+            br
+        div(align='center')
+          p(style='margin-bottom: 15px;margin-top:30px;')
+          p
+            b.caption
+              | For support contact : 
+              a(href='mailto:')
+      .footer
+        div(style='width:318px; text-align: center; margin:0 auto;')
+          | Do not reply to this email.For technical issues contact us at 
+          a(href='mailto:') 

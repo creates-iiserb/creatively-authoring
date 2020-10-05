@@ -1,0 +1,77 @@
+<% if(pipe=="sub"){%>
+<div class="tab-pane" id="subAnswers">
+    <div class="form-group row">
+        <div class="col-xs-10 col-xs-offset-1 col-md-10 col-md-offset-1 inMiddle">
+            <div class="col-md-4">
+                <label class="control-label " style="padding-bottom:13px;">
+                    Answer Type
+                </label>
+                <select name="selectChoice" id="selectChoice" class="selectpicker">
+                    <!-- <option value="">Choose</option> -->
+                    <!-- <option value="0" <%if(data.allowedDrawings==0 ){%> selected="selected"<%}%> >0</option> -->
+                    <option value="textAns" <%if(data.allowedDrawings==0){%> selected="selected"<%}%> >Text Only</option>
+                    <option value="draw" <%if(data.limit==0 ){%> selected="selected"<%}%> >Drawing Only</option>
+                    <option value="TextAndDraw" <%if(data.allowedDrawings!=0 && data.limit !=0){%> selected="selected"<%}%> >Text And Drawing</option>
+                </select>
+            </div>
+            <div class="col-md-4"   id="limitDiv" <%if(data.limit==0){%> style="display:none"<%}%> >
+                <label class="control-label ">
+                    Text Limit
+                    <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipSubAns01%>">
+                        <i class="ti-help-alt fa-lg"></i>
+                    </button>
+                </label>
+                <div >
+                    <input type="number" class="form-control" id="subLimit" name="subLimit" pattern="^[0-9]$" placeholder="Enter value between 10-5000" min="10" max="5000" value="<%-data.limit%>" onkeypress='return isNumberKey(event)'  required>
+                    <span id="limitErr" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4" id="drawDiv" <%if(data.allowedDrawings==0){%> style="display:none"<%}%> >
+                <label class="control-label ">
+                    Drawings Allowed
+                     <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipSubAns03%>">
+                         <i class="ti-help-alt fa-lg"></i>
+                     </button>
+                 </label>
+                 <div >
+                     <select name="allowedDrawings" id="allowedDrawings" class="selectpicker">
+                         <!-- <option value="">Choose</option> -->
+                         <!-- <option value="0" <%if(data.allowedDrawings==0 ){%> selected="selected"<%}%> >0</option> -->
+                         <option value="1" <%if(data.allowedDrawings==1 ){%> selected="selected"<%}%> >1</option>
+                         <option value="2" <%if(data.allowedDrawings==2 ){%> selected="selected"<%}%> >2</option>
+                         <option value="3" <%if(data.allowedDrawings==3 ){%> selected="selected"<%}%> >3</option>
+                     </select>
+                 </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="form-group row">
+        <div class="col-xs-10 col-xs-offset-1 col-md-10 col-md-offset-1 inMiddle">
+            <label class=" control-label text-right">
+                Suggested Answer
+                <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipSubAns02%>">
+                    <i class="ti-help-alt fa-lg"></i>
+                </button>
+            </label>
+            <textarea class="form-control" rows="10" id="id_subAns"><%-data.answer%></textarea>
+            <!-- <p>char count:<b id="anscharcount"></b></p> -->
+        </div>
+    </div>
+     
+    <div class="form-group row">
+        <div class="col-xs-10 col-xs-offset-1 col-md-10 col-md-offset-1 inMiddle">
+            <label class=" control-label text-right">
+                Answer Keywords 
+                <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipSubAns04%>">
+                    <i class="ti-help-alt fa-lg"></i>
+                </button>
+                <small class='required' >(max 10 allowed)</small>
+            </label>
+            <input type="text" class="form-control" id="id_keyword" data-role="tagsinput"  value="<%-data.keywords%>" >
+        </div>
+    </div>
+    
+    </div>
+<%}%>

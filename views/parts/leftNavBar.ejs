@@ -1,0 +1,117 @@
+<div class="sidebar" data-background-color="brown" data-active-color="warning">
+    <div class="logo">
+        <a href="#" class="simple-text logo-mini">EX</a>
+        <a href="#" class="simple-text logo-normal"><b>EXAMINEER</b></a>
+    </div>
+    <div class="sidebar-wrapper">
+        <div class="user">
+            <div class="photo" style="height:50px; width:50px;">
+                <!--  -->
+                <div>
+                        <img src="author_public/images/user.png">
+            </li>
+                         </div>
+                 </div>
+            <div class="info">
+                <a href="/author_profile">
+                <%if(userMeta.fullName){%>
+                    <% if(userMeta.fullName.length>=20){
+                      var fullname11 = userMeta.fullName.slice(0,19);    
+                    %>
+                        <span style="margin-top:10px;"><%- fullname11%> ...</span>
+                    <%}else{%>
+                        <span style="margin-top:10px;"><%- userMeta.fullName%></span>
+                    <%}%>
+                <%}else{%>
+                    <span style="margin-top:10px;"><%-short%></span>
+                <%}%>
+                      </a>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <ul class="nav">
+            <li>
+                <a href="/author_dashboard">
+                  <i class="ti ti-home"></i>
+                  <p>Dashboard</p>
+              </a>
+            </li>
+            <li>
+                <a href="/author_dashboard_prog">
+                  <i class="ti ti-ruler-pencil"></i>
+                  <p>Content Under Dev</p>
+              </a>
+            </li>
+            <li>
+                <a href="/author_dashboard_comm">
+                  <i class="ti ti-check-box"></i>
+                  <p>Committed Content</p>
+              </a>
+            </li>
+            
+            <li>
+                <a href="/author_mediaGallery">
+                  <i class="ti ti-gallery"></i>
+                  <p>Media Library</p>
+              </a>
+            </li>
+            <li>
+                <a href="/author_playlist_dash">
+                  <i class="ti ti-view-list-alt"></i>
+                  <p>Playlist</p>
+              </a>
+            </li>
+            <%if(userMeta.access.indexOf('quiz')>-1){%>
+            <li>
+                <a href="/author_create_quiz">
+                  <i class="ti ti-write"></i>
+                  <p>Quiz</p>
+              </a>
+            </li>
+            <%}%>
+            
+            <%if(userMeta.access.indexOf('publicRead')>-1){%>
+            <li>
+                <a href="/author_pubList_dash">
+                    <i class="fa fa-globe"></i>
+                    <p>Public List</p>
+                </a>
+            </li>
+            <%}%>
+
+            <%if(userMeta.access.indexOf('publicRead')>-1 || userMeta.access.indexOf('publicWrite')>-1 ){%>
+                <li>
+                    <a href="/author_questionTickets">
+                        <i class="ti ti-ticket"></i>
+                        <p>Tickets</p>
+                    </a>
+                </li>
+            <%}%>
+
+
+            <%if(userMeta.access.indexOf('workbook')>-1){%>
+            <li>
+                <a href="/author_workbook_dash">
+                    <i class="ti ti-book"></i>
+                    <p>Workbook</p>
+                </a>
+            </li>
+            <%}%>
+
+            <%if(userMeta.access.indexOf('admin')>-1){%>
+                <li>
+                    <a href="/author_adminDash">
+                        <i class="ti ti-user"></i>
+                        <p>Admin</p>
+                    </a>
+                </li>
+            <%}%>
+            <li>
+                <a href="https://examineer.in/docs/" target="_blank">
+                  <i class="fa fa-book"></i>
+                  <p>Documentation</p>
+              </a>
+            </li>
+        </ul>
+    </div>
+</div>

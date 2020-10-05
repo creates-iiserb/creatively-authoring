@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <%- include('../parts/allCSS'); %>
+    <link rel="stylesheet" href="author_public/css/author_quiz.css">
+    <script src="author_public/PaperDashBoard/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+    $(function(){ 
+        $("#btnGetEval").click(function(event){
+            
+            var tags_ary  = new Array();            
+            var arr = document.getElementById('tags').value;
+            tags_ary  = arr.split(",");
+            var tags_ary_length = tags_ary.length;
+            if(tags_ary_length<3){
+              swal(
+                    'Error...',
+                    'Minimum 3 tags required.',
+                    'error'
+                );
+              
+              return false;
+            }
+
+
+            var id_instruction=document.getElementById('id_instruction').value ;
+            var title=document.getElementById('title').value ;
+            var begin_time=document.getElementById('begin_time').value ;
+            var end_time=document.getElementById('end_time').value ;
+
+           
+            //  console.log(id_instruction);
+             var isValid= true;
+            if(title == "" || id_instruction == "" || begin_time=="" || end_time == "" ) {            
+                isValid =false;
+            }
+            
+            
+            $("[id^=sectdiv_old]").each(function (index) {                
+                var secTitle = document.getElementById("secTitle"+index).value; 
+                var secDesc =  document.getElementById("secInstr"+index).value;
+                // console.log(secTitle)
+                var helpAtReview;
+                $("input[name=review_help_selector"+index+"]:checked").each(function() {
+                    var value = $(this).val();
+                    helpAtReview = value;
+                }); 
+                // console.log("1====="+helpAtReview)
+                if(secTitle.trim()=='' || helpAtReview==undefined)                
+                    isValid = false;
+                
+            });
+
+            if(!isValid){
+            swal(
+                    'Error...',
+                    'Please fill required fields.',
+                    'error'
+            );
+            return false;
+            }
+
+        })
+    })
+    </script> 
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var begin_time_utc = document.getElementById('begin_time_utc').value;
+            var begindate1 = new Date(begin_time_utc);
+            // console.log(begindate1);
+            // document.getElementById('begin_time').value = begindate1;
+            
+            var time3 = begindate1.toString().split(" ")[4];
+            var month = new Array();
+            month[0] = "Jan";
+            month[1] = "Feb";
+            month[2] = "Mar";
+            month[3] = "Apr";
+            month[4] = "May";
+            month[5] = "Jun";
+            month[6] = "Jul";
+            month[7] = "Aug";
+            month[8] = "Sep";
+            month[9] = "Oct";
+            month[10] = "Nov";
+            month[11] = "Dec";
+            var getstartDate3 = begindate1.getDate();
+            var getstartMonth3 = month[begindate1.getMonth()];
+            var getstartFullYear3 = begindate1.getFullYear();
+            if(getstartDate3 < 10)
+            getstartDate3 = "0"+getstartDate3;
+            var date3 = getstartDate3+" "+getstartMonth3+" "+getstartFullYear3;
+            var beginTime =  date3 + " " + time3.substring(0, 5); 
+            document.getElementById('begin_time').value = beginTime;
+        });
+
+        $(document).ready(function() {
+            var end_time_utc = document.getElementById('end_time_utc').value;
+            var enddate1 = new Date(end_time_utc);
+            // console.log(enddate1);
+            // document.getElementById('end_time').value = enddate1;
+
+            var time4 = enddate1.toString().split(" ")[4];
+            var month1 = new Array();
+            month1[0] = "Jan";
+            month1[1] = "Feb";
+            month1[2] = "Mar";
+            month1[3] = "Apr";
+            month1[4] = "May";
+            month1[5] = "Jun";
+            month1[6] = "Jul";
+            month1[7] = "Aug";
+            month1[8] = "Sep";
+            month1[9] = "Oct";
+            month1[10] = "Nov";
+            month1[11] = "Dec";
+            var getstartDate4 = enddate1.getDate();
+            var getstartMonth4 = month1[enddate1.getMonth()];
+            var getstartFullYear4 = enddate1.getFullYear();
+            if(getstartDate4 < 10)
+            getstartDate4 = "0"+getstartDate4;
+            var date4 = getstartDate4+" "+getstartMonth4+" "+getstartFullYear4;
+            var endTime =  date4 + " " + time4.substring(0, 5); 
+            document.getElementById('end_time').value = endTime;
+        });
+    </script>
+
+    <style>
+        .swal2-modal .swal2-content {            
+        font-weight: bold !important;            
+        font-size: 20px !important;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="wrapper">
+        <%- include ../parts/leftNavBar %>
+        <div class="main-panel">
+        <%- include('../parts/topNavBarPart1'); %>Edit Quiz Settings (Quiz Id: <%-data._id%>)
+        <%- include('../parts/topNavBarPart2'); %>
+        <div class="content">
+       
+        <!-- warning notify -->
+            <div class="container-fluid">
+                <div class='row'>
+                    <div class='col-md-10 col-md-offset-1'>
+                        <div class="card card-big">
+                            <div class="card-header clearfix">
+                                <div class="pull-left">
+                                    <form role="form" name="frmback" id="frmback" method="post" action="/author_getQuizControlData" enctype="multipart/form-data">
+                                        <input type="hidden" name="quizid" id="quizid" value="<%-data._id%>">
+                                        <button class="btn btn-wd btn-default btn-move-left" id="back"><span class="btn-label"><i class="ti-angle-left"></i></span>Back</button>
+                                    </form>
+                                </div>
+                                <div class="pull-right">
+                                    <form name="authfrm2" id="authfrm2" method="post" action="/author_updateSecQuizControlBoard">
+                                        <input type="hidden" id="data" name="data" value="">
+                                        <input type="hidden" id="type" name="type" value="verify_sectioned_quiz_changes">
+                                        <input type="hidden" id="quiz_id" name="quiz_id" value="<%-data._id%>">
+                                        <input type="hidden" id="author" name="author" value="<%-data.author%>">
+                                        <input type="hidden" name="log_Id" id="log_Id" value="">
+                                        <input type="hidden" name="log_Token" id="log_Token" value="">
+                                        <input type="hidden" name="sectns" id="sectns" value="<%-data.sections%>">
+                                        <input type="hidden" name="isSection" id="isSection" value="<%-isSection%>">
+                                        <button class='btn  btn-success btn-fill btn-wd ' type='button' id='btnGetEval' ><i class="fa fa-check-square-o"></i> Verify</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="card-content" >
+                                <div class="nav-tabs-navigation">
+                                    <div class="nav-tabs-wrapper">
+                                        <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+                                            <li class="active"><a href="#MetaData" data-toggle="tab">Metadata</a></li>
+                                            <li><a href="#content" data-toggle="tab">Content</a></li>
+                                            <li><a href="#tab3" data-toggle="tab">Time</a></li>
+                                            <li><a href="#advance" data-toggle="tab">Advanced</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div id="edit-quiz-content" class="tab-content">
+                                    <div class="tab-pane active" id="MetaData">
+                                        <form  class="form-horizontal">
+                                            <fieldset>
+                                                <div class="form-group">
+                                                    <!-- <label class="col-lg-3 control-label">Author</label> -->
+                                                    <div class="col-lg-8">
+                                                        <input type="hidden" class="form-control" id="author1" value="<%-data.author%>" readonly="true">
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                            <fieldset>
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">
+                                                        Tags <star><b>*</b></star>
+                                                        <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipD01%>">
+                                                         <i class="ti-help-alt fa-lg" style="font-size:1.5em;"></i>
+                                                        </button>
+                                                    </label>
+                                                    <div class="col-lg-8">
+                                                        <input type="text" data-role="tagsinput" class="form-control" id="tags" name="tags" value="<%-data.tags%>" required >
+                                                        
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                            <fieldset>
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">
+                                                        Quiz Title <star><b>*</b></star>
+                                                        <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipD02%>">
+                                                         <i class="ti-help-alt fa-lg" style="font-size:1.5em;"></i>
+                                                        </button>
+                                                    </label>
+                                                    <div class="col-lg-8">
+                                                        <input type="text" class="form-control" id="title" name="title" value="<%-data.title%>" required>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                            <fieldset>
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">
+                                                        Description
+                                                        <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipD03%>">
+                                                         <i class="ti-help-alt fa-lg" style="font-size:1.5em;"></i>
+                                                        </button>
+                                                    </label>
+                                                    <div class="col-lg-8">
+                                                        <textarea class="form-control" rows="3" id="desc"><%-data.description%></textarea>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                            <fieldset>
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">
+                                                        Quiz Instruction <star><b>*</b></star>
+                                                        <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipD04%>">
+                                                         <i class="ti-help-alt fa-lg"></i>
+                                                        </button>
+                                                    </label>
+                                                    <div class="col-lg-8">
+                                                        <textarea class="form-control" rows="3" id="id_instruction" required><%-data.origInstr%></textarea>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </form>                                      
+                                    </div>
+                                    <div class="tab-pane" id="content">
+                                        <div class="row">
+                                            <form  class="form-horizontal">                                               
+                                               
+                                                <% var sections =  data.sections; %>
+                                                <% for(var i =0;i<sections.length;i++){
+                                                    var collapseMe = false;
+                                                    var expandClass = '';
+                                                      if(i==0)
+                                                      {
+                                                        collapseMe = true;
+                                                        expandClass = 'in';
+                                                      }
+                                                      
+                                                      
+                                                    %>
+                                                    <div class="row" id="sectdiv_old-<%-i%>">
+                                                        <div id="acordeon" class="col-md-11">
+                                                            <div class="panel-group" id="accordion">
+                                                                <div class="panel panel-border panel-default white">
+                                                                    <a data-toggle="collapse" href="#collapse<%-i%>" class="" aria-expanded="<%-collapseMe%>">
+                                                                    <div class="panel-heading white">
+                                                                        <h4 class="panel-title">
+                                                                        Section <%-i+1%>
+                                                                        <i class="ti-angle-down" style="font-size:1em"></i>
+                                                                        </h4>
+                                                                    </div>
+                                                                    </a>
+                                                                    <div id="collapse<%-i%>" class="panel-collapse collapse <%-expandClass%>" aria-expanded="false">
+                                                                        <div class="panel-body">
+                                                                            <div class="card">
+                                                                                <fieldset  class="col-sm-10 col-sm-offset-1">
+                                                                                    <div class="form-group">
+                                                                                        <label class="col-lg-3 control-label">
+                                                                                            Section Title <star><b>*</b></star>
+                                                                                            <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                                                                                <i class="ti-help-alt fa-lg" style="font-size:1.5em;"></i>
+                                                                                            </button>
+                                                                                        </label>
+                                                                                        <div class="col-lg-8">
+                                                                                            <input type="text" class="form-control" id="secTitle<%-i%>" name="secTitle<%-i%>" value="<%-sections[i].title%>" required>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </fieldset>
+                                                                                <fieldset  class="col-sm-10 col-sm-offset-1">
+                                                                                    <div class="form-group">
+                                                                                        <label class="col-lg-3 control-label">
+                                                                                            Section Instruction 
+                                                                                            <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipD04%>">
+                                                                                                <i class="ti-help-alt fa-lg"></i>
+                                                                                            </button>
+                                                                                        </label>
+                                                                                        <div class="col-lg-8">
+                                                                                            <textarea class="form-control secInsCls"  rows="3" id="secInstr<%-i%>" name="secInstr<%-i%>"><%-sections[i].instruction%></textarea>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </fieldset>
+                                                                                <fieldset  class="col-sm-10 col-sm-offset-1">
+                                                                                    <div class="form-group">
+                                                                                        <label class="col-lg-3 control-label">
+                                                                                        Help Level Selector <star><b>*</b></star>
+                                                                                        <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipD16%>">
+                                                                                            <i class="ti-help-alt fa-lg"></i>
+                                                                                        </button>
+                                                                                        </label>
+                                                                                        <div class="col-lg-9">
+                                                                                            <div class="radio">
+                                                                                                <input type="radio" onclick="editGridMatrix('<%-i%>','2')" name="help_level_selector<%-i%>"  id="helplevel1<%-i%>" value="2" <% if(sections[i].helpAllowed == 2){%> checked <%}%>>
+                                                                                                <label for="helplevel1<%-i%>">
+                                                                                                    Hint and Explanation Allowed 
+                                                                                                </label>
+                                                                                            </div>
+                                                                                            <div class="radio">
+                                                                                                <input type="radio" onclick="editGridMatrix('<%-i%>','1')"  name="help_level_selector<%-i%>"  id="helplevel2<%-i%>" value="1" <% if(sections[i].helpAllowed == 1){%> checked <%}%>>
+                                                                                                <label for="helplevel2<%-i%>">
+                                                                                                    Hint Allowed 
+                                                                                                </label>
+                                                                                            </div>  
+                                                                                            <div class="radio">
+                                                                                                <input type="radio" onclick="editGridMatrix('<%-i%>','0')" name="help_level_selector<%-i%>"  id="helplevel3<%-i%>"  value="0" <% if(sections[i].helpAllowed == 0){%> checked <%}%>>
+                                                                                                <label for="helplevel3<%-i%>">
+                                                                                                    No Help Allowed 
+                                                                                                </label>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div> 
+                                                                                </fieldset>
+                                                                                <fieldset  class="col-sm-10 col-sm-offset-1">
+                                                                                    <div class="form-group">
+                                                                                        <label class="col-lg-3 control-label">
+                                                                                        Grading Matrix <star><b>*</b></star>
+                                                                                        <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipD09%>">
+                                                                                            <i class="ti-help-alt fa-lg"></i>
+                                                                                        </button>
+                                                                                        </label> 
+                                                                                        <div class="col-lg-9">
+                                                                                            <div class="">
+                                                                                                <div class="">
+                                                                                                    <div class=" table-responsive">
+                                                                                                        <table class="table table-center table-responsive" style="border:#ccc5b8 1px solid;border-radius:5px;">
+                                                                                                            <thead>
+                                                                                                                <tr>
+                                                                                                                    <th></th>
+                                                                                                                    <th>No help used</th>
+                                                                                                                    <th class="hintCol<%-i%>" <% if(sections[i].helpAllowed == 0){%> style="display:none;" <%}%> >Hint used</th>
+                                                                                                                    <th class="expCol<%-i%>" <% if(sections[i].helpAllowed == 0 || sections[i].helpAllowed == 1){%> style="display:none;" <%}%> >Explanation used</th>
+                                                                                                                </tr>
+                                                                                                            </thead>
+                                                                                                            <tbody>
+                                                                                                                <tr>
+                                                                                                                    <td><b>Correct Score</b></td>
+                                                                                                                    <td>
+                                                                                                                        <input id="correctsc<%-i%>" min="-1000" max="1000" class="form-control" type="number" value="<%-sections[i].gradingMatrix[0][0]%>" style="background-color:rgba(161, 234, 194, 0.4);">
+                                                                                                                    </td>
+                                                                                                                    <td class="hintCol<%-i%>" <% if(sections[i].helpAllowed == 0){%> style="display:none;" <%}%> >
+                                                                                                                        <input type="number"  min="-1000" max="1000" class="form-control" id="correctsc<%-i%>" value="<%-sections[i].gradingMatrix[0][1]%>" style="background-color:rgba(241, 209, 142, 0.4);">
+                                                                                                                    </td>
+                                                                                                                    <td class="expCol<%-i%>" <% if(sections[i].helpAllowed == 0 || sections[i].helpAllowed == 1){%> style="display:none;" <%}%> >
+                                                                                                                    <input type="number" min="-1000" max="1000" class="form-control" id="correctsc<%-i%>" value="<%-sections[i].gradingMatrix[0][2]%>" style="background-color:rgba(170, 216, 228, 0.4);" >
+                                                                                                                    </td>
+                                                                                                                </tr>
+                                                                                                                <tr>
+                                                                                                                    <td><b>Skip Score</b></td>
+                                                                                                                    <td>
+                                                                                                                        <input type="number" min="-1000" max="1000" class="form-control" id="skipsc<%-i%>" value="<%-sections[i].gradingMatrix[1][0]%>" style="background-color:rgba(161, 234, 194, 0.4);">
+                                                                                                                    </td>
+                                                                                                                    <td class="hintCol<%-i%>" <% if(sections[i].helpAllowed == 0){%> style="display:none;" <%}%> >
+                                                                                                                        <input type="number" min="-1000" max="1000" class="form-control" id="skipsc<%-i%>" value="<%-sections[i].gradingMatrix[1][1]%>" style="background-color:rgba(241, 209, 142, 0.4);">
+                                                                                                                    </td>
+                                                                                                                    <td class="expCol<%-i%>" <% if(sections[i].helpAllowed == 0 || sections[i].helpAllowed == 1){%> style="display:none;" <%}%> >
+                                                                                                                        <input type="number"  min="-1000" max="1000" class="form-control" id="skipsc<%-i%>" value="<%-sections[i].gradingMatrix[1][2]%>" style="background-color:rgba(170, 216, 228, 0.4);" >
+                                                                                                                    </td>
+                                                                                                                </tr>
+                                                                                                                <tr>
+                                                                                                                    <td ><b>Incorrect Score</b></td>
+                                                                                                                    <td>
+                                                                                                                        <input type="number" min="-1000" max="1000" class="form-control" id="incorrectsc<%-i%>" value="<%-sections[i].gradingMatrix[2][0]%>" style="background-color:rgba(161, 234, 194, 0.4);">
+                                                                                                                    </td>
+                                                                                                                    <td class="hintCol<%-i%>" <% if(sections[i].helpAllowed == 0){%> style="display:none;" <%}%> >
+                                                                                                                        <input type="number" min="-1000" max="1000"  class="form-control" id="incorrectsc<%-i%>" value="<%-sections[i].gradingMatrix[2][1]%>" style="background-color:rgba(241, 209, 142, 0.4);">
+                                                                                                                    </td>
+                                                                                                                    <td class="expCol<%-i%>" <% if(sections[i].helpAllowed == 0 || sections[i].helpAllowed == 1){%> style="display:none;" <%}%> >
+                                                                                                                        <input type="number" min="-1000" max="1000" class="form-control" id="incorrectsc<%-i%>" value="<%-sections[i].gradingMatrix[2][2]%>" style="background-color:rgba(170, 216, 228, 0.4);" >
+                                                                                                                    </td>
+                                                                                                                </tr>
+                                                                                                            </tbody>
+                                                                                                        </table>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </fieldset>
+                                                                                <fieldset  class="col-sm-10 col-sm-offset-1">
+                                                                                    <div class="form-group">
+                                                                                        <label class="col-lg-3 control-label">
+                                                                                        Help Selector At Review<star><b>*</b></star>
+                                                                                        <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                                                                            <i class="ti-help-alt fa-lg"></i>
+                                                                                        </button>
+                                                                                        </label>
+                                                                                        <div class="col-lg-9">
+                                                                                            <div class="radio">
+                                                                                                <input type="radio"  onclick="checkReviewHelpLevelEdit('<%-i%>','2','<%-sections[i].helpAtReview%>')" name="review_help_selector<%-i%>"  id="helplevel1r<%-i%>" value="2" <% if(sections[i].helpAtReview == 2){%> checked <%}%>>
+                                                                                                <label for="helplevel1r<%-i%>">
+                                                                                                    Hint and Explanation Allowed 
+                                                                                                </label>
+                                                                                            </div>
+                                                                                            <div class="radio">
+                                                                                                <input type="radio"  onclick="checkReviewHelpLevelEdit('<%-i%>','1','<%-sections[i].helpAtReview%>')" name="review_help_selector<%-i%>"  id="helplevel2r<%-i%>" value="1" <% if(sections[i].helpAtReview == 1){%> checked <%}%>>
+                                                                                                <label for="helplevel2r<%-i%>">
+                                                                                                    Hint Allowed 
+                                                                                                </label>
+                                                                                            </div>  
+                                                                                            <div class="radio">
+                                                                                                <input type="radio"  onclick="checkReviewHelpLevelEdit('<%-i%>','0','<%-sections[i].helpAtReview%>')" name="review_help_selector<%-i%>"  id="helplevel3r<%-i%>"  value="0" <% if(sections[i].helpAtReview == 0){%> checked <%}%>>
+                                                                                                <label for="helplevel3r<%-i%>">
+                                                                                                    No Help Allowed 
+                                                                                                </label>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div> 
+                                                                                </fieldset>
+                                                                                <fieldset  class="col-sm-10 col-sm-offset-1">
+                                                                                    <div class="form-group">
+                                                                                        <label for="partialGrade" class="col-lg-3 control-label">
+                                                   
+                                                                                        </label>
+                                                                                        <div class="col-lg-8">
+                                                                                            <div class="checkbox">
+                                                                                                <input id="partialGrade<%-i%>" name="partialGrade<%-i%>" type="checkbox" <% if(sections[i].partialGrading == true){%> checked <%}%>>
+                                                                                                <label for="partialGrade<%-i%>">
+                                                                                                    Allow partial grading in Fill-in questions. Partially correct answers will be counted as incorrect but will be awarded prorated score based on fraction of answer correct and incorrect.
+                                                                                                    <!-- <lable><button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content=""><i class="ti-help-alt fa-lg" style="font-size:1.5em;"></i></button></lable> -->
+                                                                                                </label>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div> 
+                                                                                </fieldset>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>    
+                                                    
+                                                <%}%>
+                                                 
+                                               
+                                                <div class="card">
+                                                    <fieldset class="col-sm-12">
+                                                        <div class="form-group">
+                                                            <!-- <label class="col-lg-3 control-label">Author</label> -->
+                                                            <div class="col-lg-12">
+                                                                <div class="reminder"><p><i class="fa fa-bell"></i> Onces the quiz starts the "Help Level Selector", "Grading Matrix" and "Partial Grading" field cannot be changed.</p></div>
+                                                            </div>
+                                                        </div>
+                                                    </fieldset>
+                                                </div>
+                                            </form>
+                                        </div>                                 
+                                    </div>
+                                    <div class="tab-pane" id="tab3">
+                                        <div class="row">
+                                            <form  class="form-horizontal">
+                                                <fieldset  class="col-sm-10 col-sm-offset-1">
+                                                    <div class="form-group">
+                                                        <label class="col-lg-3 control-label">
+                                                        Opens At <star><b>*</b></star>
+                                                        <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipD11%>">
+                                                         <i class="ti-help-alt fa-lg"></i>
+                                                        </button>
+                                                        </label>
+                                                        <div class="col-lg-8">
+                                                            <input type="hidden" id="begin_time_utc" name="begin_time_utc" value="<%-data.beginTime%>">
+                                                            <input type="text" class="form-control pull-right" id="begin_time" value="" required readonly> 
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                                <fieldset  class="col-sm-10 col-sm-offset-1">
+                                                    <div class="form-group">
+                                                        <%if(data.quizType !='live'){%>
+                                                        <label class="col-lg-3 control-label">
+                                                        Deadline <star><b>*</b></star>
+                                                        <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipD11%>">
+                                                         <i class="ti-help-alt fa-lg"></i>
+                                                        </button>
+                                                        </label>
+                                                        <div class="col-lg-8">
+                                                            <input type="hidden" id="end_time_utc" name="end_time_utc" value="<%-data.endTime%>">
+                                                            <input type="text" class="form-control pull-right readOnlyCal" id="end_time" value="" required readonly>
+                                                        </div>
+                                                        <%}else{%>
+                                                            <input type="hidden" id="end_time_utc" name="end_time_utc" value="<%-data.endTime%>">
+                                                            <input type="hidden" class="form-control pull-right readOnlyCal" id="end_time" value="" required readonly>
+                                                        <%}%>
+                                                    </div>
+                                                </fieldset>
+                                                <fieldset  class="col-sm-10 col-sm-offset-1">
+                                                    <%if(data.quizType !='live'){%>
+                                                    <div class="form-group">
+                                                        <label class="col-lg-3 control-label">
+                                                        Duration
+                                                        <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipD12%>">
+                                                         <i class="ti-help-alt fa-lg"></i>
+                                                        </button>
+                                                        </label>
+                                                        <div class="col-lg-8">
+                                                            <input type="number" class="form-control" id="duration" min="5" value="<%-data.duration%>" onkeypress='return isNumberKey(event)'>
+                                                        </div>
+                                                    </div> <%}else{%>
+                                                        <input type="hidden" class="form-control" id="duration" min="5" value="">
+                                                    <%}%>
+                                                </fieldset>
+                                            </form>
+                                        </div>                                 
+                                    </div>
+                                    <div class="tab-pane" id="advance">
+                                        <div class="row">
+                                            <form  class="form-horizontal">
+
+                                                <%
+                                                  if(quizTy =='sectioned'){
+                                                %>
+                                                <fieldset  class="col-sm-10 col-sm-offset-1">
+                                                    <div class="form-group">
+                                                        <label class="col-lg-3 control-label">
+                                                        Duration Interpretation <star><b>*</b></star>
+                                                        <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipD14%>">
+                                                         <i class="ti-help-alt fa-lg"></i>
+                                                        </button>
+                                                        </label>
+                                                        <div class="col-lg-8">
+                                                            <div class="radio">
+                                                                <input type="radio" name="duration_interpretation" id="duration1"  value="actual" <% if(data.loginTime == "actual"){%> checked <%}%>>
+                                                                <label for="duration1">
+                                                                  Actual Login Time: Total time is used to calculate by adding time taken per question. Recommoded mode for a regular homework. 
+                                                                </label>
+                                                            </div>
+                                                            <div class="radio">
+                                                                <input type="radio" name="duration_interpretation" id="duration2" value="absolute" <% if(data.loginTime == "absolute"){%> checked <%}%>>
+                                                                <label for="duration2">
+                                                                  Absolute: Time used is calculated since the first login. Total duration is considered to be difference between absolute first login and absolute submission time.
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+
+                                                <%
+                                                  }else
+                                                  if(quizTy =='live')
+                                                  {
+                                                %>
+                                                <input type="hidden" name="duration_interpretation" id="duration1"  value="actual" <% if(data.loginTime == "actual"){%> checked <%}%>>
+                                                <%
+                                                  }
+                                                %>
+
+                                                    <fieldset  class="col-sm-10 col-sm-offset-1">
+                                                        <div class="form-group">
+                                                            <label class="col-lg-3 control-label">Calculator <star><b>*</b></star>
+                                                                <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                                                    <i class="ti-help-alt fa-lg"></i>
+                                                                </button>
+                                                            </label>
+                                                            <div class="col-lg-8">
+                                                                <div class="radio">
+                                                                    <input type="radio" name="calculator" id="cal1" value="none" <% if(data.calculator == "none"){%> checked <%}%>>
+                                                                    <label for="cal1">None</label>
+                                                                </div>
+                                                                <div class="radio">
+                                                                    <input type="radio" name="calculator" id="cal2" value="basic" <% if(data.calculator == "basic"){%> checked <%}%>>
+                                                                    <label for="cal2">Basic</label>
+                                                                </div>
+                                                                <div class="radio">
+                                                                    <input type="radio" name="calculator" id="cal3" value="scientific" <% if(data.calculator == "scientific"){%> checked <%}%>>
+                                                                    <label for="cal3">Scientific</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </fieldset>
+                                                    
+
+
+
+                                            </form>
+                                        </div>                                 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <%- include ../parts/footer %>
+    </div>
+</div>
+</body>
+<%- include ../parts/allJS %>
+<%- include('../parts/codemirrorJS'); %>
+    
+    <script src="author_public/js/author_edit_secquiz.js"></script>
+</html>

@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <%- include('../parts/allCSS'); %>
+  <link rel="stylesheet" href="author_public/css/author_media.css">
+  <script src="author_public/PaperDashBoard/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+  <%
+   var updateURL='';
+  if(isNew==true){
+    updateURL="/author_uploadmedia";
+  }else{
+    updateURL="/author_updateMediaUpload";
+  }
+  %>
+</head>
+<body>
+  <div class="wrapper">
+    <%- include('../parts/leftNavBar'); %>
+      <div class="main-panel">
+        <%- include('../parts/topNavBarPart1'); %> 
+        <%if(isNew==false){%>
+        Edit Image (Id: <%-token%>)
+        <%}else{%>New Image<%}%>
+        <%- include('../parts/topNavBarPart2'); %>
+        <div class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-8 col-md-offset-2">
+                <div class="row">
+                  <div class="card">
+                      <div class="card-header clearfix">
+                        <div class="pull-left">
+                            <button type="button" class="btn btn-wd btn-default btn-move-left" onclick="window.location.href='/author_mediaGallery'">
+                              <span class="btn-label">
+                                  <i class="ti-angle-left"></i>
+                              </span>
+                              Back
+                          </button>
+                        </div>
+                        <div class="pull-right">
+                          <!-- <div class="row"> -->
+                            <!-- <div class="col-sm-12"> -->
+                              <div class='col-sm-6'>
+                                <form role="form" name="uploadFrm" id="uploadFrm" method="post" action="<%-updateURL%>"  enctype="multipart/form-data">
+                                <input type="hidden" name="author" value="<%-short%>">
+                                <%if(isNew==false){%>
+                                  <input type="hidden" name="id" id="id" value="<%-token%>">
+                                  <input type="hidden" name="token" id="token" value="<%-data.token%>">
+                                  <input type="hidden" name="base64textarea" id="base64textarea" value="<%-data.base64%>">
+                                  <input type="hidden" name="ctype" id="ctype" value="<%-data.ctype%>">
+                                  <input type="hidden" name="log_Id" id="log_Id" value="">
+                                  <input type="hidden" name="log_Token" id="log_Token" value="">
+                                  <button class="btn btn-warning btn-wd btn-fill" type="submit"  id="update" onclick="return check_tag();">
+                                      <i class="fa fa-upload"></i> Update
+                                  </button>
+                                
+                              </div>
+                              
+                              <div class='col-sm-6'>
+                                <button class="btn btn-danger btn-wd btn-fill" type="button"  id="img_delete">
+                                      <i class="ti-trash"></i> Delete
+                                </button>
+                                <input type="hidden" value="<%-token%>" id="metaid">
+                                <input type="hidden" value="<%-data._rev%>" id="revno">
+                              </div>
+                            <%}else{%>
+                             
+                              <input type="hidden" name="base64textarea" id="base64textarea" value="">
+                              <input type="hidden" name="ctype" id="ctype" value="">
+                              <button class="btn btn-warning btn-wd btn-fill" type="submit"  id="update" onclick="return check_tag();">
+                                  <i class="fa fa-check-circle"></i> Add
+                              </button>
+                             </div>
+                            <%}%>
+                            <!-- </div> -->
+                          <!-- </div> -->
+                        </div>
+                      </div><hr>
+                      <div class="card-content">
+                        <div class="form-group">
+                          <label for="tags">Tags 
+                            <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipImg01%>">
+                              <i class="ti-help-alt fa-lg"></i>
+                             </button>
+                             <span style="color:#cc0000"> * &nbsp; (Minimum 3 Tags required) &nbsp;</span>
+                          </label>
+                          <input type="text" class="form-control" id="tags" name="tags"  data-role="tagsinput" value="<%if(isNew==false){%><%-data.tags%><%}%>" >
+                        </div>
+                        <div class="form-group">
+                          <label for="caption">Caption 
+                              <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipImg02%>">
+                                  <i class="ti-help-alt fa-lg"></i>
+                              </button>
+                          </label>
+                          <textarea class="form-control" rows="3" id="caption" name="caption"><%if(isNew==false){%><%-data.caption%><%}%></textarea>
+                        </div>
+                        <div class="form-group">
+                          <label for="descr">Description
+                              <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipImg03%>">
+                                  <i class="ti-help-alt fa-lg"></i>
+                              </button>
+                          </label>
+                          <textarea class="form-control" rows="3" id="descr" name="descr"><%if(isNew==false){%><%-data.description%><%}%></textarea>
+                        </div>
+                        <div class="form-group">
+                          <label for="filename">Upload Image
+                              <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipImg04%>">
+                                  <i class="ti-help-alt fa-lg"></i>
+                              </button>
+                          </label>
+                          <%if(isNew==false){%>
+                            <input type="file" class="btn btn-primary" id="filename" name="filename" onchange="checkExtension(this.value);">
+                          <%}else{%>
+                            <input type="file" class="btn btn-primary" id="filename" name="filename" onchange="checkExtension(this.value);" required>
+                          <%}%>
+                           
+                        </div>
+                        </form>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <%- include('../parts/footer'); %>
+      </div>
+  </div>
+    </div>
+  </div>
+</body>
+<%- include('../parts/allJS'); %>
+<script type="text/javascript" src="author_public/js/author_media.js"></script>
+</html>

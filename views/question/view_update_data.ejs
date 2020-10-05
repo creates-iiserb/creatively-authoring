@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <%- include('../parts/allCSS'); %>
+  <style>
+      .example-modal .modal {
+        position: relative;
+        top: auto;
+        bottom: auto;
+        right: auto;
+        left: auto;
+        display: block;
+        z-index: 1;
+      }
+      .example-modal .modal {
+        background: transparent !important;
+      }
+    </style>
+</head>
+
+<body>
+  <div class="wrapper">
+    <%- include('../parts/leftNavBar'); %>
+      <div class="main-panel">
+        <%- include('../parts/topNavBarPart1'); %>
+          <%- include('../parts/topNavBarPart2'); %>
+            <div class="content">
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-md-8 col-md-offset-2">
+                    <div class="card">
+                      <div class="card-content">
+                         <%if(body.ok==true){%>
+                            <div class="example-modal">
+                              <div class="modal modal-success">
+                                <div class="modal-dialog">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                      <h4 class="modal-title"><%=id%> : Updated Successfully </h4>
+                                    </div>
+                                    <div class="modal-body">
+                                      
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" onclick="window.location.href='/author_dashboard?&mod=prog'" class="btn btn-outline pull-left" data-dismiss="modal">Go To Working</button>
+                                      <button type="button" onclick="window.location.href='/author_dashboard?mod=com'" class="btn btn-outline">Go To Comitted</button>
+                                    </div>
+                                  </div><!-- /.modal-content -->
+                                </div><!-- /.modal-dialog -->
+                              </div><!-- /.modal -->
+                            </div><!-- /.example-modal -->
+                          <%} else {%>
+                          <div class="example-modal">
+                              <div class="modal modal-warning">
+                                <div class="modal-dialog">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                      <h4 class="modal-title"><%=id%> : Updated Failed </h4>
+                                    </div>
+                                    <div class="modal-body">
+                                      
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" onclick="window.location.href='/author_getauthorid?id=<%=id%>'" class="btn btn-outline pull-left"  data-dismiss="modal">Reload Data</button>
+                                      
+                                      <button type="button" onclick="window.location.href='/author_dashboard?mod=com'" class="btn btn-outline">Go To Comitted</button>
+                                    </div>
+                                  </div><!-- /.modal-content -->
+                                </div><!-- /.modal-dialog -->
+                              </div><!-- /.modal -->
+                            </div><!-- /.example-modal -->
+                            <%}%>
+                      </div>
+                  </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+             <%- include('../parts/footer'); %>
+      </div>
+     
+  </div>
+  </div>
+</body>
+<%- include('../parts/allJS'); %>
+</html>

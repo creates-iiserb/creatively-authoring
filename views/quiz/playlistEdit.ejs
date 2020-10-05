@@ -1,0 +1,1361 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <%- include('../parts/allCSS'); %>
+        <link rel="stylesheet" href="author_public/css/author_playlist.css">
+        <link rel="stylesheet" href="author_public/css/author_basket.css">
+        <script src="author_public/PaperDashBoard/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({
+            CommonHTML: { linebreaks: { automatic: true } },
+            "HTML-CSS": { linebreaks: { automatic: true } },
+            SVG: { linebreaks: { automatic: true } }
+            });
+        </script> 
+        
+       
+</head>
+<body>
+    <div class="wrapper">
+        <%- include('../parts/leftNavBar'); %>
+        <div class="main-panel">
+            <%- include('../parts/topNavBarPart1'); %> Edit Playlist <br><small>(Id: <%-token%>, Owner : <%-ownerName%>)</small>
+            <%- include('../parts/topNavBarPart2'); %>
+            <div class="content">
+                <!-- warning notify -->
+                <div class="alert alert-success" id="updatepname" style="display:none;">
+                    <button type="button" aria-hidden="true" class="close">�</button>
+                    <span>
+                        <b> Success - </b> Playlist Updated Successfully !!!</span>
+                </div>
+                <!-- warning notify -->
+                <div class="alert alert-warning" id="pnameexist" style="display:none;">
+                    <button type="button" aria-hidden="true" class="close">�</button>
+                    <span>Playlist name already exit. Please choose another name for playlist !!!</span>
+                </div>
+                <%
+                    if(data.collaborator){
+                        var collbArry = data.collaborator;
+                        var collbemail = collbArry.indexOf(authorEmail);
+                    }
+                    var collAuthList = collbData.map(x=>x.shortName); 
+                    collAuthList.push(data.author);
+                %>
+           
+               
+                 <input type="hidden" value="<%-collAuthList%>" id="authList">
+                
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-12 col-sm-offset-0 col-md-12 col-md-offset-0">
+                            <div class="card card-big">
+                                <div class="card-header clearfix">
+                                    <div class="pull-left">
+                                        <button type="button" class="btn btn-wd btn-default btn-move-left" onclick="window.location.href='/author_playlist_dash'">
+                                            <span class="btn-label">
+                                                <i class="ti-angle-left"></i>
+                                            </span>
+                                            Back
+                                        </button>
+                                    </div>
+                                    <div class="pull-right">
+                                        <button class="btn btn-danger btn-wd btn-fill" type="button" id="playlist_delete" <%if(collbemail>-1){%> disabled <%}%>>
+                                            <i class="ti-trash"></i> Delete Playlist
+                                        </button>
+                                        <input type="hidden" name="short" id="short" value="<%-short%>">
+                                        <input type="hidden" name="id" id="id" value="<%-token%>">
+                                        <input type="hidden" name="rev" id="rev" value="<%-data._rev%>">
+                                    </div>
+                                </div><hr>
+                                <div class="card-content">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label style="font-size:18px;">Playlist Name
+                                                <button type="button" data-toggle="popover" class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipPlaylist07%>">
+                                                    <i class="ti-help-alt fa-lg"></i>
+                                                </button>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <form role="form" name="add_form1" id="add_form1" method="post" action="/author_updatePlaylist" enctype="multipart/form-data">
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" id="playlist_name" name="playlist_name" value="<%-data.name%>" maxlength="50" required <%if(collbemail>-1){%> readonly<%}%>  >
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <!-- <form role="form" name="add_form1" id="add_form1" method="post" action="/author_updatePlaylist" enctype="multipart/form-data"> -->
+                                                    <!-- <button type="button" id="full_name_save" class="btn btn-icon" onclick="save_full_name()" rel="tooltip" data-original-title="Update full name"><span class="ti-save"></span></button> -->
+                                                    <!-- <form role="form" name="add_form" id="add_form" method="post" action="/author_updatePlaylist" enctype="multipart/form-data"> -->
+                                                    <input type="hidden" name="author" value="<%-short%>">
+                                                    <input type="hidden" name="token" id="token" value="<%-token%>">
+                                                    <!-- <input type="hidden" name="ques_ids" id="ques_ids" value="<%-data.content%>"> -->
+                                                    <input type="hidden" name="log_Id" id="log_Id" value="">
+                                                    <input type="hidden" name="log_Token" id="log_Token" value="">
+                                                    <button type='submit' class="btn btn-icon" id="update_name" rel="tooltip" data-original-title="Save" <%if(collbemail>-1){%> disabled <%}%>>
+                                                        <span class="ti-save"></span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label style="font-size:18px;">Playlist Description
+                                                <button type="button" data-toggle="popover" class="btn btn-info btn-simple btn-xs" data-content="">
+                                                    <i class="ti-help-alt fa-lg"></i>
+                                                </button>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <form role="form" name="frmPlDes" id="frmPlDes" method="post" action="/author_updatePlaylistDesp" enctype="multipart/form-data">
+                                            <div class="col-md-6">
+                                                <textarea class="form-control" id="playlist_desp" name="playlist_desp" <%if(collbemail>-1){%> readonly<%}%>><%-data.description%></textarea>
+                                                <!-- <input type="text" class="form-control" id="playlist_name" name="playlist_name" value="" required <%if(collbemail>-1){%> readonly<%}%>  > -->
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <!-- <form role="form" name="add_form1" id="add_form1" method="post" action="/author_updatePlaylist" enctype="multipart/form-data"> -->
+                                                    <!-- <button type="button" id="full_name_save" class="btn btn-icon" onclick="save_full_name()" rel="tooltip" data-original-title="Update full name"><span class="ti-save"></span></button> -->
+                                                    <!-- <form role="form" name="add_form" id="add_form" method="post" action="/author_updatePlaylist" enctype="multipart/form-data"> -->
+                                                    <input type="hidden" name="author" value="<%-short%>">
+                                                    <input type="hidden" name="token" id="token" value="<%-token%>">
+                                                    <!-- <input type="hidden" name="ques_ids" id="ques_ids" value="<%-data.content%>"> -->
+                                                    <input type="hidden" name="log_Id" id="log_Id" value="">
+                                                    <input type="hidden" name="log_Token" id="log_Token" value="">
+                                                    <button type='submit' class="btn btn-icon" id="update_desp" rel="tooltip" data-original-title="Save" <%if(collbemail>-1){%> disabled <%}%>>
+                                                        <span class="ti-save"></span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label style="font-size:18px;">Collaborator
+                                                <button type="button" data-toggle="popover" class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipPlaylist07%>">
+                                                    <i class="ti-help-alt fa-lg"></i>
+                                                </button>
+                                            </label>
+                                           
+
+                                           
+                                          
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6"><!--onkeypress="validate2()" onkeyup="validate2()"-->
+                                            <input type="text" class="form-control" id="collbName" name="collbName" value="" onkeypress="validate2()" onkeyup="validate2()" <%if(collbemail>-1){%> readonly <%}%>> 
+                                            <span id="result2"></span>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input type="hidden"id="author" name="author" value="<%-short%>">
+                                            <input type="hidden" id="token" name="token" id="token" value="<%-token%>">
+                                            <button type='button' class="btn btn-icon" id="addCollbBtn" rel="tooltip" data-original-title="Add Collaborator" <%if(collbemail>-1){%> disabled <%}%>>
+                                                <span class="ti-plus"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <% if(data.collaborator){
+                                        if(data.collaborator.length>0){
+                                    %>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="" id="toolbar1">
+                                                <!--Here you can write extra buttons/actions for the toolbar--><br>
+                                                <label>List of Collaborator</label>
+                                               
+                                            </div>
+                                            <table class="table" id="collb-tbl">
+                                                <thead>
+                                                    <th data-field="email" data-sortable="true">Email</th>
+                                                    <th data-field="name" data-sortable="true">Name</th>
+                                                    <th data-field="shortname" data-sortable="true">Author Id</th>
+                                                    <th data-field="action" class="text-center"></th>
+                                                </thead>
+                                                <tbody>
+                                                    <% var collb = collbData ;  
+                                                    for(var i=0; i<collb.length; i++) {%>
+                                                        <tr>
+                                                            <td id="collb-<%-i%>">
+                                                                <%- collb[i].email %>
+                                                            </td>
+                                                            <td><%- collb[i].fullName %></td>
+                                                            <td><%- collb[i].shortName %></td>
+                                                            <td class="td-actions text-right">
+                                                                <input type="hidden"id="author" name="author" value="<%-short%>">
+                                                                <input type="hidden"id="playlistId" name="playlistId" value="<%-token%>">
+                                                                <button type="button" class="btn btn-danger btn-simple btn-xs" id="delCollb" rel="tooltip" data-original-title="Remove" value="<%- collb[i].email %>" <%if(collbemail>-1){%> disabled <%}%>>
+                                                                        <i class="ti-close"></i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    <% } %>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <%}}%>
+                                </div><br/><br/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 col-sm-offset-0 col-md-12 col-md-offset-0">
+                            <div class="card card-big">
+                                <%
+                                    var items = data.content;
+                                    var itmLen = data.content.length;
+
+                                    if(data.sections){
+                                        var secItm = data.sections;
+                                        var secItmsLen = data.sections.length;
+                                    }
+                                    
+                                %>
+                                <div class="card-header clearfix">
+                                    <div class="pull-left">
+                                        <h3 class="card-title">Items
+                                            <label>
+                                                <button type="button" data-toggle="popover" class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipPlaylist06%>">
+                                                    <i class="ti-help-alt fa-lg"></i>
+                                                </button>
+                                            </label>
+                                        </h3>
+                                        <% if(data.updatedAt){%>
+                                            <script>
+                                                $(document).ready(function() {
+                                                    var begin_time_utc = document.getElementById('updatedAtUTC').value;
+                                                    var begindate1 = new Date(begin_time_utc);
+                                                    document.getElementById('localUpdateDate').innerHTML = begindate1;
+                                                });
+                                            </script>
+                                            <input type="hidden" name="updatedAtUTC" id="updatedAtUTC" value="<%-data.updatedAt.updateAt%>">
+                                            <small class="text-default">Last updated at : <b id="localUpdateDate"></b>, by Author Id : <b><%-data.updatedAt.updateBy%></b> </small>
+                                        <%}%>
+                                        <input type="hidden" id="quesArry" name="quesArry" value="<%-quesArry%>">
+                                    </div>
+                                    <div class="pull-right">
+                                        <div class="col-sm-6">
+                                            <form role="form" name="add_form2" id="add_form2" method="post" action="/author_arrAndUpdateItems" enctype="multipart/form-data">
+                                                <!-- <input type="text" class="form-control" id="ques_ids2" name="ques_ids2" value="" readonly><br/> -->
+                                                <!-- <input type="hidden" name="ques_ids2" id="ques_ids2" value=""> -->
+                                                <input type="hidden" name="length" id="length" value="<%-items.length%>">
+                                                <input type="hidden" name="author" value="<%-short%>">
+                                                <input type="hidden" name="token" id="token" value="<%-token%>">
+                                                <input type="hidden" name="log_Id" id="log_Id" value="">
+                                                <input type="hidden" name="log_Token" id="log_Token" value="">
+                                                <input type="hidden" name="takers_data" id="takers_data" value=""> <!--json for update -->
+                                                <input type="hidden" name="IdList" id="IdList" value="">
+                                                <input type="hidden" name="unauthDataArr" id="unauthDataArr" value="<%-unauthData%>">
+                                                <input type="hidden" name="playlist_name_arr" id="playlist_name_arr" value="<%-data.name%>">
+                                                <input type="hidden" name="collbData11" id="collbData11" value="<%-validAuthor%>">
+                                                <%if(data.sections){%>
+                                                    <input type="hidden" name="secLength" id="secLength" value="<%-data.sections.length%>">
+                                                <%}else{%> 
+                                                    <input type="hidden" name="secLength" id="secLength" value="0">
+                                                <%}%>
+                                                <textarea name="dataContent" id="dataContent" style="display:none;"><%-JSON.stringify(data.content)%></textarea>
+                                                <button type='submit' class="btn btn-warning btn-wd btn-fill" id="arrange_ids" disabled  <%if(collbemail>-1){%> disabled <%}%>>
+                                                    <i class="ti-save"></i> Update</button>
+                                            </form>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="dropdown">
+                                                <a href="#" class="btn dropdown-toggle btn-primary btn-fill btn-wd btnmargin" data-toggle="dropdown" aria-expanded="false">
+                                                    More &nbsp;
+                                                    <b class="caret"></b>
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    <!-- <li>
+                                                        <a id="addAllToBasket" data-toggle="modal" data-target="#addAllToBasketMdl">
+                                                            <i class="fa fa-shopping-basket"></i> Add All To Basket
+                                                        </a>
+                                                    </li> -->
+                                                    <li>
+                                                        <form>
+                                                            <!--input fileds to be used to fetch question type and token id from html/ejs page to javascript  -->
+                                                            <input type="hidden" value="<%-short%>" id="author">
+                                                            <input type="hidden" name="playlist_Id" id="playlist_Id" value="<%-token%>">
+                                                        </form>
+                                                        <a href="#" id='clearAllFromPlaylist' disabled>
+                                                            <i class="ti-trash"></i> 
+                                                            &nbsp; Empty Playlist
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><hr><!-- header -->
+                                <div class="card-content">
+                                    <% if(unauthData !=''){ %>
+                                    <div class="row">
+                                        <div class='col-sm-12'>
+                                            <!-- <div class="checkbox">
+                                                <input id="weightChk" type="checkbox">
+                                                <label for="weightChk" style="font-size:16px;font-weight:bold;display:auto;">
+                                                    Make this a weighted playlist
+                                                </label>
+                                            </div> -->
+                                            
+                                            <div class="error">
+                                                <b><i class="ti-alert"></i> &nbsp;There are some unauthorized or uncommitted items in this playlist. You are authorized to keep content that is authored by you or collaborator in playlist or if it is a public content.</b>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <%}%>
+
+
+                                    <div class="row" id="secListDiv">
+                                        <div class='col-sm-12'>
+                                            <table id="tblSection" class="table table-no-bordered"><!--  table-no-bordered -->
+                                                <thead>
+                                                    <%
+                                                    if(data.sections && data.sections.length==5){%>
+                                                        <tr>
+                                                            <th data-field="sec1" data-sortable="false" class="text-center" >
+                                                                <a class="btn btn-warning btn-icon btn-simple btnsmall" id="fetchBtn1" title="Fetch from basket" rel="tooltip"  onclick="fetchItm('0')"  <%if(collbemail>-1){%> disabled <%}%>>
+                                                                    <i class="fa fa-arrow-circle-down"></i>
+                                                                </a>
+                                                                <% if(data.sections && data.sections.length>0){ %>
+                                                                    <span class="sectionHead" id="s1"><%-secItm[0].secName%></span>
+                                                                    <input type="text" class="input-medium" style="display:none;" maxlength="20" placeholder="<%-secItm[0].secName%>">
+                                                                <%}else{%>
+                                                                    <span class="sectionHead" id="s1">Section 1</span>
+                                                                    <input type="text" class="input-medium" style="display:none;" maxlength="20" placeholder="Section 1">
+                                                                <%}%>
+                                                                <!-- <div class="">  -->
+                                                                    <button type="button" class="btn btn-info btn-simple btnsmall controls-edit" onclick="edit(this);" rel="tooltip" data-original-title="Edit" <%if(collbemail>-1){%> disabled <%}%>>
+                                                                     <i class="ti-pencil"></i>
+                                                                    </button>
+                                                                <!-- </div> -->
+                                                                <!-- <div class=""> -->
+                                                                    <button type="button" class="btn btn-info btn-simple btnsmall controls-update" style="display:none;" onclick="update(this);" rel="tooltip" data-original-title="update" <%if(collbemail>-1){%> disabled <%}%>>
+                                                                        <i class="ti-save"></i>
+                                                                    </button>
+                                                                <!-- </div> -->
+                                                            </th>
+                                                            <th data-field="sec2" data-sortable="false" class="text-center" >
+                                                                <a class="btn btn-warning btn-icon btn-simple btnsmall" id="fetchBtn" title="Fetch from basket" rel="tooltip" onclick="fetchItm('1')"  <%if(collbemail>-1){%> disabled <%}%>>
+                                                                    <i class="fa fa-arrow-circle-down"></i>
+                                                                </a>
+                                                                <% if(data.sections && data.sections.length>0){ %>
+                                                                    <span class="sectionHead" id="s2"><%-secItm[1].secName%></span>
+                                                                    <input type="text" class="input-medium" style="display:none;" maxlength="20"  placeholder="<%-secItm[1].secName%>">
+                                                                <%}else{%>
+                                                                    <span class="sectionHead"  id="s2">Section 2</span>
+                                                                    <input type="text" class="input-medium" style="display:none;" maxlength="20" placeholder="Section 2">
+                                                                <%}%>
+                                                                <button type="button" class="btn btn-info btn-simple btnsmall controls-edit" onclick="edit(this);" rel="tooltip" data-original-title="Edit" <%if(collbemail>-1){%> disabled <%}%> >
+                                                                    <i class="ti-pencil"></i>
+                                                                </button>
+                                                            
+                                                                <button type="button" class="btn btn-info btn-simple btnsmall controls-update" style="display:none;" onclick="update(this);" rel="tooltip" data-original-title="Update" <%if(collbemail>-1){%> disabled <%}%> >
+                                                                    <i class="ti-save"></i>
+                                                                </button>
+                                                            </th>
+                                                            <th data-field="sec3" data-sortable="false" >
+                                                                <a class="btn btn-warning btn-icon btn-simple btnsmall" id="fetchBtn" title="Fetch from basket" rel="tooltip" onclick="fetchItm('2')"  <%if(collbemail>-1){%> disabled <%}%>>
+                                                                    <i class="fa fa-arrow-circle-down"></i>
+                                                                </a>
+                                                                <% if(data.sections && data.sections.length>0){ %>
+                                                                    <span class="sectionHead" id="s3"><%-secItm[2].secName%></span>
+                                                                    <input type="text" class="input-medium" style="display:none;" maxlength="20" placeholder="<%-secItm[2].secName%>">
+                                                                <%}else{%>
+                                                                    <span class="sectionHead"  id="s3">Section 3</span>
+                                                                    <input type="text" class="input-medium" style="display:none;"  maxlength="20" placeholder="Section 3">
+                                                                <%}%>
+                                                                <button type="button" class="btn btn-info btn-simple btnsmall controls-edit" onclick="edit(this);" rel="tooltip" data-original-title="Edit" <%if(collbemail>-1){%> disabled <%}%>>
+                                                                    <i class="ti-pencil"></i>
+                                                                </button>
+                                                            
+                                                                <button type="button" class="btn btn-info btn-simple btnsmall controls-update" style="display:none;" onclick="update(this);" rel="tooltip" data-original-title="Update" <%if(collbemail>-1){%> disabled <%}%>>
+                                                                    <i class="ti-save"></i>
+                                                                </button>
+                                                            </th>
+                                                            <th data-field="sec4" data-sortable="false" >
+                                                                <a class="btn btn-warning btn-icon btn-simple btnsmall" id="fetchBtn" title="Fetch from basket" rel="tooltip" onclick="fetchItm('3')"  <%if(collbemail>-1){%> disabled <%}%>>
+                                                                    <i class="fa fa-arrow-circle-down"></i>
+                                                                </a>
+                                                                    <% if(data.sections && data.sections.length>0){ %>
+                                                                        <span class="sectionHead" id="s4"><%-secItm[3].secName%></span>
+                                                                        <input type="text" class="input-medium" style="display:none;" maxlength="20" placeholder="<%-secItm[3].secName%>">
+                                                                    <%}else{%>
+                                                                        <span class="sectionHead"  id="s4">Section 4</span>
+                                                                        <input type="text" class="input-medium" style="display:none;" maxlength="20" placeholder="Section 4">
+                                                                    <%}%>
+                                                                <button type="button" class="btn btn-info btn-simple btnsmall controls-edit" onclick="edit(this);" rel="tooltip" data-original-title="Edit" <%if(collbemail>-1){%> disabled <%}%>>
+                                                                    <i class="ti-pencil"></i>
+                                                                </button>
+                                                            
+                                                                <button type="button" class="btn btn-info btn-simple btnsmall controls-update" style="display:none;" onclick="update(this);" rel="tooltip" data-original-title="Update" <%if(collbemail>-1){%> disabled <%}%>>
+                                                                    <i class="ti-save"></i>
+                                                                </button>
+                                                            </th>
+                                                            <th data-field="sec5" class="td-actions text-center">
+                                                                <a class="btn btn-warning btn-icon btn-simple btnsmall" id="fetchBtn" title="Fetch from basket" rel="tooltip" onclick="fetchItm('4')"  <%if(collbemail>-1){%> disabled <%}%>>
+                                                                    <i class="fa fa-arrow-circle-down"></i>
+                                                                </a>
+                                                                <!-- <button type="button" class="btn btn-warning btn-simple btnsmall controls-fetch" onclick="fetch(this);" rel="tooltip" data-original-title="fetch from basket" <%if(collbemail>-1){%> disabled <%}%>>
+                                                                    <i class="fa fa-arrow-circle-down"></i>
+                                                                   </button> -->
+                                                                    <% if(data.sections && data.sections.length>0){ %>
+                                                                        <span class="sectionHead" id="s5"><%-secItm[4].secName%></span>
+                                                                        <input type="text" class="input-medium" style="display:none;" maxlength="20" placeholder="<%-secItm[4].secName%>">
+                                                                    <%}else{%>
+                                                                        <span class="sectionHead"  id="s5">Section 5</span>
+                                                                        <input type="text" class="input-medium" style="display:none;"  maxlength="20" placeholder="Section 5">
+                                                                    <%}%>
+                                                                <button type="button" class="btn btn-info btn-simple btnsmall controls-edit" onclick="edit(this);" rel="tooltip" data-original-title="Edit" <%if(collbemail>-1){%> disabled <%}%> >
+                                                                    <i class="ti-pencil"></i>
+                                                                </button>
+                                                            
+                                                                <button type="button" class="btn btn-info btn-simple btnsmall controls-update" style="display:none;" onclick="update(this);" rel="tooltip" data-original-title="Update" <%if(collbemail>-1){%> disabled <%}%>>
+                                                                    <i class="ti-save"></i>
+                                                                </button>
+                                                            </th>
+                                                        </tr>
+                                                    <%}else{%>
+                                                        <tr>
+                                                            <th data-field="unsecList" data-sortable="false">Unsectioned List</th>
+                                                            
+                                                            <th data-field="sec1" data-sortable="false" class="text-center" >
+                                                                <a class="btn btn-warning btn-icon btn-simple btnsmall" id="fetchBtn1" title="Fetch from basket" rel="tooltip"  onclick="fetchItm('1')"  <%if(collbemail>-1){%> disabled <%}%>>
+                                                                    <i class="fa fa-arrow-circle-down"></i>
+                                                                </a>
+                                                                <% if(data.sections && data.sections.length>0){ %>
+                                                                    <span class="sectionHead" id="s1"><%-secItm[1].secName%></span>
+                                                                    <input type="text" class="input-medium" style="display:none;" maxlength="20" placeholder="<%-secItm[1].secName%>">
+                                                                <%}else{%>
+                                                                    <span class="sectionHead" id="s1">Section 1</span>
+                                                                    <input type="text" class="input-medium" style="display:none;" maxlength="20" placeholder="Section 1">
+                                                                <%}%>
+                                                                <!-- <div class="">  -->
+                                                                    <button type="button" class="btn btn-info btn-simple btnsmall controls-edit" onclick="edit(this);" rel="tooltip" data-original-title="Edit" <%if(collbemail>-1){%> disabled <%}%>>
+                                                                     <i class="ti-pencil"></i>
+                                                                    </button>
+                                                                <!-- </div> -->
+                                                                <!-- <div class=""> -->
+                                                                    <button type="button" class="btn btn-info btn-simple btnsmall controls-update" style="display:none;" onclick="update(this);" rel="tooltip" data-original-title="update" <%if(collbemail>-1){%> disabled <%}%>>
+                                                                        <i class="ti-save"></i>
+                                                                    </button>
+                                                                <!-- </div> -->
+                                                            </th>
+                                                            <th data-field="sec2" data-sortable="false" class="text-center" >
+                                                                <a class="btn btn-warning btn-icon btn-simple btnsmall" id="fetchBtn" title="Fetch from basket" rel="tooltip" onclick="fetchItm('2')"  <%if(collbemail>-1){%> disabled <%}%>>
+                                                                    <i class="fa fa-arrow-circle-down"></i>
+                                                                </a>
+                                                                <% if(data.sections && data.sections.length>0){ %>
+                                                                    <span class="sectionHead" id="s2"><%-secItm[2].secName%></span>
+                                                                    <input type="text" class="input-medium" style="display:none;" maxlength="20"  placeholder="<%-secItm[2].secName%>">
+                                                                <%}else{%>
+                                                                    <span class="sectionHead"  id="s2">Section 2</span>
+                                                                    <input type="text" class="input-medium" style="display:none;" maxlength="20" placeholder="Section 2">
+                                                                <%}%>
+                                                                <button type="button" class="btn btn-info btn-simple btnsmall controls-edit" onclick="edit(this);" rel="tooltip" data-original-title="Edit" <%if(collbemail>-1){%> disabled <%}%> >
+                                                                    <i class="ti-pencil"></i>
+                                                                </button>
+                                                            
+                                                                <button type="button" class="btn btn-info btn-simple btnsmall controls-update" style="display:none;" onclick="update(this);" rel="tooltip" data-original-title="Update" <%if(collbemail>-1){%> disabled <%}%> >
+                                                                    <i class="ti-save"></i>
+                                                                </button>
+                                                            </th>
+                                                            <th data-field="sec3" data-sortable="false" >
+                                                                <a class="btn btn-warning btn-icon btn-simple btnsmall" id="fetchBtn" title="Fetch from basket" rel="tooltip" onclick="fetchItm('3')"  <%if(collbemail>-1){%> disabled <%}%>>
+                                                                    <i class="fa fa-arrow-circle-down"></i>
+                                                                </a>
+                                                                <% if(data.sections && data.sections.length>0){ %>
+                                                                    <span class="sectionHead" id="s3"><%-secItm[3].secName%></span>
+                                                                    <input type="text" class="input-medium" style="display:none;" maxlength="20" placeholder="<%-secItm[3].secName%>">
+                                                                <%}else{%>
+                                                                    <span class="sectionHead"  id="s3">Section 3</span>
+                                                                    <input type="text" class="input-medium" style="display:none;"  maxlength="20" placeholder="Section 3">
+                                                                <%}%>
+                                                                <button type="button" class="btn btn-info btn-simple btnsmall controls-edit" onclick="edit(this);" rel="tooltip" data-original-title="Edit" <%if(collbemail>-1){%> disabled <%}%>>
+                                                                    <i class="ti-pencil"></i>
+                                                                </button>
+                                                            
+                                                                <button type="button" class="btn btn-info btn-simple btnsmall controls-update" style="display:none;" onclick="update(this);" rel="tooltip" data-original-title="Update" <%if(collbemail>-1){%> disabled <%}%>>
+                                                                    <i class="ti-save"></i>
+                                                                </button>
+                                                            </th>
+                                                            <th data-field="sec4" data-sortable="false" >
+                                                                <a class="btn btn-warning btn-icon btn-simple btnsmall" id="fetchBtn" title="Fetch from basket" rel="tooltip" onclick="fetchItm('4')"  <%if(collbemail>-1){%> disabled <%}%>>
+                                                                    <i class="fa fa-arrow-circle-down"></i>
+                                                                </a>
+                                                                    <% if(data.sections && data.sections.length>0){ %>
+                                                                        <span class="sectionHead" id="s4"><%-secItm[4].secName%></span>
+                                                                        <input type="text" class="input-medium" style="display:none;" maxlength="20" placeholder="<%-secItm[4].secName%>">
+                                                                    <%}else{%>
+                                                                        <span class="sectionHead"  id="s4">Section 4</span>
+                                                                        <input type="text" class="input-medium" style="display:none;" maxlength="20" placeholder="Section 4">
+                                                                    <%}%>
+                                                                <button type="button" class="btn btn-info btn-simple btnsmall controls-edit" onclick="edit(this);" rel="tooltip" data-original-title="Edit" <%if(collbemail>-1){%> disabled <%}%>>
+                                                                    <i class="ti-pencil"></i>
+                                                                </button>
+                                                            
+                                                                <button type="button" class="btn btn-info btn-simple btnsmall controls-update" style="display:none;" onclick="update(this);" rel="tooltip" data-original-title="Update" <%if(collbemail>-1){%> disabled <%}%>>
+                                                                    <i class="ti-save"></i>
+                                                                </button>
+                                                            </th>
+                                                            <th data-field="sec5" class="td-actions text-center">
+                                                                <a class="btn btn-warning btn-icon btn-simple btnsmall" id="fetchBtn" title="Fetch from basket" rel="tooltip" onclick="fetchItm('5')"  <%if(collbemail>-1){%> disabled <%}%>>
+                                                                    <i class="fa fa-arrow-circle-down"></i>
+                                                                </a>
+                                                                <!-- <button type="button" class="btn btn-warning btn-simple btnsmall controls-fetch" onclick="fetch(this);" rel="tooltip" data-original-title="fetch from basket" <%if(collbemail>-1){%> disabled <%}%>>
+                                                                    <i class="fa fa-arrow-circle-down"></i>
+                                                                   </button> -->
+                                                                    <% if(data.sections && data.sections.length>0){ %>
+                                                                        <span class="sectionHead" id="s5"><%-secItm[5].secName%></span>
+                                                                        <input type="text" class="input-medium" style="display:none;" maxlength="20" placeholder="<%-secItm[5].secName%>">
+                                                                    <%}else{%>
+                                                                        <span class="sectionHead"  id="s5">Section 5</span>
+                                                                        <input type="text" class="input-medium" style="display:none;"  maxlength="20" placeholder="Section 5">
+                                                                    <%}%>
+                                                                <button type="button" class="btn btn-info btn-simple btnsmall controls-edit" onclick="edit(this);" rel="tooltip" data-original-title="Edit" <%if(collbemail>-1){%> disabled <%}%> >
+                                                                    <i class="ti-pencil"></i>
+                                                                </button>
+                                                            
+                                                                <button type="button" class="btn btn-info btn-simple btnsmall controls-update" style="display:none;" onclick="update(this);" rel="tooltip" data-original-title="Update" <%if(collbemail>-1){%> disabled <%}%>>
+                                                                    <i class="ti-save"></i>
+                                                                </button>
+                                                            </th>
+                                                        </tr>
+                                                    <%}%>
+                                                    
+                                                    <script>
+                                                        function edit(element) {
+                                                            var parent = $(element).parent().parent();
+                                                            var placeholder = $(parent).find('.sectionHead').text();
+                                                            //hide label
+                                                            $(parent).find('span').hide();
+                                                            //show input, set placeholder
+                                                            var input = $(parent).find('input[type="text"]').val(placeholder);
+                                                            var edit = $(parent).find('.controls-edit');
+                                                            var update = $(parent).find('.controls-update');
+                                                            $(input).show();
+                                                            $(edit).hide();
+                                                            $(update).show();
+                                                            //$(input).attr('placeholder', placeholder);
+                                                        }
+
+                                                        function update(element) {
+                                                            var parent = $(element).parent().parent();
+                                                            var placeholder = $(parent).find('.sectionHead').text();
+                                                            //hide label
+                                                            $(parent).find('span').show();
+                                                            //show input, set placeholder
+                                                            var input = $(parent).find('input[type="text"]');
+                                                            var edit = $(parent).find('.controls-edit');
+                                                            var update = $(parent).find('.controls-update');
+                                                            $(input).hide();
+                                                            $(edit).show();
+                                                            $(update).hide();
+                                                            //$(input).attr('placeholder', placeholder);playlist_name.replace(/\s\s+/g, ' ')
+                                                            $(parent).find('span').text($(input).val().replace(/\s\s+/g, ' ').trim());
+                                                            document.getElementById('arrange_ids').disabled = false;
+                                                        }
+                                                        
+                                                   
+                                                        function fetchItm(sectionId) {
+                                                        // console.log("12345")
+                                                        var author = document.getElementById("author").value;
+                                                        var sectionId= sectionId;
+                                                        var id = document.getElementById("token").value;
+                                                            $.ajax({
+                                                                    type: "POST",
+                                                                    data: {
+                                                                        'author': author,
+                                                                        'sectionId':sectionId,
+                                                                        'playlistId':id
+                                                                    },
+                                                                    url: '/author_fetchFromBasket',
+                                                                    success: function (data) {
+                                                                        // console.log(data)
+                                                                        if (data.status == "success") {
+                                                                            // console.log(data.duplicateId.length)
+                                                                            if(data.duplicateId.length>0){
+                                                                                swal({
+                                                                                    type: 'success',
+                                                                                    title: 'Items added succesfully',
+                                                                                    html: "<p style='word-wrap: break-word;font-size:17px;'><b>Duplicate Items:</b><br>"+ data.duplicateId+"</p>"
+                                                                                }).then(function () {
+                                                                                    window.location.href='/author_getPlaylistData?id='+id;
+                                                                                });
+                                                                            }else{
+                                                                                swal({
+                                                                                    type: 'success',
+                                                                                    title: 'Items added succesfully !!!'
+                                                                                }).then(function () {
+                                                                                    window.location.href='/author_getPlaylistData?id='+id;
+                                                                                });
+                                                                            }
+                                                                        } else if(data.status === "Unauthorized"){
+                                                                            swal({
+                                                                                type: 'error',
+                                                                                title: 'Error',
+                                                                                html: 'You are authorized to fetch data only if Worksheet is authored by you.'
+                                                                            });
+                                                                        }else if(data.status === "empty basket"){
+                                                                            swal({
+                                                                                type: 'error',
+                                                                                title: 'Error',
+                                                                                html: data.msg
+                                                                            });
+                                                                        }else if(data.status === "maxlist" ){
+
+                                                                        }else {
+                                                                            swal({
+                                                                                type: 'error',
+                                                                                title: 'Error',
+                                                                                html: data.msg
+                                                                            });
+                                                                        }
+                                                                    },
+                                                                    error: function (data) {
+                                                                        swal("Cancelled", "Error: Please Contact Administrator ", " error ");
+                                                                    }
+                                                                });
+                                                            }
+                                                            
+                                                        
+                                                    </script>
+                                                </thead>
+                                                <tbody>
+                                                    
+                                                    <tr>
+                                                       <% 
+                                                       if(data.sections){
+                                                        
+
+                                                       secItm.forEach((item1, index) =>{ %>
+                                                       <td>
+                                                           <ul  id="Section<%-index%>" class="connectedSortable">
+                                                               <% item1.content.forEach((itm2, index1)=>{ 
+                                                                   
+                                                                   var id11 = itm2['item'];
+                                                                   var itmD11 = itmData[id11];
+
+                                                                   var unauth = unauthData.indexOf(itm2['item']);
+                                                                   var ordernumber = index1+1;
+
+                                                                %>
+                                                                <script>
+                                                
+                                                                    var basketdata = (sessionStorage['basketitems']!=undefined)?JSON.parse(sessionStorage['basketitems']):[];
+        
+                                                                    console.log(basketdata);  
+                                                                    var ques = "<%-itm2.item%>";
+                                                                    if(basketdata.indexOf(ques)>-1)
+                                                                    {
+                                                                        $("#ad"+ques).addClass('inbasket');
+                                                                        $("#ad"+ques).attr('title', 'In Basket');
+        
+                                                                    }
+                
+                                                                </script>
+                                                                    <li id="<%-itm2.item%>" <% if(unauth>-1){%> style="border:2px solid #EB5E28;background-color: #f39f7f2e;"<% }%> >
+                                                                        <div class="row">
+                                                                            <div class="col-md-7 text-left">
+                                                                                <span class="orderNumber"><%-ordernumber%> </span>
+                                                                               
+
+                                                                                <a class="btn btn-success btn-icon btn-simple btnsmall" id="sample" data-item="<%-itm2.item%>" title="View Sample" rel="tooltip">
+                                                                                    <b id="ques<%-index%><%-index1%>" style="font-size:16px;color:#68B3C8"><%-itm2.item%></b>
+                                                                                    </a>
+                                                               
+
+                                                                                <input type="hidden" class="form-control" id="itm<%-index%><%-index1%>" value="<%-itm2.item%>">
+                                                                                <input type="hidden" class="form-control" id="weight<%-index%><%-index1%>" value="<%-itm2.weight%>">
+                                                                                <!-- <input type="hidden" class="form-control" id="itemProp<%-index%><%-index1%>" value="<%-itm2.properties%>" required> -->
+                                                                                <!-- <input type="text" class="form-control"  value=""> -->
+                                                                                <%if(itmD11['public']==true){%>
+                                                                                    <!-- <span style="font-size:12px;" class="icon-default"><i class="fa fa-users"></i> -->
+                                                                                        <!-- <button class="btn btn-icon btn-simple "><i class="fa fa-globe"></i></button> -->
+                                                                                        <input type="hidden" class="form-control" id="public<%-index%><%-index1%>" value="<%-itm2.public%>">
+                                                                                        <!-- <span class="label label-default lableTag">Public</span> -->
+                                                                                        <i class="text-primary fa fa-globe" title="Public" rel="tooltip"></i>
+                                                                                        
+                                                                                    <!-- </span> -->
+                                                                                <%}%>
+
+                                                                                <% if (itmD11['author'] !="unknown") {%>
+                                                                                <span class="label label-primary lableTag"><%-itmD11['author']%></span>
+                                                                                <% }else{ %>
+                                                                                <span class="label label-danger lableTag">Question Deleted</span>
+                                                                                <%} %>
+                                                                                <span class="label label-info lableTag"><%-itmD11['type']%></span>
+                                                                            </div>     
+                                                                            <div class="col-md-5 text-right">
+                                                                                <input type="hidden" name="author" id="author" value="<%-short%>">
+                                                                                <input type="hidden" name="token" id="token" value="<%-token%>">
+                                                                                <input type="hidden" name="quesSecData" id="quesSecData" value="">
+                                                                                <input type="hidden" name="ques_ids1" id="ques_ids1" value="">
+                                                                                <input type="hidden" name="playlist_name_del" id="playlist_name_del" value="<%-data.name%>">
+                                                                                <input type="hidden" name="log_Id" id="log_Id" value="">
+                                                                                <input type="hidden" name="log_Token" id="log_Token" value="">
+                                                                                <a class="btn btn-warning btn-icon btn-simple btnsmall" data-toggle='modal' data-target='#additmProp<%-index%><%-index1%>' title="Set Properties" rel="tooltip" style="display:none;" <%if(collbemail>-1){%> disabled <%}%>>
+                                                                                    <i class="ti-settings"></i>
+                                                                                </a>
+
+                                                                                <% if(itmD11['public']==true || itmD11['author']== short ){%>
+                                                                               
+                                                                                <a class="btn btn-info btn-icon btn-simple btnsmall basket"  title="Add to basket" rel="tooltip" onclick="AddtoBasket('ad<%-itm2.item%>','<%-itm2.item%>','Not')" style="display:auto;" id="ad<%-itm2.item%>" >
+                                                                                    <i class="fa fa-shopping-basket" ></i>
+                                                                                </a>
+                                                                                <!-- end of basket -->
+                                                                                <%}%>
+
+                                                                                <a class="btn btn-danger btn-icon btn-simple btnsmall" id="delItem<%-index%><%-index1%>" title="Remove Item" rel="tooltip" onclick="del('<%-index%><%-index1%>','<%-itm2.item%>')"  <%if(collbemail>-1){%> disabled <%}%>>
+                                                                                    <i class="ti-close"></i>
+                                                                                </a>
+                                                                                <!-- <a class="btn btn-success btn-icon btn-simple btnsmall" id="sample" data-item="<%-itm2.item%>" title="View Sample" rel="tooltip">
+                                                                                    <i class="fa fa-eye"></i>
+                                                                                </a> -->
+                                                                            </div>        
+                                                                        </div>  
+                                                                        <div class="text-left">
+                                                                            <input type="hidden" name="itemJson<%-index%><%-index1%>" id="itemJson<%-index%><%-index1%>" value="<%-JSON.stringify(itm2)%>">
+                                                                            <!-- <%if(itm2.public || itm2.public==true){%>
+                                                                                    <input type="hidden" class="form-control" id="public<%-index%><%-index1%>" value="<%-itm2.public%>">
+                                                                                    <span class="label label-default lableTag">Public</span>
+                                                                            <%}%> -->
+                                                                            <!-- <span class="label label-success lableTag">author</span> -->
+                                                                                
+                                                                            <% if(itmD11['tags']){%>
+                                                                                <span class="label label-success lableTag"><%-itmD11['tags'][0]%></span>
+                                                                                <span class="label label-success lableTag"><%-itmD11['tags'][1]%></span>
+                                                                                <span class="label label-success lableTag"><%-itmD11['tags'][2]%></span>
+                                                                            <%}%>
+                                                                        </div>
+                                                                        <% 
+                                                                        var str =""; 
+                                                                        if(itmD11['comments']){
+                                                                         str = itmD11['comments'].substring(0,80)
+                                                                        }
+                                                                        %>
+                                                                        <div class="text-left">
+                                                                            <p><%-str%></p>
+                                                                        </div>
+                                                                        <% if (itmD11['committed'] !=true) {%>
+                                                                            <span class="label label-danger lableTag">Not committed</span>
+                                                                        <%} %>
+                                                                        <div class="text-left" style="margin-top:8px;display:none;">
+                                                                            <p><span class="badge badge-warning bdgTag" title="Weight" rel="tooltip">5</span> 
+                                                                                <span class="badge badge-warning bdgTag" title="Property" rel="tooltip">always come first</span> 
+                                                                            </p>
+                                                                        </div>
+                                                                    </li>
+                                                                    <div class="">
+                                                                        <div class="modal fade" id="additmProp<%-index%><%-index1%>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                                            <div class="modal-dialog">
+                                                                                <div class="modal-content">
+                                                                                    <div class="modal-header">
+                                                                                        <button type="button" class="close" data-dismiss="modal">
+                                                                                            <span aria-hidden="true">&times;</span>
+                                                                                            <span class="sr-only">Close</span>
+                                                                                        </button>
+                                                                                        <h4 class="modal-title" id="myModalLabel">
+                                                                                            <b>Set Item
+                                                                                                Properties
+                                                                                            </b>
+                                                                                            <button type="button" rel="tooltip" title="" class="btn btn-info btn-simple btn-xs" data-original-title="">
+                                                                                                <i class="ti-help-alt fa-lg"></i>
+                                                                                            </button>
+                                                                                        </h4>
+                                                                                    </div>
+                                                                                    <div class="modal-body">
+                                                                                        <form role="form" name="add_form" id="add_form" method="post" action="" enctype="multipart/form-data">
+                                                                                            <div class="form-group">
+                                                                                                <label style="font-size:15px;">Weight</label>
+                                                                                                <input type="number" class="form-control" id="weightitm<%-index%><%-index1%>" min="0" max="10" value="<%-itm2.weight%>" required>
+                                                                                            </div>
+                                                                                            <div class="form-group">
+                                                                                                <label style="font-size:15px;">Properties</label>
+                                                                                                <div class="radio">
+                                                                                                    <input type="radio" name="itemPropMod<%-index%><%-index1%>" id="prop1itm<%-index%><%-index1%>" value="none" <% if(itm2.properties=="none" ){%>                                                                                                                        checked
+                                                                                                    <%}%>
+                                                                                                        checked>
+                                                                                                        <label for="prop1itm<%-index%><%-index1%>">
+                                                                                                            None
+                                                                                                        </label>
+                                                                                                </div>
+                                                                                                <div class="radio">
+                                                                                                    <input type="radio" name="itemPropMod<%-index%><%-index1%>" id="prop2itm<%-index%><%-index1%>" value="always" <% if(itm2.properties=="always"
+                                                                                                        ){%>                                                                                                                        checked
+                                                                                                    <%}%>>
+                                                                                                        <label for="prop2itm<%-index%><%-index1%>">
+                                                                                                            Always include this item
+                                                                                                        </label>
+                                                                                                </div>
+                                                                                                <div class="radio">
+                                                                                                    <input type="radio" name="itemPropMod<%-index%><%-index1%>" id="prop3itm<%-index%><%-index1%>" value="first" <% if(itm2.properties=="first" ){%>                                                                                                                        checked
+                                                                                                    <%}%>>
+                                                                                                        <label for="prop3itm<%-index%><%-index1%>">
+                                                                                                            Always include at first
+                                                                                                        </label>
+                                                                                                </div>
+                                                                                                <div class="radio">
+                                                                                                    <input type="radio" name="itemPropMod<%-index%><%-index1%>" id="prop4itm<%-index%><%-index1%>" value="last" <% if(itm2.properties=="last" ){%>                                                                                                                        checked
+                                                                                                    <%}%>>
+                                                                                                        <label for="prop4itm<%-index%><%-index1%>">
+                                                                                                            Always include at last
+                                                                                                        </label>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="form-group">
+                                                                                                <button type="button" class="btn btn-success btn-wd btn-fill" id="setItmProp<%-index%><%-index1%>" disabled> Set</button>
+                                                                                            </div>
+                                                                                        </form>
+                                                                                    </div>
+                                                                                    <div class="modal-footer">
+                                                                                        <button type="button" class="btn btn-default btn-wd btn-fill" data-dismiss="modal">Close</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <script type="text/javascript">
+                                                                        $(function () {
+                                                                            $("#delItem<%-index%><%-index1%>").click(function (event) {
+                                                                                var author= document.getElementById('author').value;
+                                                                                var token= document.getElementById('token').value;
+                                                                                var quesSecData= document.getElementById('quesSecData').value;
+                                                                                var ques_ids1= document.getElementById('ques_ids1').value;
+                                                                                var playlist_name_del= document.getElementById('playlist_name_del').value;
+                                                                                var log_Id= document.getElementById('log_Id').value;
+                                                                                var log_Token= document.getElementById('log_Token').value;
+                                                                                var takers_data= document.getElementById('takers_data').value;
+                                                                                event.preventDefault();
+                                                                                swal({
+                                                                                    title: 'Are you sure?',
+                                                                                    text: "This item will be removed from playlist",
+                                                                                    type: 'warning',
+                                                                                    showCancelButton: true,
+                                                                                    confirmButtonClass: 'btn btn-success btn-fill',
+                                                                                    cancelButtonClass: 'btn btn-danger btn-fill',
+                                                                                    confirmButtonText: 'Yes, remove it!',
+                                                                                    buttonsStyling: false
+                                                                                }).then(function () {
+                                                                                    // $('#add_form3').submit();
+                                                                                    $.ajax({
+                                                                                        type: "POST",
+                                                                                        data: {
+                                                                                            'author': author,
+                                                                                            'token': token,
+                                                                                            'quesSecData': quesSecData,
+                                                                                            'ques_ids1':ques_ids1,
+                                                                                            'playlist_name_del':playlist_name_del,
+                                                                                            'log_Id':log_Id,
+                                                                                            'log_Token':log_Token,
+                                                                                            'takers_data':takers_data
+                                                                                        },
+                                                                                        url: '/author_deleteAndUpdateItems',
+                                                                                        success: function (data) {
+                                                                                            if (data.status == "success") {
+                                                                                                swal({
+                                                                                                    type: 'success',
+                                                                                                    title: 'Item removed!'
+                                                                                                }).then(function () {
+                                                                                                    window.location.href='/author_getPlaylistData?id='+token;
+                                                                                                });
+                                                                                            } else {
+                                                                                                // swal("Cancelled", "Error:"+data.msg, " error ");
+                                                                                                swal({
+                                                                                                    type: 'error',
+                                                                                                    title: 'Error',
+                                                                                                    html: data.msg
+                                                                                                });
+                                                                                            }
+                                                                                        },
+                                                                                        error: function (data) {
+                                                                                            swal("Cancelled", "Error: Please Contact Administrator ", " error ");
+                                                                                        }
+                                                                                    });
+                                                                                }).catch(function () {
+                                                                                    console.log("Aborted clone req");
+                                                                                });
+                                                                            });
+                                                                        });
+                                                                    </script>
+                                                                <%})%>
+                                                           </ul>
+                                                       </td>
+
+                                                       <%})%>
+
+
+                                                        <%}else{%>
+
+                                                       <td>
+                                                            <ul id="Section0" class="connectedSortable">
+                                                                <% 
+                                                                    for(var j=1,k=0; k<items.length;j++,k++){
+                                                                    var ques = data.content[k].item;
+                                                                    
+                                                                    var itmDt22 = itmData[ques];
+                                                                    var unauthcon = unauthData.indexOf(ques);
+                                                                    var ordernumber = j;
+
+                                                                 %>
+                                                                 <!--  basket start -->
+                                                                 <script>   
+                                                                    var basketdata = (sessionStorage['basketitems']!=undefined)?JSON.parse(sessionStorage['basketitems']):[];
+                                                                    console.log(basketdata);    
+                                                                    var ques = "<%-ques%>";
+                                                                    if(basketdata.indexOf(ques)>-1)
+                                                                    {
+                                                                        
+                                                                        $("#ad"+ques).addClass('inbasket');
+                                                                        $("#ad"+ques).attr('title', 'In Basket');
+                                                                        
+                                                                    }
+                                                                </script>
+                                                                <!--  basket end -->
+
+                                                                <li id="<%-ques%>" <% if(unauthcon>-1){%> style="border:2px solid #EB5E28;background-color: #f39f7f2e;"<% }%> >
+                                                                    <div class="row">
+                                                                        <div class="col-md-8 text-left">
+                                                                                <span class="orderNumber"><%-ordernumber%></span>
+                                                                            <a class="btn btn-success btn-icon btn-simple btnsmall" id="sample" data-item="<%-ques%>" title="View Sample" rel="tooltip">
+                                                                                    <b id="ques<%-j%>" style="font-size:16px;color:#68B3C8"><%-ques%></b>
+                                                                            </a>
+                                                                            <input type="hidden" class="form-control" id="itm<%-j%>" value="<%-ques%>">
+                                                                            <input type="hidden" class="form-control" id="weight<%-j%>" value="<%-data.content[k].weight%>">
+                                                                            <!-- <input type="hidden" class="form-control" id="itemProp<%-j%>" value="<%-data.content[k].properties%>" required> -->
+                                                                            <input type="hidden" name="itemJson<%-j%>" id="itemJson<%-j%>" value="<%-JSON.stringify(data.content[k])%>">
+                                                                            <%if(itmDt22.public==true){%>
+                                                                                <!-- <span style="font-size:12px;" class="icon-default"><i class="fa fa-users"></i> -->
+                                                                                    <!-- <button class="btn btn-icon btn-simple "><i class="fa fa-globe"></i></button> -->
+                                                                                    <input type="hidden" class="form-control" id="public<%-j%>" value="<%-data.content[k].public%>">
+                                                                                    <i class="text-primary fa fa-globe" title="Public" rel="tooltip"></i>
+                                                                                    
+                                                                                <!-- </span> -->
+                                                                            <%}%>
+                                                                            
+
+                                                                            <% if (itmDt22.author !="unknown") {%>
+                                                                                <span class="label label-primary lableTag"><%-itmDt22.author%></span>
+                                                                            <% }else{ %>
+                                                                                <span class="label label-danger lableTag">Question Deleted</span>
+                                                                            <%} %>
+                                                                            <span class="label label-info lableTag"><%-itmDt22['type']%></span>
+                                                                        </div>     
+                                                                        <div class="col-md-4 text-right">
+                                                                            <input type="hidden" name="author" id="author" value="<%-short%>">
+                                                                            <input type="hidden" name="token" id="token" value="<%-token%>">
+                                                                            <input type="hidden" name="quesSecData" id="quesSecData" value="">
+                                                                            <input type="hidden" name="ques_ids1" id="ques_ids1" value="">
+                                                                            <input type="hidden" name="playlist_name_del" id="playlist_name_del" value="<%-data.name%>">
+                                                                            <input type="hidden" name="log_Id" id="log_Id" value="">
+                                                                            <input type="hidden" name="log_Token" id="log_Token" value="">
+                                                                            <a class="btn btn-warning btn-icon btn-simple btnsmall" data-toggle='modal' data-target='#additmProp<%-j%>' title="Set Properties" rel="tooltip" style="display:none;" <%if(collbemail>-1){%> disabled <%}%>>
+                                                                                <i class="ti-settings"></i>
+                                                                            </a>
+
+                                                                            <% if(itmDt22.public==true || itmDt22.author == short ){%>
+                                                                                 <!--  add to basket -->
+                                                                                <a class="btn btn-info btn-icon btn-simple btnsmall basket"  title="Add to basket" rel="tooltip" onclick="AddtoBasket('ad<%-ques%>','<%-ques%>','NOT')" style="display:auto;" id="ad<%-ques%>" >
+                                                                                    <i class="fa fa-shopping-basket" ></i>
+                                                                                </a>
+                                                                                <!-- end of basket -->
+                                                                            <%}%>
+                                                                           
+                                                                            <a class="btn btn-danger btn-icon btn-simple btnsmall" id="delItem<%-j%>" title="Remove Item" rel="tooltip" onclick="del('<%-j%>','<%-ques%>')" style="display:auto;" <%if(collbemail>-1){%> disabled <%}%>>
+                                                                                <i class="ti-close"></i>
+                                                                            </a>
+                                                                        </div>        
+                                                                    </div>  
+                                                                    <div class="text-left">
+                                                                        <% if(itmDt22.tags){%>
+                                                                            <span class="label label-success lableTag"><%-itmDt22.tags[0]%></span>
+                                                                            <span class="label label-success lableTag"><%-itmDt22.tags[1]%></span>
+                                                                            <span class="label label-success lableTag"><%-itmDt22.tags[2]%></span>
+                                                                        <%}%>
+                                                                    </div>
+                                                                    <% var strcon="";
+                                                                    if(itmDt22.comments){
+                                                                    var strcon = itmDt22.comments.substring(0,80)
+                                                                    }
+                                                                    %>
+                                                                    <div class="text-left">
+                                                                        <p><%-strcon%></p>
+                                                                    </div>
+                                                                    <% if (itmDt22.committed !=true) {%>
+                                                                        <span class="label label-danger lableTag">Not committed</span>
+                                                                    <%} %>
+                                                                    <div class="text-left" style="margin-top:8px;display:none;">
+                                                                        <p><span class="badge badge-warning bdgTag" title="Weight" rel="tooltip">5</span> 
+                                                                            <span class="badge badge-warning bdgTag" title="Property" rel="tooltip">always come first</span> 
+                                                                        </p>
+                                                                    </div>
+                                                                    <script type="text/javascript">
+                                                                        $(function () {
+                                                                            $("#delItem<%-j%>").click(function (event) {
+                                                                                var author= document.getElementById('author').value;
+                                                                                var token= document.getElementById('token').value;
+                                                                                var quesSecData= document.getElementById('quesSecData').value;
+                                                                                var ques_ids1= document.getElementById('ques_ids1').value;
+                                                                                var playlist_name_del= document.getElementById('playlist_name_del').value;
+                                                                                var log_Id= document.getElementById('log_Id').value;
+                                                                                var log_Token= document.getElementById('log_Token').value;
+                                                                                var takers_data= document.getElementById('takers_data').value;
+                                                                                event.preventDefault();
+                                                                                swal({
+                                                                                    title: 'Are you sure?',
+                                                                                    text: "This item will be removed from playlist",
+                                                                                    type: 'warning',
+                                                                                    showCancelButton: true,
+                                                                                    confirmButtonClass: 'btn btn-success btn-fill',
+                                                                                    cancelButtonClass: 'btn btn-danger btn-fill',
+                                                                                    confirmButtonText: 'Yes, remove it!',
+                                                                                    buttonsStyling: false
+                                                                                }).then(function () {
+                                                                                    // $('#add_form3').submit();
+                                                                                    $.ajax({
+                                                                                        type: "POST",
+                                                                                        data: {
+                                                                                            'author': author,
+                                                                                            'token': token,
+                                                                                            'quesSecData': quesSecData,
+                                                                                            'ques_ids1':ques_ids1,
+                                                                                            'playlist_name_del':playlist_name_del,
+                                                                                            'log_Id':log_Id,
+                                                                                            'log_Token':log_Token,
+                                                                                            'takers_data':takers_data
+                                                                                        },
+                                                                                        url: '/author_deleteAndUpdateItems',
+                                                                                        success: function (data) {
+                                                                                            if (data.status == "success") {
+                                                                                                swal({
+                                                                                                    type: 'success',
+                                                                                                    title: 'Item removed!'
+                                                                                                }).then(function () {
+                                                                                                    window.location.href='/author_getPlaylistData?id='+token;
+                                                                                                });
+                                                                                            } else {
+                                                                                                // swal("Cancelled", "Error:"+data.msg, " error ");
+                                                                                                swal({
+                                                                                                    type: 'error',
+                                                                                                    title: 'Error',
+                                                                                                    html: data.msg
+                                                                                                });
+                                                                                            }
+                                                                                        },
+                                                                                        error: function (data) {
+                                                                                            swal("Cancelled", "Error: Please Contact Administrator ", " error ");
+                                                                                        }
+                                                                                    });
+                                                                                }).catch(function () {
+                                                                                    console.log("Aborted clone req");
+                                                                                });
+                                                                            });
+                                                                        });
+                                                                    </script>
+                                                                </li>
+                                                                <%}%>
+                                                            </ul>
+                                                       </td>
+                                                       <td>
+                                                            <ul id="Section1" class="connectedSortable">
+                                                                
+                                                            </ul>
+                                                       </td>
+                                                       <td>
+                                                            <ul id="Section2" class="connectedSortable">
+                                                                
+                                                            </ul>
+                                                       </td>
+                                                       <td>
+                                                            <ul id="Section3" class="connectedSortable">
+                                                                
+                                                            </ul>
+                                                       </td>
+                                                       <td>
+                                                            <ul id="Section4" class="connectedSortable">
+                                                                
+                                                            </ul>
+                                                       </td>
+                                                       <td>
+                                                            <ul id="Section5" class="connectedSortable">
+                                                                
+                                                            </ul>
+                                                       </td>
+                                                       <%}%>
+                                                    </tr>
+                                                    <!-- modal view sample -->
+                                                    <div class="">
+                                                            <div class="modal fade" id="bsModal3" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                                                                <div class="modal-dialog modal-lg">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                                            <h4 class="modal-title" id="mySmallModalLabel">View
+                                                                                Sample
+                                                                            </h4>
+                                                                        </div>
+                                                                        <div class="modal-body" id="viewModalContent">
+                                                                            <p></p>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                                            <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div><!-- modal close-->
+                                                        <script type="text/javascript">
+                                                            $(function () {
+                                                                $('#bsModal3').on('hidden.bs.modal', function () { // do something� })
+                                                                    $("#viewModalContent").html(" <p></p>");
+                                                                })
+                                                            });
+                                                        </script>
+                                                        
+                                                         <script type="text/javascript">
+                                                            $(document).ready(function () {
+                                                                var authList = $("#authList").val().split(',');
+                                                                authList = JSON.stringify(authList);
+                                                                $("body").on("click","#sample",function () {
+                                                                    var quesItm = $(this).attr("data-item");
+                                                                    $.ajax({
+                                                                        type: 'get',
+                                                                        url: '/author_getCommittedSampleQue?id='+quesItm+'&authList='+authList,
+                                                                        cache: false,
+                                                                        success: function (returndata) {
+                                                                            if (returndata) {
+                                                                                // $('#bsModal3 .modal-body p').modal('show'); // Please right this in your Code
+                                                                                // console.log(returndata);
+                                                                                MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+                                                                                $('#bsModal3 .modal-body p').html(returndata);
+                                                                                $('#bsModal3').modal('show');
+                                                                                MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+                                                                            } else {
+                                                                                // other code
+                                                                            }
+                                                                        },
+                                                                        error: function () {
+                                                                            console.error('Failed to process ajax !');
+                                                                        }
+                                                                    });
+                                                                });
+                                                            });
+                                                        </script>
+                                                        <script type="text/javascript">
+                                                            function del(id, item) {
+                                                                var data = '<%-JSON.stringify(data.content)%>';
+                                                                var d1 = JSON.parse(data);
+
+                                                                console.log("data-==" + JSON.stringify(d1));
+                                                                var result = d1.filter(function (emp) { return emp.item != item });
+                                                                console.log("del item-==" + JSON.stringify(result));
+                                                                document.getElementById('ques_ids1').value = JSON.stringify(result);
+
+                                                                var secLength1=document.getElementById('secLength').value;
+                                                                console.log("secLength1--"+secLength1)
+                                                                if(secLength1==5){
+                                                                    // console.log(1)
+                                                                    // console.log($("#Section0").sortable("toArray"))
+                                                                    // let IdList  = $("#Section0").sortable("toArray");
+                                                                    let IdList1 = $("#Section0").sortable("toArray");
+                                                                    let IdList2 = $("#Section1").sortable("toArray");
+                                                                    let IdList3 = $("#Section2").sortable("toArray");
+                                                                    let IdList4 = $("#Section3").sortable("toArray");
+                                                                    let IdList5 = $("#Section4").sortable("toArray");
+
+                                                                    console.log($("#Section0").sortable("toArray"))
+
+                                                                    // orderPlaylist(IdList);
+                                                                    // var dt = orderPlaylist(IdList, "Unsectioned List",JSON.stringify(result));
+                                                                    var dt1 = orderPlaylist(IdList1, $("#s1").text(),JSON.stringify(result));
+                                                                    var dt2 = orderPlaylist(IdList2, $("#s2").text(),JSON.stringify(result));
+                                                                    var dt3 = orderPlaylist(IdList3, $("#s3").text(),JSON.stringify(result));
+                                                                    var dt4 = orderPlaylist(IdList4, $("#s4").text(),JSON.stringify(result));
+                                                                    var dt5 = orderPlaylist(IdList5, $("#s5").text(),JSON.stringify(result));
+
+                                                                    // console.log(JSON.stringify(dt1));
+
+                                                                    var finalJson = new Array();
+                                                                    finalJson.push(dt1,dt2,dt3,dt4,dt5);
+                                                                    console.log("finalJson item-=="+JSON.stringify(finalJson));
+                                                                    document.getElementById('takers_data').value = JSON.stringify(finalJson);
+
+
+                                                                }else{
+                                                                    
+                                                                    let IdList  = $("#Section0").sortable("toArray");
+                                                                    let IdList1 = $("#Section1").sortable("toArray");
+                                                                    let IdList2 = $("#Section2").sortable("toArray");
+                                                                    let IdList3 = $("#Section3").sortable("toArray");
+                                                                    let IdList4 = $("#Section4").sortable("toArray");
+                                                                    let IdList5 = $("#Section5").sortable("toArray");
+
+                                                                    
+                                                                    // orderPlaylist(IdList);
+                                                                    var dt = orderPlaylist(IdList, "Unsectioned List",JSON.stringify(result));
+                                                                    var dt1 = orderPlaylist(IdList1, $("#s1").text(),JSON.stringify(result));
+                                                                    var dt2 = orderPlaylist(IdList2, $("#s2").text(),JSON.stringify(result));
+                                                                    var dt3 = orderPlaylist(IdList3, $("#s3").text(),JSON.stringify(result));
+                                                                    var dt4 = orderPlaylist(IdList4, $("#s4").text(),JSON.stringify(result));
+                                                                    var dt5 = orderPlaylist(IdList5, $("#s5").text(),JSON.stringify(result));
+
+                                                                    // console.log(JSON.stringify(dt1));
+
+                                                                    var finalJson = new Array();
+                                                                    finalJson.push(dt,dt1,dt2,dt3,dt4,dt5);
+                                                                    console.log(JSON.stringify(finalJson));
+                                                                    document.getElementById('takers_data').value = JSON.stringify(finalJson);
+                                                                }
+                                                            }
+                                                        </script>
+                                                </tbody>
+                                            </table><br/><br/>
+                                        </div>
+                                    </div>
+                                </div><!-- card-content -->
+                            </div><!-- card big-->
+                        </div><!-- col -->
+                    </div><!-- row2 -->
+                </div> <!-- content-fluid -->
+            </div> <!-- content-->
+            <%- include('../parts/footer'); %>
+        </div> <!-- main-panel -->
+    </div> <!--wrapper -->
+</body>
+    <%- include('../parts/playlistJS'); %>
+    <script type="text/javascript" src="author_public/js/author_playlist.js"></script>
+    <script type="text/javascript">
+        var $table1 = $('#tblSection');
+        $().ready(function () {
+            $table1.bootstrapTable({
+                toolbar: ".toolbar"
+               
+            });
+            //activate the tooltips after the data table is initialized
+            $('[rel="tooltip"]').tooltip();
+        });
+    </script>
+    <script>
+        function setMaxH(){
+            var maxHeight = Math.max.apply(null, $("ul.connectedSortable").map(function (){
+                let content = $(this).text();
+                if($.trim(content)!=""){
+                    return $(this).innerHeight();
+                }
+            }).get());
+              //console.log(maxHeight);
+            $("ul.connectedSortable").each(function(){  
+                $(this).css('min-height',maxHeight);
+            })
+        }
+
+        $(function () {
+            // $('#unsectionlist').sortable();
+
+            // $("#unsectionlist").sortable();
+            // var idArr=$( "#unsectionlist" ).sortable( "toArray" );
+            // jQuery(".IdList").text(idArr.join());
+            var oldparent; // ordering
+            
+                $("#Section0").sortable({
+                connectWith: ".connectedSortable",
+                stop: function (event, ui) {
+
+                    
+                    // var idArr = $("#unsectionlist").sortable("toArray");
+                    // // jQuery(".IdList").text(idArr.join());
+                    // idArr = jQuery.grep(idArr, function(n){ return (n); });
+                    // document.getElementById("IdList").value = idArr;
+                    // console.log("unsectionlist==="+idArr);
+                    document.getElementById('arrange_ids').disabled = false;
+                    
+                    // ordering
+                    var newparent = $(ui.item[0]).parent();
+                    var parentId =  newparent.attr('id');
+                    var orderchilds = newparent.find('.orderNumber');
+                    var indexnumber = 1;
+                    orderchilds.each(function(i,val){
+                        $(this).html(indexnumber);
+                        indexnumber++;
+                    });
+
+                    var oldparentId =  oldparent.attr('id');
+                    if(oldparentId !=  parentId)
+                    {
+                        var orderchilds = oldparent.find('.orderNumber');
+                        indexnumber = 1;
+                        orderchilds.each(function(i,val){
+                        $(this).html(indexnumber);
+                        indexnumber++;
+                        });
+
+                    }                    
+                    //end of  ordering
+                    setMaxH(); //
+                    
+                },
+                start: function( event, ui ) {
+                    oldparent = $(ui.item[0]).parent();                    
+                }
+            }).disableSelection();
+            
+
+            
+
+            $("#Section1, #Section2, #Section3, #Section4, #Section5").sortable({
+                connectWith: ".connectedSortable",
+                stop: function (event, ui) {
+
+                    
+
+                    document.getElementById('arrange_ids').disabled = false;
+
+                    // ordering
+                    var newparent = $(ui.item[0]).parent();
+                    var parentId =  newparent.attr('id');                    
+                    var orderchilds = newparent.find('.orderNumber');
+                    var indexnumber = 1;
+                    orderchilds.each(function(i,val){
+                        $(this).html(indexnumber);
+                        indexnumber++;
+                    });
+                    var oldparentId =  oldparent.attr('id');
+                    if(oldparentId !=  parentId)
+                    {
+                        var orderchilds = oldparent.find('.orderNumber');
+                        indexnumber = 1;
+                        orderchilds.each(function(i,val){
+                        $(this).html(indexnumber);
+                        indexnumber++;
+                        });
+                       
+                    } 
+                    
+                    
+
+                    //end of  ordering
+                    setMaxH(); //
+                },
+                start: function( event, ui ) {
+                    oldparent = $(ui.item[0]).parent();  
+                                   
+                }
+            });
+
+            setMaxH();
+        });
+        $(function () {
+            $('input[id="SecPlaylist"]').change(function () {
+                document.getElementById('arrange_ids').disabled = false;
+            });
+        });
+    </script>
+</html>

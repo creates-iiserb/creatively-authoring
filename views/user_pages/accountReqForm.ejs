@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <meta name="viewport" content="width=device-width" />
+    <title> Examineer | Author</title>
+    <!-- Bootstrap core CSS     -->
+     <link href="../../author_public/PaperDashBoard/css/bootstrap.min.css" rel="stylesheet" />
+     <!--  Paper Dashboard core CSS    -->
+     <link href="../../author_public/PaperDashBoard/css/paper-dashboard.css" rel="stylesheet"/>
+    <!--  Fonts and icons     -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
+     <link href='https://fonts.googleapis.com/css?family=Muli:400,300' rel='stylesheet' type='text/css'> 
+    <!-- <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'> -->
+    <link href="../../author_public/PaperDashBoard/css/themify-icons.css" rel="stylesheet">
+    <!-- <link rel = "stylesheet" href="css/author1.css"> -->
+    <link rel = "stylesheet" href="../../author_public/css/author.css">
+
+    <!-- <link rel="stylesheet" href="css/bootstrap-tagsinput.css" /> --> 
+
+    <!--  CSS for Demo Purpose, don't include it in your project     -->
+    <link href="../../author_public/PaperDashBoard/css/demo.css" rel="stylesheet" />
+
+   
+    <link rel="stylesheet" href="../../author_public/dist/css/skins/_all-skins.min.css">
+   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.12/clipboard.min.js"></script>
+    <link rel='stylesheet prefetch' href='https://s3-us-west-2.amazonaws.com/s.cdpn.io/438937/strength.css'>
+    <link href="../../author_public/dist/css/pwstrength.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="../../author_public/css/progress-tracker.css">
+    <link rel="stylesheet" href="../../author_public/css/author_signup.css">    
+  </head>
+  <body>
+   
+      <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" onclick="navbarToggle();">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar bar1"></span>
+                    <span class="icon-bar bar2"></span>
+                    <span class="icon-bar bar3"></span>
+                </button>
+                <a class="navbar-brand" href="#">Examineer</a>
+            </div>
+        
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <ul class="nav navbar-nav navbar-right">
+                <li ><a href="https://quiz.examineer.in" target="_blank">Student</a></li>
+                <li > <a href="https://author.examineer.in">Author</a></li>
+            </ul>
+        </div><!-- /.container-fluid -->
+      </nav>
+ 
+
+   <div class="row">
+    <div  class="col-md-6 col-md-offset-3">
+      <div class="formCont">
+          <ul class="progress-tracker progress-tracker--text progress-tracker--center">
+            <li class="progress-step is-active">
+              <span class="progress-marker"></span>
+              <span class="progress-text">
+                <h4 class="progress-title">Step 1</h4>
+                <span class="progress-line"> Request for an account</span>  
+              </span>
+            </li>
+          
+            <li class="progress-step">
+              <span class="progress-marker"></span>
+              <span class="progress-text">
+                <h4 class="progress-title">Step 2</h4>
+                <span class="progress-line"> Verify your email address and set password.</span>
+              </span>
+            </li>
+          
+            <li class="progress-step">
+              <span class="progress-marker"></span>
+              <span class="progress-text">
+                <h4 class="progress-title">Step 3</h4>
+                <span class="progress-line"> Account will be approved by admin </span>
+              </span>
+            </li>
+          </ul>
+
+          <div class="login-title" align="center">
+            <b>Request For An Account</b>
+          </div>
+
+          <% if (status=='success') { %>
+            <div class="box-body" id="alert_box1">
+              <div class="alert alert-success alert-dismissable">                
+                <i class="fa fa-thumbs-o-up"></i>
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">X</button>
+                <b><%=msg%></b>
+                </div>
+            </div>
+          <% } %>
+
+            
+
+          <% if (status=='error') { %>
+            <div class="box-body" id="alert_box2">
+              <div class="alert alert-danger alert-dismissable">
+                <i class="fa fa-ban"></i>
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">X</button>
+                <b><%=msg%></b>
+                </div>
+            </div>
+          <% } %>
+
+            
+          <form role="form" id="regFrm" class="regClsFrm " name="regFrm" action="/authoraccountrequest" method="post">
+            <div class="form-group">
+              <label class="fg_label">Name <strong class="text-danger">*</strong></label>
+              <input type="text" id="name" name="name" class="form-control"  required> 
+            </div>
+
+            <div class="form-group">
+              <label class="fg_label">Affiliation <strong class="text-danger">*</strong></label>
+              <input type="text" name="affiliation" id="affiliation" class="form-control"  />
+            </div>
+
+            <div class="form-group">
+              <label class="fg_label">Department <strong class="text-danger">*</strong></label>
+              <input type="text" id="dept" name="dept" class="form-control"  />
+            </div>
+          
+            <div class="form-group">
+              <label class="fg_label">Email <strong class="text-danger">*</strong></label>
+              <input type="text" id="email" name="email" class="form-control" />
+            </div>
+
+            <div class="form-group">
+              <label class="fg_label">Department webpage on your institution's website listing your name and email address used above <strong class="text-danger">*</strong></label>
+              <input type="text" id="personalPage" name="personalPage" class="form-control"/>
+            </div>
+
+            <div class="form-group">
+              <label class="fg_label">Phone Number (Optional)</label>
+              <input type="text" id="phoneNo" name="phoneNo" class="form-control"  onkeypress="javascript:return isPhoneNumber(event)" maxlength="10"/>
+            </div>
+
+
+            <div class="form-group">
+              <label class="fg_label">How did you hear about us? <strong class="text-danger">*</strong></label>
+              <input type="text" id="howToKnow" name="howToKnow" class="form-control" />
+            </div>
+
+
+            <div class="form-group">
+              <label class="fg_label">Courses you taught or you plan to teach <strong class="text-danger">*</strong></label>
+              <input type="text" id="coursesYouTeach" name="coursesYouTeach" class="form-control" />
+            </div>
+
+            <br>
+            
+              <div class="row">
+              
+                <div class="col-lg-6">
+                  <div class="text-left" style="font-size:16px;padding-top:8px;padding-bottom:5px">
+                    <a href="/authorlogin">I already have a membership</a>
+                  </div>
+                </div>
+
+                <div class="col-lg-6">
+                  <button type="submit" class="btn btn-wd btn-lg btn-fill pull-right signbtn" id="submitbutton">
+                    <b>Send </b>Request
+                    <span class="btn-label">
+                      <i class="ti-angle-right"></i>
+                    </span> 
+                  </button>
+                </div>
+
+              </div>
+            
+           
+          </form>
+         
+      </div>
+      
+    </div>
+   </div>
+   
+
+    <br>
+    <br>
+    <div class="row">
+      <div class="col-md-12 text-center">
+        &copy; <span id="year"> </span>, All Rights Reserved. examineer.in, v1.0.0
+      </div>
+    </div>
+    <br>
+  </body>
+
+  <%- include('../parts/allloginJS'); %>
+  <script src="../../author_public/js/author_signup.js"></script>
+</html>

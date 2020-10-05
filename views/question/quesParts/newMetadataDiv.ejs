@@ -1,0 +1,105 @@
+<!-- <div class="tab-pane active quesYScroll" id="metadata"> -->
+<div class="tab-pane active" id="metadata">
+      <form  class="form-horizontal">
+    <fieldset>
+        <div class="form-group">
+            <!--  <label class="col-lg-3 control-label">Author</label> -->
+            <div class="col-lg-8">
+                <input type="hidden" placeholder="name" class="form-control" id="author1" value="<%-author%>"  readonly=true>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                Comments
+                <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipQueMeta01%>">
+                 <i class="ti-help-alt fa-lg"></i>
+                </button>
+            </label>
+            <div class="col-lg-8">
+                <input type="text" class="form-control" id="remarks" value="<%-metaData.comments%>">
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                <b class='required' >*</b> Tags
+                <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipQueMeta02%>">
+                 <i class="ti-help-alt fa-lg"></i>
+                </button>
+            </label>
+            <div class="col-lg-8">
+                <input type="text" class="form-control" id="id_commentsTg" data-role="tagsinput" value="<%-metaData.tags%>">
+            </div>
+        </div>
+    </fieldset>
+    <%if (concepts){%>
+    <!-- <fieldset>
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                Concepts
+                <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipQueMeta03%>">
+                 <i class="ti-help-alt fa-lg"></i>
+                </button>
+            </label>
+            <div class="col-lg-5">
+                <select id="concepts" class="selectpicker" multiple data-max-options="2" data-live-search="true" data-style="btn-default">
+                    <% 
+                        var k;
+                        for(var i=0; i<concepts.length;i++){ 
+                        if(metaData.concepts){ 
+                        arr = metaData.concepts;
+                        k = arr.indexOf(concepts[i]);
+                        if(k>-1){
+                        %>
+                    <option selected value="<%-concepts[i]%>" > <%-concepts[i]%> </option>
+                    <%      }else{ %>
+                    <option value="<%-concepts[i]%>" ><%-concepts[i]%></option>
+                    <%      }
+                        }else{ %>
+                    <option value="<%-concepts[i]%>" ><%-concepts[i]%></option>
+                    <%    }
+                        } 
+                        %>
+                </select>
+            </div>
+        </div>
+    </fieldset> -->
+    <%}%>
+    <%if (skills){%>
+    <!-- <fieldset>
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                Skills
+                <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipQueMeta04%>">
+                 <i class="ti-help-alt fa-lg"></i>
+                </button>
+            </label>
+            <div class="col-lg-5">
+                <select id="skills" class="selectpicker " multiple data-max-options="2" data-live-search="true" data-style="btn-default">
+                    <% 
+                        var k;
+                        for(var i=0; i<skills.length;i++){ 
+                        if(metaData.skills){ 
+                        arr = metaData.skills;
+                        k = arr.indexOf(skills[i]);
+                        if(k>-1){
+                        %>
+                    <option selected value="<%-skills[i]%>" > <%-skills[i]%> </option>
+                    <%      }else{ %>
+                    <option value="<%-skills[i]%>" ><%-skills[i]%></option>
+                    <%      }
+                        }else{ %>
+                    <option value="<%-skills[i]%>" ><%-skills[i]%></option>
+                    <%     }
+                        } 
+                        %>
+                </select>
+            </div>
+        </div>
+    </fieldset> -->
+    <%}%>
+</form>                                      
+</div>

@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <%- include('../parts/allCSS'); %>
+    <script src="author_public/PaperDashBoard/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+    <script src="author_public/js/author_basket.js"></script>
+   <link rel="stylesheet" href="author_public/css/author_pubList.css">
+   <link rel="stylesheet" href="author_public/css/author_basket.css">
+ 
+   <style>
+    .pagination li.page-item a{
+      font-size: 14px;
+    }
+   </style>
+</head>
+<body>
+  <div class="wrapper">
+    <%- include('../parts/leftNavBar'); %>
+      <div class="main-panel">
+        <%- include('../parts/topNavBarPart1'); %> Public List
+          <%- include('../parts/topNavBarPart2'); %>
+            <div class="content">
+              <div class="container-fluid">
+              <div class="row"><div class="col-lg-10 col-lg-offset-1">
+                <div class="row">
+                  <input type="hidden" name="author" id="author" value="<%-short%>">                  
+                  <textarea name="playlistData" class="form-control" id="playlistData" style="display:none;"><%-playlistdata%></textarea>
+                   <div>
+                   <!-- <input type="checkbox" class="switch" checked> -->
+                  </div>
+                <!-- <p><%-JSON.stringify(subject)%></p> -->
+                        <% var color = 0;
+                        
+                        Object.keys(subject).forEach((sub) => {
+                        var head_class = [{"class":"text-danger", "color":"bor-danger"},
+                                          {"class":"text-warning", "color":"bor-warning"},
+                                          {"class":"text-success", "color":"bor-success"},
+                                          {"class":"text-info", "color":"bor-info"},
+                                          {"class":"text-primary", "color":"bor-primary"}
+                                        ];
+                        if(color>=4){
+                            color = 0;
+                        }else{
+                        color++;
+
+                        }
+                        %>
+                        
+                            <div class="col-md-4 col-lg-3 col-xs-6">
+                                <div class="card sub_card <%-head_class[color].color%>">
+                                    <div class="card-content text-center">
+                                       <h4 class="<%-head_class[color].class%>"><%-sub%></h4><hr>
+                                      
+                                        <% var i=1;
+                                        subject[sub].forEach((data) => { 
+                                        if(i<=2){
+                                        %>
+                                            <p class="topic getQues" id="<%-data.id%>"  data-ques='{"topic":"<%-data.name%>", "color":"<%-head_class[color].class%>"}'><%-data.name%></p>
+                                            <%if(i!=2){%><hr class='pubListHr'><%}%>
+                                            <!-- <button class="btn topic" id="<%-data.id%>"><%-data.name%></button> -->
+                                        <% }%>
+
+                                        <% i++; }) %>
+                                        
+                                   
+                                        <%if(subject[sub].length>=3){%>
+                                            <div class="sub_footer"><hr class='pubListHr'>
+                                               <a class="<%-head_class[color].class%> getTopic" data-sub='{"subject":"<%-sub%>","data":<%-JSON.stringify(subject[sub])%>, "color":"<%-head_class[color].class%>" }' >
+                                                View all <%-subject[sub].length%>
+                                                </a> 
+                                            </div>
+                                        <%}else{%>
+                                            <div class="sub_footer">&nbsp;</div>
+                                        <%}%>
+                                    </div>
+                                </div>
+                            </div>
+                         
+                        <% }); %>
+                     </div></div></div>
+                    <div class="">
+                      <div id="topicOverlay" class="overlay" style="overflow: scroll;">
+                        <a href="javascript:void(0)" class="closebtn" onclick="closeNav('topicOverlay')">&times;</a>
+                        <div class="overlay-content">
+                          <div class="row">
+                            <div class="col-md-8 col-xs-12 col-md-offset-3">
+                              <div class="card">
+                                  <div class="card-content" id="topicOverlayList">
+                                      <a href="javascript:void(0)" class="closebtn" onclick="closeNav('topicOverlay')">&times;</a>
+                                  </div>
+                                  <div class="card-footer">&nbsp;</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    
+                    <div class="">
+                      <div id="quesOverlay" class="overlay">
+                        <a href="javascript:void(0)" class="closebtn" onclick="closeNav('quesOverlay')">&times;</a>
+                        <div class="overlay-content">
+                          <div class="row">
+                            <div class="col-md-8 col-xs-12 col-md-offset-3">
+                              <div class="card">
+                                  <div class="card-content" id="quesOverlayList">
+                                    <div id="tblquesHead"></div>
+                                      <div class='toolbar'>
+                                         
+                                        <div class="filterbtns mt-14px">
+                             
+                                          <label>Filter:</label>
+                                            <div class="btn-group" role="group" >
+                                            <button id="allrows" rel="tooltip" title="All questions" onclick="showalltabdata()" type="button" class="btn btn-default btn-sm"> All</button>
+                                            <button id="basketrows" rel="tooltip" title="Basket questions" onclick="filterbybasket('#publistQues','recentView','table')" type="button" class="btn btn-default btn-sm "><i class="fa fa-shopping-basket" ></i></button>
+                                            <button id="lastviewrows" rel="tooltip" title="Recent view" onclick="filterbyview('#publistQues','recentView','table')" type="button" class="btn btn-default btn-sm btngrplastbtn">
+                                              <i class="fa fa-clock-o"></i>
+                                            </div> 
+
+                                            <input type="hidden" id="pubListId">
+                                            <input type="hidden" id="list">
+                                            <input type="hidden" id="basketItm">
+                                            
+                                        </div>
+
+                                      </div>
+                                      <table id='publistQues' class='table'>
+                                        <thead>
+                                          <tr>
+                                            <th data-field='id' data-sortable='true'  class="text-center">Question Id</th>
+                                            <th data-field='type' data-sortable='true'  class="text-center">Type</th>
+                                            <th data-field='tags' data-sortable='true'  class="text-center">Tags</th>
+                                            <th data-field='comments' data-sortable='true'  class="text-center">Description</th>
+                                            <th data-field="actions" class="td-actions text-center" data-events="operateEvents" data-formatter="operateFormatter">Actions</th>
+                                          </tr>
+                                        </thead>
+                                      </table>
+                                  </div>
+                                  <div class="card-footer">&nbsp;</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- modal view sample -->
+                    <div class="">
+                      <div class="modal" id="mdlViewSample" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                              <h4 class="modal-title" id="mySmallModalLabel">View Sample</h4>
+                            </div>
+                            <div class="modal-body" id="viewModalContent">
+                              <p></p>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                              <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- modal view sample -->
+                    
+
+
+
+                     <!-- modal Ticket Raise -->                     
+                      <div class="modal" id="mdlTicketRaise" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <form method="post" id="frmRaiseTicket">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                              <h4 class="modal-title" id="mySmallModalLabel">Raise Ticket</h4>
+                              
+                            </div>
+                            <div class="modal-body" id="ticketModalContent">
+                                  <fieldset>
+                                      <div class="form-group">
+                                         <div class="row">                                          
+                                          <div class="col-sm-12">
+                                            <p style="font-size:14px;">
+                                              Your are raising a ticket because you think there is some issue with content id <b id="mdlQuesLbl"></b>
+                                            </p>
+                                                  <label>Describe your issue</label>
+                                                  <textarea placeholder="Description" rows="5" name="rt_ticketDescription" class="form-control" id="rt_ticketDescription"></textarea>
+                                          </div>   
+                                          </div>     
+                                      </div>
+                                      <input type="hidden" name="rt_quesId" id="rt_quesId">
+                                      <input type="hidden" name="rt_authorId" id="rt_authorId">
+                                  </fieldset>
+                             
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" id="saveRaiseTicket"  class="btn btn-primary btnDisableHover">Raise Ticket</button>
+                            </div>
+
+                          </div>
+                        </form>
+                        </div>
+                      </div>                    
+                    <!-- modal Ticket Raise -->
+
+                     <!-- modal already ticket raised -->                     
+                     <div class="modal" id="mdlAlreadyTicekt" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                       
+                        <div class="modal-content">
+                         
+                          <div class="modal-body" id="ticketAlreadyModalContent">
+                            <div class='row '>
+                              <div class="col-lg-12">
+                                  <div class="reminder reminderwidth">
+                                      <p>
+                                          <i class="fa fa-bell" style="font-size:1.5em;"></i> Ticket has been raised for this question already.</p>
+                                  </div>
+                              </div>
+
+                              <div class="col-lg-12">
+                                <h5 class="mrBtm-5px"> <b>Issue Description:</b> </h5>
+                                <blockquote class="blockquteCust">
+                                  <p id="issueContent"></p>    
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-12 col-xs-12">
+                                          <small class="text-left txtResLeft contentBNone"><b> On :</b>
+                                            <span id="issueRaiseAt"></span>
+                                          </small>
+                                        </div>
+                                        <div class="col-md-6 col-sm-12 col-xs-12">
+                                          <small class="text-right txtResLeft"><b> Raised By</b>
+                                              <cite id="issueRaiseBy"></cite>
+                                              
+                                          
+                                          </small>
+                                        </div>
+                                    </div>     
+                                </blockquote>
+                              </div>
+
+                          </div>     
+                           
+                          </div>
+
+                          <div class="modal-footer">
+                              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                              <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                          </div>
+                          
+                        </div>
+                     
+                      </div>
+                    </div>                    
+                  <!-- modal  already ticket raised -->
+
+                   
+
+
+                  </div>
+                </div>
+    <%- include('../parts/footer'); %>
+    </div>
+  </div>
+</body>
+<%- include('../parts/allJS'); %>
+<!-- Latest compiled and minified JavaScript -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>
+
+<script type="text/javascript" src="author_public/js/author_pubList.js"></script>
+
+<script>
+  //
+  //sessionStorage.removeItem('recentView');
+
+  $("[rel='tooltip'][data-vid]").on('show.bs.tooltip', function(){
+                var data = $(this).attr('data-vid');
+                var qid = data.substring(2);               
+                updateLastViewTime(qid,'recentView');                    
+  });
+  changecolor('#publistQues','recentView','table');
+
+  $(document).ready(function() {
+  });
+  
+  function showalltabdata()
+  {
+    
+    let pubListId = $("#pubListId").val();
+    
+    let list = JSON.parse($("#list").val()); 
+    htm = "<h3 class=" + list.color + ">" + list.topic + "<button id=\"fetchBtn\" rel=\"tooltip\" title=\"Fetch From Basket\" onclick=\"fetchFrmBasket('<%-short%>')\" type=\"button\" class=\"btn btn-default btn-simple btn-lg \"><i class=\"fa fa-arrow-circle-down\"></i></button></h3>";
+    $("#tblquesHead").html(htm);
+
+		$.ajax({
+			type: 'get',
+			url: '/author_getpubListQuestion?id=' + pubListId,
+			cache: false,
+			success: function (returndata) {
+				if (returndata) {
+					if (returndata.status == 'success') {
+						var fdata = JSON.parse(returndata.data);
+
+            $('#publistQues').bootstrapTable('destroy');
+						$('#publistQues').bootstrapTable({
+							toolbar: ".toolbar",
+							data: fdata,
+							clickToSelect: true,
+							showRefresh: false,
+							search: true,
+							showToggle: true,
+							showColumns: true,
+							pagination: true,
+							searchAlign: 'right',
+							strictSearch: false,
+							pageSize: 10,
+							clickToSelect: false,
+							pageList: [5, 10, 25, 50, 100],
+
+							formatShowingRows: function (pageFrom, pageTo, totalRows) {
+								//do nothing here, we don't want to show the text "showing x of y from..."
+								return "showing " + pageFrom + " to " + pageTo + " of " + totalRows + " entries <br/>";
+							},
+							formatRecordsPerPage: function (pageNumber) {
+								return "  " + pageNumber + " rows visible";
+							},
+							icons: {
+								refresh: 'fa fa-refresh',
+								toggle: 'fa fa-th-list',
+								columns: 'fa fa-columns',
+								detailOpen: 'fa fa-plus-circle',
+								detailClose: 'ti-close'
+							}
+						});
+						//activate the tooltips after the data table is initialized
+            $('[rel="tooltip"]').tooltip();
+            
+            $("[rel='tooltip'][data-vid]").on('show.bs.tooltip', function(){
+            var data = $(this).attr('data-vid');
+            var qid = data.substring(2);     
+              
+            updateLastViewTime(qid,'recentView');                    
+            });
+
+						$('#publistQues').on('post-body.bs.table', function () {
+              $('[rel="tooltip"]').tooltip();
+              $("[rel='tooltip'][data-vid]").on('show.bs.tooltip', function(){
+                var data = $(this).attr('data-vid');
+                var qid = data.substring(2);         
+                updateLastViewTime(qid,'recentView');                    
+              });
+							changecolor('#publistQues','recentView','table');
+
+						});
+						  
+												
+						changecolor('#publistQues','recentView','table');
+						
+
+
+					} else if (returndata.status == 'error') {
+						$.notify({
+							icon: "",
+							message: "This List does not contains any question !!!"
+						}, {
+								type: "danger",
+								timer: 1000,
+								delay: 700,
+								placement: {
+									from: 'top',
+									align: 'center'
+								}
+							});
+					} else { }
+
+
+				} else {
+					// other code
+				}
+			},
+			error: function () {
+				console.error('Failed to process ajax !');
+			}
+		});
+
+}
+ 
+LoadRecentViewQuest('recentView');
+
+$(document).ready(function() {
+        if (window.location.search.indexOf('msg=dberror') > -1) {
+             $.notify({
+                icon: "",
+                message: "Error occurs during fetching your data, Please Contact Administrator !! !!!"
+              },{
+                type: "danger",
+                timer: 4000,
+                placement: {
+                    from: 'top',
+                    align: 'center'
+                }
+              });
+
+              var currrentUrl =  window.location.href;
+              var newUrl =  currrentUrl.split("?")[0];           
+              window.history.replaceState(null, null, newUrl);
+
+        } 
+});
+
+</script>
+
+</html>

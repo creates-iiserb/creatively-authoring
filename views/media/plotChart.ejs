@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <%- include('../parts/allCSS'); %>
+  <link rel="stylesheet" href="author_public/css/author_media.css">
+  <script src="author_public/PaperDashBoard/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+  <!-- MATH.JS FOR CALCULATING VALUES OF CONTINOUS FUNCTION -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.9.0/math.min.js"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+        if (window.location.search.indexOf('body=true') > -1) {
+            $.notify({
+          icon: "",
+          message: "<b> Success - </b> Chart Updated Successfully !!!"
+        },{
+          type: "success",
+          timer: 4000,
+          placement: {
+              from: 'top',
+              align: 'center'
+          }
+        });
+        } else {
+            // alert('track not here');
+        }
+    });
+
+     $(document).ready(function() {
+        if (window.location.search.indexOf('msg=tagerr') > -1) {
+            $.notify({
+          icon: "",
+          message: "<b> Warning - </b> Minimum 3 tags required !!!"
+        },{
+          type: "warning",
+          timer: 4000,
+          placement: {
+              from: 'top',
+              align: 'center'
+          }
+        });
+        } else {
+            // alert('track not here');
+        }
+    });
+  </script>
+</head>
+<body onload="loadPlotDatachart()">
+  <div class="wrapper">
+    <%- include('../parts/leftNavBar'); %>
+      <div class="main-panel">
+        <%- include('../parts/topNavBarPart1'); %> New Chart (Chart Id: <%-id%>)
+        <%- include('../parts/topNavBarPart2'); %>
+        <div class="content" style="padding-top:5px;">
+        
+
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-lg-7 col-sm-12 outer">
+                <div class="row">
+                  <div class="card card-big">
+                      <div class="card-header clearfix">
+                        <div class="pull-left">
+                            <button type="button" class="btn btn-wd btn-default btn-move-left" onclick="window.location.href='/author_mediaGallery'">
+                              <span class="btn-label">
+                                  <i class="ti-angle-left"></i>
+                              </span>
+                              Back
+                          </button>
+                        </div>
+                        <div class="pull-right">
+                         
+                                <script type="text/javascript">
+                                    $(document).ready(function(){
+                                      $('#btnupdate').on('click', function() {
+                                        document.getElementById('caption').value = document.getElementById('caption1').value;
+                                        document.getElementById('description').value = document.getElementById('description1').value;
+                                        document.getElementById('tags').value = document.getElementById('tags1').value;
+                                      });
+                                    }); 
+                                </script>  
+                                <script type="text/javascript">
+                                 $(document).ready(function(){
+                                      $('#btnupdate').on('click', function(e) {
+                                        var tags_ary  = new Array();
+                                        var arr = document.getElementById('tags1').value;
+                                        tags_ary  = arr.split(",");
+                                        var tags_ary_length = tags_ary.length;
+                                        if(tags_ary_length<3){
+                                          alert("Minimum 3 tags required !!!");
+                                          return false;
+                                        }
+                                      });
+                                    }); 
+                                </script> 
+                                <form name="authfrm4" id="authfrm4" method="post" action="/author_updategraph" >
+                                  <input type="hidden" id="layout_update" name="layout_update" value="">
+                                  <input type="hidden" id="plotdata_update" name="plotdata_update" value="">
+                                  <input type="hidden" id="ctype" name="ctype" value="chart">
+                                  
+                                  <input type="hidden" id="author" name="author" value="<%-author%>">
+                                  <input type="hidden" id="id" name="id" value="<%-id%>">
+                                  <input type="hidden" id="caption" name="caption" value="">
+                                  <input type="hidden" id="description" name="description" value="">
+                                  <input type="hidden" id="tags" name="tags" value="">
+                                  <input type="hidden" name="log_Id" id="log_Id" value="">
+                                  <input type="hidden" name="log_Token" id="log_Token" value="">
+                                  <input type="hidden" name="token" id="token" value="<%-token%>">
+                                  <button class='btn btn-warning btn-wd btn-fill' type='submit' id='btnupdate' onclick="return plotChart();"><i class="fa fa-upload"></i> Update</button>
+                                </form>
+                             
+                        </div>
+                      </div><hr>
+                      <div class="card-content" style="padding-right:2px;">
+                        <div class="nav-tabs-navigation">
+                            <div class="nav-tabs-wrapper">
+                                <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+                                  <li class="active"><a href="#MetaData" data-toggle="tab">Metadata</a></li>
+                                  <li ><a href="#Layout" data-toggle="tab" onclick="validationCheckplot()">Layout</a></li>
+                                  <li><a href="#Plot" data-toggle="tab" >Plot</a></li>
+                                  <li><a href="#plotdata" data-toggle="tab" onclick="plotDataTab()">Advance</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div id="edit-quiz-content" class="tab-content">
+                          <div class="tab-pane active" id="MetaData">
+                            <!-- <form  class="form-horizontal"> -->
+                            <fieldset class="col-sm-10 col-sm-offset-1">
+                              <div class="form-group">
+                                  <!-- <label style="font-size:18px;">Author</label> -->
+                                  <input type="hidden" class="form-control" id="author" value="<%-short%>" readonly=true >
+                              </div>
+                            </fieldset>
+                            <fieldset class="col-sm-10 col-sm-offset-1">
+                              <div class="form-group">
+                                  <label>Caption</label>
+                                  <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipChart01%>">
+                                   <i class="ti-help-alt fa-lg"></i>
+                                  </button>
+                                  <input type="text" class="form-control" id="caption1" value="" >
+                              </div>
+                            </fieldset>
+                            <fieldset class="col-sm-10 col-sm-offset-1">
+                              <div class="form-group">
+                                  <label>Description</label>
+                                  <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipChart02%>">
+                                   <i class="ti-help-alt fa-lg"></i>
+                                  </button>
+                                  <input type="text" class="form-control" id="description1" value="" >
+                              </div>
+                            </fieldset>
+                            <fieldset class="col-sm-10 col-sm-offset-1">
+                              <div class="form-group">
+                                  <label>Tags</label><b style="color:#cc0000;"> *</b>
+                                  <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipChart03%>">
+                                   <i class="ti-help-alt fa-lg"></i>
+                                  </button>
+                                  <input type="text" class="form-control" id="tags1" name="tags" data-role="tagsinput" required>
+                              </div>
+                            </fieldset>
+                            <!-- </form>-->
+                          </div>
+                          <div class="tab-pane" id="Layout">
+                            <fieldset class="col-sm-10 col-sm-offset-1">
+                              <div class="form-group">
+                                <label>Title</label><b style="color:#cc0000;"> * </b>
+                                <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipChart04%>">
+                                 <i class="ti-help-alt fa-lg"></i>
+                                </button>
+                                <input type="text" class="form-control" id="chartTitle" placeholder="Add title of the Plot" aria-describedby="sizing-addon1" required><br/>
+                              </div>
+                            </fieldset>
+                            <fieldset class="col-sm-10 col-sm-offset-1">
+                              <div class="form-group">
+                                <label></label>
+                                <div class="row">
+                                  <div class="col-md-3">
+                                      <div class="form-group">
+                                        <select id="hover"  class="selectpicker" data-style="btn-default"> 
+                                          <option value="closest">Hover</option>
+                                          <option value="x">Hover-X</option>
+                                          <option value="y">Hover-Y</option>
+                                          <option value="false">None</option>
+                                        </select>
+                                      </div>
+                                  </div>
+                                  <div class="col-md-3">
+                                      <div class="form-group">
+                                        <select id="legend"  class="selectpicker" data-style="btn-default"> 
+                                            <option value="true">Legend</option>
+                                            <option value="v" >Vertical</option>
+                                            <option value="h" >Horizontal</option>
+                                            <option value="false">None</option>
+                                        </select> 
+                                      </div>
+                                  </div>
+                                  <div class="col-md-2">
+                                      <div class="form-group">
+                                        <div class="checkbox">
+                                          <input id="frame" type="checkbox" class="form-control"><label for="frame"></label><b>Frame</b>
+                                        </div>
+                                      </div>
+                                  </div>
+                                  <div class="col-md-3">
+                                      <div class="form-group">
+                                        <div class="dropdown">
+                                          <!-- <div> -->
+                                            <button class="btn btn-default dropdown-toggle selectButton" data-toggle="dropdown" id="add-new-event" onclick="colorChooser()" type="button"> Frame Color <span class="caret"></span></button>
+                                            
+                                              <ul class="dropdown-menu" role="menu">
+                                                  <li role="presentaion">
+                                                      <div class="btn-group" style="width: 100%; margin-bottom: 10px;">
+                                                          <!--<button type="button" id="color-chooser-btn" class="btn btn-info btn-block dropdown-toggle selectButton" data-toggle="dropdown">Color <span class="caret"></span></button>-->
+                                                          <ul class="fc-color-picker" id="color-chooser">
+                                                              <li><a class="text-aqua" href="#"><i class="fa fa-square"></i></a></li>
+                                                              <li><a class="text-blue" href="#"><i class="fa fa-square"></i></a></li>
+                                                              <li><a class="text-light-blue" href="#"><i class="fa fa-square"></i></a></li>
+                                                              <li><a class="text-teal" href="#"><i class="fa fa-square"></i></a></li>
+                                                              <li><a class="text-yellow" href="#"><i class="fa fa-square"></i></a></li>
+                                                              <li><a class="text-light-orange" href="#"><i class="fa fa-square"></i></a></li>
+                                                              <li><a class="text-orange" href="#"><i class="fa fa-square"></i></a></li>
+                                                              <li><a class="text-green" href="#"><i class="fa fa-square"></i></a></li>
+                                                              <li><a class="text-lime" href="#"><i class="fa fa-square"></i></a></li>
+                                                              <li><a class="text-red" href="#"><i class="fa fa-square"></i></a></li>
+                                                              <li><a class="text-purple" href="#"><i class="fa fa-square"></i></a></li>
+                                                              <li><a class="text-fuchsia" href="#"><i class="fa fa-square"></i></a></li>
+                                                              <li><a class="text-maroon" href="#"><i class="fa fa-square"></i></a></li>
+                                                              <li><a class="text-gray" href="#"><i class="fa fa-square"></i></a></li>
+                                                              <li><a class="text-muted" href="#"><i class="fa fa-square"></i></a></li>
+                                                              <li><a class="text-navy" href="#"><i class="fa fa-square"></i></a></li>
+                                                          </ul>
+                                                          
+                                                      </div>
+                                                  </li>  
+                                              </ul>
+                                         <!--  </div> -->
+                                      </div>
+                                      </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </fieldset>
+                            <fieldset class="col-sm-10 col-sm-offset-1">
+                              <div class="form-group">
+                                <!-- x-axis -->
+                                <div class="row">
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                      <div class="checkbox">
+                                          <input id="xx" type="checkbox" class="form-control"><label for="xx"><b>X-axis </b></label>
+                                          <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipChart05%>">
+                                             <i class="ti-help-alt fa-lg"></i>
+                                          </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                      <div class="checkbox">
+                                        <input id="gridlinesX" type="checkbox" class="form-control" ><label for="gridlinesX"><b>GridLines</b></label>&nbsp;&nbsp; 
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                      <div class="checkbox">
+                                        <input id="zerolinesX" type="checkbox" class="form-control" ><label for="zerolinesX"><b>ZeroLines</b></label>&nbsp;&nbsp; 
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="col-md-12">
+                                      <div class="form-group">
+                                         <input type="text" class="form-control" id="Xaxis"  placeholder="title for x axis" aria-describedby="sizing-addon1" value="">
+                                      </div>
+                                  </div>
+                                </div>
+
+                            <!-- y-axis -->
+                                <div class="row">
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                      <div class="checkbox">
+                                          <input id="yy" type="checkbox" class="form-control" ><label for="yy"><b>Y-axis :</b> </label>
+                                          <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipChart06%>">
+                                              <i class="ti-help-alt fa-lg"></i>
+                                          </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-md-4">
+                                      <div class="form-group">
+                                        <div class="checkbox">
+                                          <input id="gridlinesY" type="checkbox" class="form-control" ><label for="gridlinesY"><b>GridLines</b></label>&nbsp;&nbsp; 
+                                        </div>
+                                      </div>
+                                  </div>
+                                  <div class="col-md-4">
+                                      <div class="form-group">
+                                        <div class="checkbox">
+                                          <input id="zerolinesY" type="checkbox" class="form-control" ><label for="zerolinesY"><b>ZeroLines</b></label>&nbsp;&nbsp; 
+                                        </div>
+                                      </div>
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="col-md-12">
+                                      <div class="form-group">
+                                         <input type="text" class="form-control input-lg" id="Yyaxis"  placeholder="title for y axis" aria-describedby="sizing-addon1" value="">
+                                      </div>
+                                  </div>
+                                 
+                                </div>
+                                <script type="text/javascript">
+                                  $('#yy').change(function(){
+                                      $("#Yyaxis,#gridlinesY,#zerolinesY").prop("disabled", !$(this).is(':checked'));
+                                  });
+
+                                  $('#xx').change(function(){
+                                      $("#Xaxis,#gridlinesX,#zerolinesX").prop("disabled", !$(this).is(':checked'));
+                                  });
+                                </script>
+                              </div>
+                            </fieldset>
+                          </div>
+                          <div class="tab-pane" id="Plot">
+                            <div class="row">
+                              <fieldset  class="col-sm-10 col-sm-offset-1">
+                                <div class="form-group">
+                                  <!-- <div align="right">     -->
+                                    <label>Add Trace  </label><button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipChart07%>">
+                                   <i class="ti-help-alt fa-lg"></i>
+                                  </button>
+                                    <select id="selectChart"  class="selectpicker" data-style="btn-default" onchange="addDiv()">
+                                        <option value="">Select</option>
+                                        <option value="scatter">Scatter</option>
+                                        <option value="markers">Bubble</option>
+                                        <option value="bar">Bar</option>
+                                        <option value="continous">Functions</option>
+                                        <option value="3d">3-D Chart</option>
+                                        <option value="pie">Pie Chart</option>
+                                    </select>  
+                                    <!-- <input class='btn btn-success btn-lg btn-wd btn-fill' id="btnAddOpt" onclick="addDiv()" type="button" value="Trace +" />   -->
+                                  <!-- </div> -->
+                                  <div align="right">   
+                                      <textarea class="form-control" rows="5" id="pdata" readonly="readonly" style="display:none;"></textarea>
+                                      <!-- <input class='option_btn' id="btnAddOpt" onclick="loadPlotDatachart()" type="button" value="addJson" /> -->
+                                  </div> 
+                                </div>
+                                
+                              </fieldset>
+                              <fieldset  class="col-sm-10 col-sm-offset-1">
+                                  <div id="TextBoxContainerOpt" align="center"></div><br/><br/><br/>
+                              </fieldset>
+                            </div>                                 
+                          </div>
+                          <div class="tab-pane" id="plotdata">
+                            <div class="row">
+                              <fieldset  class="col-sm-10 col-sm-offset-1">
+                                <div class="form-group">
+                                    <label>Plot Data</label><button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipChart08%>">
+                                   <i class="ti-help-alt fa-lg"></i>
+                                  </button>
+                                    <textarea class="form-control" rows="5" id="plotdataTab" readonly="readonly" ></textarea>
+                                </div>
+                              </fieldset>
+                              <fieldset  class="col-sm-10 col-sm-offset-1">
+                                <div class="form-group">
+                                    <label>Layout</label><button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipChart09%>">
+                                   <i class="ti-help-alt fa-lg"></i>
+                                  </button>
+                                    <textarea class="form-control" rows="5" id="layoutdataTab" readonly="readonly" ></textarea>
+                                </div>
+                              </fieldset>
+                              <script type="text/javascript">
+                                $(document).ready(function(){
+                                  $('#editadvplot').on('click', function() {
+                                    document.getElementById('plotdata1').value = document.getElementById('plotdataTab').value;
+                                    document.getElementById('layout1').value = document.getElementById('layoutdataTab').value;
+                                    document.getElementById('caption_edit').value = document.getElementById('caption1').value;
+                                    document.getElementById('description_edit').value = document.getElementById('description1').value;
+                                    document.getElementById('tags_edit').value = document.getElementById('tags1').value;
+                                  });
+                                });
+
+                                $(function() {
+                                  $('form#gettoken_adv_graph').click(function(e) {
+                                    e.preventDefault();
+                                    var c = confirm("This will create a new advance chart. Do you want to continue?");
+                                    if(c){
+                                      $('form#gettoken_adv_graph').submit();
+                                    }
+                                  });
+                                });
+                              </script>
+                            </div>
+                            <div class="row">
+                              
+                                  <div class='col-sm-10 col-sm-offset-1'>
+                                    <form name="gettoken_adv_graph" id="gettoken_adv_graph" method="post" action="/author_advanced_plot_graph"  target="_blank">
+                                        <input type="hidden" name="shortn" value="<%-short%>">
+                                        <input type="hidden" name="ctype" value="advance_chart">
+                                        <input type="hidden" name="layout1" id="layout1" value="">
+                                        <input type="hidden" name="plotdata1" id="plotdata1" value="">  
+                                        <input type="hidden" id="caption_edit" name="caption_edit" value="">
+                                        <input type="hidden" id="description_edit" name="description_edit" value="">
+                                        <input type="hidden" id="tags_edit" name="tags_edit" value="">
+                                        <input type="hidden" name="log_Id" id="log_Id" value="">
+                                        <input type="hidden" name="log_Token" id="log_Token" value="">
+                                        <button id="editadvplot" class='btn btn-primary btn-wd btn-fill pull-right' type='submit'>Edit In Advance Chart</button>
+                                    </form>
+                                  </div>
+                                
+                            </div>                                 
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class='col-lg-5 col-sm-12 outer sticky'>
+                <div class="card card-big">
+                    <div class="card-header clearfix">
+                        <div class="pull-left">
+                            <h3 class="card-title">Plot Chart</h3>
+                        </div>
+                        <div class="pull-right">
+                            <!-- <div class='col-lg-6'> -->
+                              <form name="authfrm" id="authfrm">
+                                <button class='btn btn-info btn-wd btn-fill' type='button' id='btnplotit' onclick="plotChart()">Plot it !</button>
+                                <a id="downloadAnchorElem" style="display:none"></a>
+                                <a id="adownloadAnchorElem" style="display:none"></a>
+                              </form>
+                            <!-- </div> -->
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="card-content" style="padding:2px;">
+                        <div id="myDiv" class="responsive-plot"><!-- Plotly chart will be drawn inside this DIV --></div>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <%- include('../parts/footer'); %>
+      </div>
+  </div>
+  
+    </div>
+  </div>
+</body>
+<%- include('../parts/allJS'); %>
+<%- include('../parts/codemirrorJS'); %>
+<script type="text/javascript" src="author_public/js/author_media.js"></script>
+<script src="author_public/plotchart/plotly-latest.min.js"></script>
+<script src="author_public/plotchart/plot2.js"></script>
+</html>

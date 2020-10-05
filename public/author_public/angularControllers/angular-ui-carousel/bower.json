@@ -1,0 +1,46 @@
+{
+  "name": "angular-ui-carousel",
+  "version": "0.1.10",
+  "authors": [
+    {
+      "name": "mihnsen",
+      "email": "minhnt.hut@gmail.com"
+    }
+  ],
+  "description": "A simple, lightweight carousel for angularjs.",
+  "main": [
+    "dist/ui-carousel.js",
+    "dist/ui-carousel.css"
+  ],
+  "keywords": [
+    "ui-carousel",
+    "carousel",
+    "carousel",
+    "angular-carousel",
+    "angular-carousel",
+    "angular-ui-carousel",
+    "ng-carousel"
+  ],
+  "ignore": [
+    "src",
+    "test",
+    "demo",
+    ".tmp",
+    "_gh-pages",
+    "gulpfile.js",
+    "karma-*.conf.js",
+    "**/.*"
+  ],
+  "license": "MIT",
+  "homepage": "https://mihnsen.github.com/ui-carousel",
+  "dependencies": {},
+  "devDependencies": {
+    "angular-mocks": ">=1.2.0",
+    "angular": "1.6",
+    "angular-sanitize": ">=1.2.0",
+    "prism": "^1.5.1"
+  },
+  "resolutions": {
+    "angular": "1.6.3"
+  }
+}

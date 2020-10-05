@@ -1,0 +1,85 @@
+<div class="card">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-8 padLft0px">
+                    <p style="    color: #94918d;     margin-bottom: 1px; font-size: 22px;">{{loadQuestion.object.style}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="card-content">
+            <span math="{{loadQuestion.object.header}}"></span>
+        </div>
+    </div>
+    
+    <div ng-if="loadQuestion.object.style!='Flash Card'" ng-repeat="section in loadQuestion.object.sections">
+        <div class="panel typo-line panel-default white" ng-show="loadQuestion.object.style=='Question Answer Pair'">
+            <a data-toggle="collapse" data-target="#collapse{{$index}}" class="collapsed" aria-expanded="false">
+                <div class="panel-heading  white">
+                    <h4 class="panel-title">
+                        {{ lang.caption_section }} {{$index+1}}<i class="ti-angle-down"></i>
+                    </h4>
+                </div>
+            </a>
+            <div id="collapse{{$index}}" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                <div class="panel-body">
+                    <span math="{{section}}"></span>
+                </div>
+            </div>
+        </div>
+        <div ng-show="loadQuestion.object.style=='Information'||loadQuestion.object.style=='Lesson'|| loadQuestion.object.style=='Example'">
+            <div class="card">
+                <div class="card-content typo-line">
+                    <span math="{{section}}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    <div class="row EH-row" ng-if="loadQuestion.object.style=='Flash Card'" style="visibility: hidden;" id="flipElement">
+            <div class="col-md-12 col-xs-12 col-sm-12 pad0px" ng-repeat="findex in flashCards" ng-show="loadQuestion.object.sections[findex[0]]">
+                <div class="flip-container ">
+                    <div class="flipper">
+                      <div class="front">
+                        <div class="inner">
+                          
+                       
+                          <div class="flipheader">
+                            <div class="row">
+                                 <div class="col-md-10 col-xs-6 padLft0px">
+                                   <h3>{{lang.caption_card}} {{$index+1}}</h3>
+                                 </div>
+                                 <div class="col-md-2 col-xs-6 padRht0px">
+                                    <button class="flipbtn btn btn-xs btn-default pull-right"><i class="fa fa-share"></i> {{lang.caption_back}}</button>
+                                  </div>
+    
+                            </div>
+                          </div>
+                          <div class="flipbody">
+                                <span math="{{loadQuestion.object.sections[findex[0]]}}"></span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="back">
+                        <div class="inner">
+    
+                            <div class="flipheader">
+                                <div class="row">
+                                    <div class="col-md-10 col-xs-6 padLft0px">
+                                     <h3>{{lang.caption_card}} {{$index+1}}</h3>
+                                    </div>
+                                     <div class="col-md-2 col-xs-6 padRht0px">
+                                        <button class="flipbtn btn btn-xs btn-default pull-right"> {{lang.caption_front}} <i class="fa fa-reply"></i></button>
+                                      </div>
+    
+                                </div>
+                              </div>
+                              <div class="flipbody text-center">
+                                    <span math="{{loadQuestion.object.sections[findex[1]]}}"></span>
+                              </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+    
+            </div>	  
+    </div>

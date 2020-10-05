@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <%- include('../parts/allCSS'); %>
+    <script src="author_public/PaperDashBoard/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+</head>
+
+<body>
+  <div class="wrapper">
+    <%- include('../parts/leftNavBar'); %>
+      <div class="main-panel">
+        <%- include('../parts/topNavBarPart1'); %> Commit a question
+          <%- include('../parts/topNavBarPart2'); %>
+            <div class="content">
+              <div class="container-fluid">
+                <div class="row">
+
+                  <% if(data){ %>
+                    <%if(data.success==true){%>
+                      <script>
+                        $(function () {
+                          swal(
+                            'Commited',
+                            'Question comitted successfully!',
+                            'success'
+                          ).then(function () {
+                            window.location.href = '/author_dashboard_comm';
+                          });
+                        });
+                      </script>
+                      <% } else {%>
+                        <div class="col-md-8 col-md-offset-2">
+                          <div class="card error">
+                            <div class="card-content">
+                              <div class="row">
+                                <div class="form-group " align="left">
+                                  <p class="text-danger">
+                                    <i class="fa fa-exclamation-triangle"></i>
+                                    <b>Error:</b>
+                                  </p>
+                                  <p>
+                                    <%=data.message%>
+                                  </p>
+                                </div>
+                              </div>
+                              <br/>
+                              <div class="row">
+                                <div class="pull-left">
+                                  <div class='col-sm-6'>
+                                    <button type='button' class="btn btn-warning btn-wd btn-fill" id="arrange_ids" onclick="window.location.href='/author_getauthorid?id=<%=token%>&pipe=<%-pipe%>'">Re Check Data</button>
+                                  </div>
+                                </div>
+                                <div class="pull-right">
+                                  <div class='col-sm-6'>
+                                    <button type='button' class="btn btn-primary btn-wd btn-fill" id="arrange_ids" onclick="window.location.href='/author_dashboard_comm'">Go To Comitted</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <%}%>
+                </div>
+                <%} else{ %>
+                  <div class="col-md-8 col-md-offset-2">
+                    <div class="card error">
+                      <div class="card-content">
+                        <div class="row">
+                          <div class="form-group " align="left">
+                            <p class="text-danger">
+                              <i class="fa fa-exclamation-triangle"></i>
+                              <b> Error:</b>
+                            </p>
+                            <p>Server is not responding. Please try again after some time.</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <% }%>
+              </div>
+            </div>
+            <%- include('../parts/footer'); %>
+      </div>
+  </div>
+  </div>
+  </div>
+</body>
+<%- include('../parts/allJS'); %>
+  <script>
+  </script>
+
+</html>

@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<script src="author_public/PaperDashBoard/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+<script src="author_public/js/author_edit_quiz.js"></script>
+<!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/> -->
+<%- include('../parts/allCSS'); %>
+<link rel="stylesheet" href="author_public/css/author_quiz.css">
+<link rel="stylesheet" href="author_public/css/author_managequiz.css">
+
+
+</head>
+<body class="sidebar-mini" ng-app="manageQuizApp" ng-controller="manageQuizController" ng-cloak >
+    <div id="initData" class="disNone"><%=JSON.stringify(data) %></div>
+
+<div class="wrapper">
+    <div class="ld ld-ring ld-spin"></div>
+    <%- include ../parts/leftNavBar %>
+    <div class="main-panel" style="display:none;"  id="mainPanelDiv">
+    <%- include('../parts/topNavBarPart1'); %>Quiz Management (Quiz Id: {{quizData._id}})
+    <%- include('../parts/topNavBarPart2'); %>
+    <div class="content ">
+        <div class="container-fluid"  >
+            <div class='row'>
+                <div class='col-md-10 col-md-offset-1'>
+                    <% if(!isSection){ %>
+                    <div class="row animated zoomIn delay-2s">
+                        <div class="col-lg-12">
+                            <div class="errorAlert boxShadow">
+                            <input type="hidden" id="validUpto_utc" value="<%-data.quizData.validUpto%>">
+                            <p><i class="fa fa-exclamation-triangle"></i>Simple quiz is deprecated. Support for this quiz will end on  "<span id="validDatewarning"></span>".</p></div>
+                        </div>
+                    </div>
+                    <%}%>
+                    <div class="card card-big">
+                        <div class="card-header clearfix">
+                           <!-- <div class="row"> -->
+                               <!-- <div class="col-md-4 col-sm-4"> -->
+                                     <div class="pull-left">
+                                            <form role="form" name="frmback" id="frmback" method="post" action="/author_getQuizControlData" enctype="multipart/form-data">
+                                                <input type="hidden" name="quizid" id="quizid" value="{{quizData._id}}">
+                                                <button class="btn btn-wd btn-default btn-move-left" id="back"><span class="btn-label"><i class="ti-angle-left"></i></span>Back</button>
+                                            </form>
+                                     </div>
+                               <!-- </div> -->
+                               <!-- <div class="col-md-8 col-sm-8"> -->
+                                    <div class="pull-right">
+                                        <div class='col-sm-5 col-xs-12'>
+                                            <button type='button' class="btn  btn-info btn-fill"  ng-click="allStudentLog()"> <i class="fa fa-street-view"></i> Quiz Log </button>
+                                        </div>
+                                        <div class='col-sm-5 col-xs-12'>
+                                            <input type="hidden" name="author" id="author" value="<%-short%>">
+                                            <input type="hidden" id="type" name="type" value="manage_examineer_quizzes">                                   
+                                            <input type="hidden" name="quiz_id" id="quiz_id" value="{{quizData._id}}"> 
+                                            <input type="hidden" name="log_Id" id="log_Id" value="">
+                                            <input type="hidden" name="log_Token" id="log_Token" value="">
+                                            <button type='button' class="btn  btn-success btn-fill" ng-disabled="isUpdate" ng-click="updateQuiz()"> <i class="ti-save"></i> Save/Reset Quiz</button>
+                                        </div>
+                                         <!-- <div class="col-sm-6">
+                                    <button  type='button' class="btn  btn-primary btn-fill btn-wd" ng-disabled="isSendMail"  data-toggle="modal"  ng-click="openSendMail()"> <i class="ti-email"></i> Send Mail</button>
+                                </div> -->
+                                   </div>
+                                <!-- </div> -->
+                           <!-- </div> -->
+                            
+                        </div>
+                        
+                        <div class="card-content  padR2px">
+                            <div class="nav-tabs-navigation">
+                                <div class="nav-tabs-wrapper">
+                                    <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+                                        <li class="active"><a href="#takers1" data-toggle="tab">Participants</a></li>
+                                        <li><a href="#advance" data-toggle="tab">Advance</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div id="edit-quiz-content" class="tab-content">
+                                <div class="tab-pane active" id="takers1">
+                                    <!-- <form  class="form-horizontal"> -->
+                                        <fieldset>
+                                        <!-- start angular app -->
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <h4>Quiz Participants <lable><button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipQuiz17%>"><i class="ti-help-alt fa-lg" style="font-size:1.5em;"></i></button></lable>
+                                                    </h4>
+                                                </div>                                                   
+                                            </div>                                                
+                                            <br/>
+                                            <div class="row">
+                                                <div class="col-md-2 col-xs-6">
+                                                    <div class="input-group">
+	                                                    <span class="input-group-addon" title="Search">
+                                                            <i class="fa fa-search"></i>
+                                                        </span>
+	                                                    <input type="text"
+                                                               autocomplete="off"
+                                                               ng-model="search"
+                                                               class="form-control" 
+                                                               placeholder="Search" 
+                                                               ng-keyup="onSearch()">
+                                                    </div>
+                                                </div>
+                                                
+
+                                                <div class="col-md-2 col-xs-6">
+                                                    <div class="input-group" >
+	                                                    <span class="input-group-addon" title="Filter">
+                                                            <i class="fa fa-filter"></i>
+                                                        </span>
+                                                        <select
+                                                            ng-model="selectType"
+                                                            ng-change="setFilter()"
+                                                            class="form-control custSelect"
+                                                            ng-init="selectType =  'All'"
+                                                            ng-options="o as o for o in ['All','Logged In','Not Login','Blocked','Submitted','Started','Started+Submitted','Not started']">
+                                                     </select> 
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-2 col-sm-12">
+                                                    <div class="input-group" >
+	                                                    <span class="input-group-addon" title="Sort">
+                                                            <i class="material-icons">import_export</i>
+                                                        </span>
+                                                        <select
+                                                        ng-model="sortBy"
+                                                        ng-change="sortByData()"
+                                                        class="form-control custSelect"
+                                                        ng-options="obj.id as obj.value for obj in sortByArr"
+                                                        >
+                                                        </select> 
+                                                    </div>
+                                                </div>
+
+                                                
+                                                   
+                                                <div class="col-md-6 col-sm-12 text-center stdCounter">
+                                                    <div >
+                                                            <ul class="list-unstyled list-inline mr-T10px">
+                                                                <li >
+                                                                    <span class="offUser circle"></span> Not Login <span class="fontmono">({{ getUserStatus(0) }})</span>
+                                                                </li>
+                                                                <li>
+                                                                    <span class="onlineUser circle"></span> Logged In <span class="fontmono">({{ getUserStatus(1) }})</span>
+                                                                </li>
+
+                                                                <li>
+                                                                    <span class="blockUser circle"></span> Blocked <span class="fontmono">({{ getUserStatus(2) }})</span>
+                                                                </li>                                                               
+                                                            </ul>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                           <!-- angularjs password template -->
+                                            <script type="text/ng-template" id="changePasswordTemplate" >
+                                                <div class="input-group">
+                                                    <input type="password" ng-show="u.show==0" name="password{{u.userid}}" class=" inpBox" id="password{{$index}}" ng-model="u.password" ng-disabled="true"  ng-change="passChange($index,u)">
+
+                                                    <input type="text" ng-show="u.show>0" name="password{{u.userid}}" class="inpBox" id="password{{$index}}" ng-model="u.password" ng-disabled="u.show==0 || u.show==1"  ng-change="passChange($index,u)">
+
+                                                    <span class="input-group-addon">
+                                                        <button type="button" class="showPwd pad-0px" title="Show Password" ng-show="!u.show" ng-click="showPass($index,u)" ><i class="ti-eye"></i></button>
+                                                        <button type="button" class="EditPwd pad-0px"   title="Edit Password"  ng-show="u.show==1" ng-click="u.show=2"><i class="ti-pencil-alt"></i></button>
+                                                        <button type="button" class="randomPwd pad-0px"   title="Generate random Password"  ng-show="u.show==2" ng-click="randomPass($index,u)"><i class="ti-control-shuffle"></i></button>
+                                                    </span>
+                                                </div>
+                                                  <span id="succMess{{$index}}" class="disNone fs-12px"></span>
+                                                  <span id="errMess{{$index}}" class="disNone fs-12px"></span>
+                                            </script>
+                                            <!-- new design -->
+                                            <div class="student-container">
+                                                <div class="student-box" 
+                                                    dir-paginate="u in filter_data  = (userData | filter: search | filter:customFilter | orderBy:sortBy )  | itemsPerPage: itemsPerPagesData"
+                                                    current-page="currPageData"  
+                                                    pagination-id = "studentPage"
+                                                    my-repeat-directive >
+                                                    <div class="student-header">
+
+                                                        <div>
+                                                            <span class="offUser circle" ng-show="u.logStatus==0"></span>
+                                                            <span class="onlineUser circle" ng-show="u.logStatus==1"></span>
+                                                            <span class="blockUser circle" ng-show="u.logStatus==2"></span>
+                                                        </div>
+                                                        <div class="student-data">
+                                                            <div class="student-user ">
+                                                                {{ u.userid }} 
+                                                             </div>
+                                                            <ul ng-if="u.userFields>1" class="list-inline list-unstyled mr-0px student-otherInfo">
+                                                                <li ng-if="colAExit  && u.userInfo['A'] !=u.userid">
+                                                                    {{  u.userInfo['A'] }} 
+                                                                </li>
+                                                                <li ng-if="colBExit  && u.userInfo['B'] !=u.userid">
+                                                                        {{  u.userInfo['B'] }} 
+                                                                </li>
+                                                                <li ng-if="colCExit  && u.userInfo['C'] !=u.userid">
+                                                                {{  u.userInfo['C'] }} 
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                  
+                                                  <div class="student-content">
+                                                    <!-- <div class="student-quizInfo {{ (u.status =='Not started' || u.status == 'not submitted'  )? 'student-notStart':''  }}"> -->
+                                                    <div class="student-quizInfo student-notStart">
+                                                    <!-- <div class="student-quizInfo student-notStart"> -->
+                                                        <div ng-if="u.status==='Not started'">
+                                                            <strong class="txt-default">{{u.status}}</strong>
+                                                        </div>
+    
+                                                        <div ng-if="u.status==='not submitted'">
+                                                            <!-- <b class="yellowTxt">Started On:</b> <br> -->
+                                                             <b  class="yellowNormalTxt" tooltip-placement="top" uib-tooltip="Started On">
+                                                                <i  class="fa fa-calendar-plus-o"></i>
+                                                                  {{u.startedOn | localDate}}
+                                                            </b><br/>
+                                                            <b  class="yellowNormalTxt" tooltip-placement="top" uib-tooltip="Time Taken">
+                                                                <i  class="fa fa-clock-o"></i>
+                                                                  {{u.timeTaken}}
+                                                            </b>
+
+                                                        </div>
+                                                        <div ng-if="u.status==='submitted'">
+                                                            <span ng-if="u.submittedOn === undefined">
+                                                               <b class="greenTxt">Submitted <br><small class="fs-12px">(Grading in progress)</small></b>
+                                                            </span>
+                                                            <span ng-if="u.submittedOn !== undefined">
+                                                               
+                                                                 <!-- <b class="greenTxt">Started On:</b> -->
+                                                                 <b  class="greenNormalTxt" tooltip-placement="top" uib-tooltip="Started On">
+                                                                    <i  class="fa fa-calendar-plus-o"></i>
+                                                                    {{ u.startedOn | localDate }}
+                                                                </b>
+                                                                <br/>
+
+                                                                <!-- <b class="greenTxt">Submitted On:</b> -->
+                                                                <b  class="greenNormalTxt" tooltip-placement="top" uib-tooltip="Submitted On">
+                                                                    <i  class="fa fa-calendar-minus-o"></i>
+                                                                       {{u.submittedOn | localDate}}
+                                                                </b><br/>
+                                                               
+                                                                <!-- <b class="greenTxt">Time Taken:</b> -->
+                                                                 
+                                                                 <b class="greenNormalTxt" tooltip-placement="top" uib-tooltip="Time Taken">
+                                                                    <i  class="fa fa-clock-o"></i>
+                                                                     {{ u.timeTaken }} </b> &nbsp; 
+                                                                   
+                                                                <!-- <b class="greenTxt">Score:</b>  -->
+                                                                <b class="greenNormalTxt" tooltip-placement="top" uib-tooltip="Score">
+                                                                    <i  class="fa fa-graduation-cap scoreIcon"></i>
+                                                                        {{ u.score }}
+                                                                </b>
+                                                            </span> 
+                                                        </div>
+                                                      
+                                                    </div>
+    
+                                                    <div class="student-log">
+                                                        <ul class="mr-B6px">
+                                                            <li  ng-repeat="log in u.logs | orderBy:'-' | limitTo:4 " class="log-item">
+                                                                <!-- {{log.message}} {{ log.utcTime | logTime }} -->
+                                                                {{ log | logMessage:50 }}
+                                                             </li>
+                                                        </ul>
+                                                    </div>
+                                                  </div>
+
+                                                  <div class="student-footer">
+                                                        <div ng-if="u.status==='Not started'" class="posRelative">
+                                                            <span class="progressLbl">{{ progressType=='content'?'Progress by content':'Progress by weightage'  }}</span>
+                                                            <div class="progressContainer" ng-show="progressType=='content'">
+                                                                <div class="progress">
+                                                                    <div class="progress-bar" style="width: 0%;">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="h18px">
+                                                                   <button type="button"
+                                                                    class="progressBtn"
+                                                                    ng-click="toggleProgressType('weightage')"
+                                                                    tooltip-placement="top"
+                                                                    uib-tooltip="Content">0%</button>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="progressContainer" ng-show="progressType=='weightage'">
+                                                                <div class="progress">
+                                                                    <div class="progress-bar" style="width: 0%;">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="h18px">
+                                                                    <button type="button"
+                                                                    class="progressBtn"
+                                                                    ng-click="toggleProgressType('content')"
+                                                                    tooltip-placement="top"
+                                                                    uib-tooltip="Weightage">0%</button>
+                                                                </div>
+                                                            </div>
+                                                        </div> 
+
+                                                        <div ng-if="u.status!=='Not started'" class="posRelative">
+                                                            <span class="progressLbl">{{ progressType=='content'?'Content Progress':'Weightage Progress'  }}</span>
+                                                            <div class="progressContainer" ng-show="progressType=='content'">
+                                                                <div class="progress">
+                                                                    <div class="progress-bar"  
+                                                                        ng-repeat="usec in u.stdSecSummary  track by $index"
+                                                                        ng-init="colorIndex=$index"
+                                                                        ng-style="{'width': ((usec.locked/u.totalGQuest)*100)+'%','background-color':progressColors[colorIndex]}"
+                                                                        tooltip-placement="top"
+                                                                        ng-show="((usec.locked/u.totalGQuest)*100)>0"
+                                                                        uib-tooltip="{{ ((usec.locked/usec.gradable)*100) | number:0 }}%">
+                                                                        {{ u.stdSecSummary.length>1  ?'S'+($index+1):'Completed' }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="h18px">
+                                                                    <button type="button"
+                                                                    class="progressBtn"
+                                                                    ng-click="toggleProgressType('weightage')"
+                                                                    tooltip-placement="top"
+                                                                    uib-tooltip="Content"> {{ u.progress }}%</button>
+                                                                </div>
+                                                            </div>
+                                                            <div class="progressContainer" ng-show="progressType=='weightage'">
+                                                                <div class="progress">
+                                                                    <div class="progress-bar"  
+                                                                        ng-repeat="usec in u.stdSecSummary track by $index"
+                                                                        ng-init="colorIndex=$index"
+                                                                        ng-style="{'width': ((usec.locked*secWiseWht[colorIndex]/u.totalWt)*100)+'%','background-color':progressColors[colorIndex]}"
+                                                                        tooltip-placement="top"
+                                                                        ng-show="(((usec.locked*secWiseWht[colorIndex])/u.totalWt)*100)>0"
+                                                                        uib-tooltip="{{ (( (usec.locked*secWiseWht[colorIndex])/ (usec.gradable*secWiseWht[colorIndex]) )*100) | number:0 }}%">
+                                                                        {{ u.stdSecSummary.length>1  ?'S'+($index+1):'Completed' }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="h18px">
+                                                                    <button type="button"
+                                                                    class="progressBtn"
+                                                                    ng-click="toggleProgressType('content')"
+                                                                    tooltip-placement="top"
+                                                                    uib-tooltip="Weightage"> {{ u.weightage }}%</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        
+
+                                                        
+                                                      
+                                                        <ul class="mr-0px student-actions">
+                                                            <li ng-show="u.status==='submitted' && u.timeTaken !== undefined">
+                                                                <form method="post" id="frm{{$index}}"
+                                                                      action="/author_quizResponse">
+                                                                    <input type="hidden" 
+                                                                    name="quiz_id"
+                                                                    id="quiz_id"
+                                                                    value="{{quizData._id}}">
+
+                                                                    <input type="hidden" 
+                                                                    name="uname"
+                                                                    id="uname"
+                                                                    value="{{u.userid}}">
+
+                                                                    <input type="hidden" 
+                                                                    name="quizPwd" 
+                                                                    id="quizPwd" 
+                                                                    value="{{u.passwordOld}}">
+                                                                    <button type="button" tooltip-placement="top" uib-tooltip="Quiz Review" ng-click="viewResponse($index)"  class="logBtn"><i class="fa fa-external-link"></i>
+                                                                    </button>                       
+                                                                </form>
+                                                            </li>
+
+                                                            <li ng-if="u.logStatus==2" class="std-tool">
+                                                                <button type="button" tooltip-placement="top" uib-tooltip="Unlock User" class="logBtn text-danger"  ng-click="unlock(u)" >
+                                                                    <i class="fa fa-unlock-alt"></i>
+                                                                </button>
+                                                            </li>
+
+                                                           
+                                                            <li class="std-tool">
+                                                                <input tooltip-placement="top" uib-tooltip="Reset quiz" type="checkbox" class="chkbox_ids mr-0px" name="chkbox_ids"  data-index="{{$index}}" ng-model="u.reset" ng-change="enableUpdate(u)">
+                                                            </li>
+                                                            <li class="std-pass">
+                                                                <button tooltip-placement="top" uib-tooltip="Password"
+                                                                uib-popover-template="passworTemplate" 
+                                                                popover-placement="top" type="button" class="logBtn">
+                                                                    <i class="fa fa-key" ng-class="{ activeIcon: u.passChange}"></i>
+                                                                </button>
+                                                            </li>
+                                                            <li class="std-tool">
+                                                                <button type="button" tooltip-placement="top" uib-tooltip="User Activity" class="logBtn" ng-click="viewLog(u)" >
+                                                                  <i class="fa fa-street-view"></i>
+                                                                </button>
+                                                             </li>
+                                                             
+                                                        </ul>
+                                                       
+                                                  </div>
+                                                </div>
+                                                <!-- end of student-box -->
+                                            </div>
+                                            
+
+                                            <div ng-show="filter_data.length==0" class="text-center">
+                                                <strong class="txt-default">
+                                                    No Data Available
+                                                </strong>
+                                            </div>
+
+                                            <div class="pageRow">
+                                                <div class="ngDT_perPage" ng-show="filter_data.length>0">
+                                                    <select
+                                                      ng-model="itemsPerPagesData"
+                                                      class="form-control ngDT_select"
+                                                      ng-init="itemsPerPagesData =  10"
+                                                      ng-change="resetPage()"
+                                                      ng-options="o as o for o in [10,25,50,100]">
+                                                    </select>
+                                                    <span class="mr-L10px"> Show Per Page</span> 
+                                                </div>
+                                                <div class="text-center" ng-if="filter_data.length>0">
+                                                        Showing {{filter_data.length}}/{{ userData.length }} entries
+                                                </div>
+                                                <dir-pagination-controls
+                                                    max-size="10"
+                                                    direction-links="true"
+                                                    boundary-links="true"
+                                                    pagination-id = "studentPage">
+                                                </dir-pagination-controls>
+                                            </div>
+
+                                           
+                                            <!-- end of new design -->
+                                                
+                                        </div>
+                                            <!-- end of angular app -->
+                                            
+                                        </fieldset>
+                                    
+                                </div>
+
+                                <!-- tab2 angular -->
+
+                            <div class="tab-pane" id="advance">
+                                <div class="row">
+                                    <div class="card">
+                                        <fieldset class="col-sm-12">
+                                            <div class="form-group">
+                                                <!-- <label class="col-lg-3 control-label">Author</label> -->
+                                                <div class="col-lg-12">
+                                                    <div class="reminder"><p><i class="fa fa-bell"></i>  By changing these properties users will <b>NOT</b> get logged out. If you want all users to get logged out use "Activate/Deactivate" feature in quiz control board.</p></div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    <form  class="form-horizontal"><br><br><br>
+                                        <fieldset  class="col-sm-10 col-sm-offset-1">
+                                            <div class="form-group">
+                                                <label class="col-lg-3 control-label">
+                                                Security Level  <star><b>*</b></star>
+                                                <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipD13%>">
+                                                    <i class="ti-help-alt fa-lg"></i>
+                                                </button>
+                                                </label>
+                                                <div class="col-lg-8">
+                                                    <div class="radio">
+                                                        <input type="radio" name="security_level" id="security1"   
+                                                        ng-value='"regular"'
+                                                        ng-model="security_level" ng-checked="security_level=='regular'">
+                                                        
+                                                        <label for="security1">
+                                                            Regular : Warning is presented if a non-recommended browser is used when the student lands on the quiz login page 
+                                                        </label>
+                                                    </div>
+                                                    <div class="radio">
+                                                        <input type="radio" name="security_level" id="security2" 
+                                                        ng-value='"high"'
+                                                        ng-model="security_level" ng-checked="security_level=='high'">
+                                                        <label for="security2">
+                                                            High: In high security mode student is not allowed to login on a non-recommended browser - a check done by the quizapp back-end
+                                                        </label>
+                                                    </div>
+                                                    <div class="radio" ng-show="(quizData.quizType=='live')">
+                                                        <input type="radio" name="security_level" id="security3" 
+                                                        ng-value='"chromeOnly"'
+                                                        ng-model="security_level" ng-checked="security_level=='chromeOnly'">
+                                                        <label for="security3">
+                                                            chromeOnly: In Chrome only security mode student is allowed to login through only chrome browser - a check done by the quizapp back-end
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset  class="col-sm-10 col-sm-offset-1">
+                                            <div class="form-group">
+                                                <label class="col-lg-3 control-label">
+                                                Scores and Reviews  <star><b>*</b></star>
+                                                <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipD15%>">
+                                                    <i class="ti-help-alt fa-lg"></i>
+                                                </button>
+                                                </label>
+                                                <div class="col-lg-8">
+                                                    <div class="radio">
+                                                        <input type="radio" name="score_avalb__selector1"     id="score1" 
+                                                        ng-value='"submission,allowed"'
+                                                        ng-model="score_review" ng-checked="score=='submission' && review=='allowed'" >
+                                                        <label for="score1">
+                                                        Allow scores immediately after submission and allow review after quiz deadline
+                                                        </label>
+                                                    </div>
+                                                    <div class="radio">
+                                                        <input type="radio" name="score_avalb__selector1" id="score2" value="submission,unallowed"
+                                                        ng-value='"submission,unallowed"'
+                                                        ng-model="score_review" ng-checked="score=='submission' && review=='unallowed'">
+                                                        <label for="score2">
+                                                        Allow scores immediately after submission but do not allow review 
+                                                        </label>
+                                                    </div>
+                                                    <div class="radio">
+                                                        <input type="radio" name="score_avalb__selector1" id="score3" 
+                                                        ng-value='"deadline,allowed"'
+                                                        ng-model="score_review" ng-checked="score=='deadline' && review=='allowed'">
+                                                        <label for="score3">
+                                                        Allow scores and review after deadline
+                                                        </label>
+                                                    </div>
+                                                    <div class="radio">
+                                                        <input type="radio" name="score_avalb__selector1" id="score4" 
+                                                        ng-value='"deadline,unallowed"'
+                                                        ng-model="score_review" ng-checked="score=='deadline' && review=='unallowed'">
+                                                        <label for="score4">
+                                                        Allow scores after deadline but do not allow review
+                                                        </label>
+                                                    </div>
+                                                    <div class="radio">
+                                                        <input type="radio" name="score_avalb__selector1" id="score5" value="unallowed,unallowed" 
+                                                        ng-value='"unallowed,unallowed"'
+                                                        ng-model="score_review" ng-checked="score=='unallowed' && review=='unallowed'">
+                                                        <label for="score5">
+                                                        Do not allow scores or review
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                
+                                            </div>
+                                        </fieldset>
+                                        <fieldset  class="col-sm-10 col-sm-offset-1">
+                                            <div class="form-group"> 
+                                                <label for="logoutFC" class="col-lg-3 control-label">
+                                                   
+                                                </label>
+                                                <div class="col-lg-8">
+                                                    <div class="checkbox">
+                                                        <input id="logoutFC" name="logoutFC" type="checkbox"  ng-model="allowFocus">
+                                                        <label for="logoutFC">
+                                                            Logout on focus change 
+                                                            <lable><button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content=""><i class="ti-help-alt fa-lg" style="font-size:1.5em;"></i></button></lable>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset  class="col-sm-10 col-sm-offset-1">
+                                            <div class="form-group"> 
+                                                <label for="logoutFC" class="col-lg-3 control-label">
+                                                   
+                                                </label>
+                                                <div class="col-lg-8">
+                                                    <div class="checkbox">
+                                                        <input id="allowStats" name="allowStats" type="checkbox"  ng-model="allowStats">
+                                                        <label for="allowStats">
+                                                            Show class statistics during quiz review
+                                                            <lable><button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content=""><i class="ti-help-alt fa-lg" style="font-size:1.5em;"></i></button></lable>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </form>
+                                </div>                                 
+                            </div>
+                                <!-- tab2 angular -->                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <!-- modal view sample -->
+        <div class="">
+            <div class="modal fade" id="bsModal3" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="mySmallModalLabel"></h4>
+                        </div>
+                        <div class="modal-body" id="viewModalContent">
+                            <p></p>
+                            <br/><br/>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- modal end -->
+
+    <!-- Send Mail -->
+    <div class="modal fade" id="sendMailMdl" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Send Email</h4>
+            </div>
+            <div class="modal-body">
+                <span class="label label-primary mrRB" ng-repeat="mail in mails">{{mail}}</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" ng-click="sendMail()"><i class="fa fa-paper-plane"></i> Send</button>
+            </div>
+            </div>
+        </div>
+    </div>
+    <!-- end of Send Mail -->
+
+
+    <!-- Track Activity -->
+    <div class="modal fade" id="viewLogMdl" role="dialog">
+        <div class="modal-dialog modal-lg">
+        
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+
+                    <div class="col-xs-10">
+                        <h4>Student Activity</h4>
+                    </div>
+                    <div class="col-xs-2">
+                        <button type="button" class="pull-right btn btn-xs btn-fill closeBtnMdl" data-dismiss="modal">X</button>
+                    </div>
+                </div>
+                <div class="card cardRsRm">
+
+                    <div class="row mrR0px">
+                        
+
+                            <div class="col-sm-8" >                                           
+                                    <div class="form-group padT11px">
+                                            <label for="username" class="control-label col-sm-2  userLbl">Username-</label>
+                                            <div class="col-sm-8 userNameMdl">
+                                                    {{ viewLogId }}
+                                            </div>
+                                    </div>                                                    
+                            </div>
+                            <div class="col-sm-4 padR0px" >
+                            </div>
+                    </div>
+                    
+
+                    <div class="card-content  table-full-width logContainer" style="padding-top: 12px;">
+                        <table class="table tablePad table-hover">
+                            <thead>
+                                
+                                <th class="wid20per">Time</th>
+                                <th>Action</th>
+                                <th>Device</th>
+                                <th  class="text-center wid20per">More</th>
+                            </thead>
+                            <tr ng-repeat-start="x in dataLogs | filter:{ priority: priority } | orderBy:'timeStamp':true" >
+                                <td class="bgBlack">{{ x.timeStamp }}</td>
+                                <td class="bgDefault">{{ x.message }}</td>   
+                                
+                                <td class="bgDefault">
+
+                                    <span ng-if="!x.useragent.isMobile &&
+                                        !x.useragent.isTablet &&
+                                        !x.useragent.isiPad &&
+                                        !x.useragent.isiPod &&
+                                        !x.useragent.isiPhone &&
+                                        !x.useragent.isAndroid &&
+                                        !x.useragent.isDesktop && 
+                                        !x.useragent.isExamApp">
+                                        -
+                                    </span>
+
+                                    <span ng-if="x.useragent.isExamApp">
+                                        Examineer App
+                                    </span>
+
+
+                                    <span ng-if="x.useragent.isMobile &&
+                                        !x.useragent.isTablet &&
+                                        !x.useragent.isiPad &&
+                                        !x.useragent.isiPod &&
+                                        !x.useragent.isiPhone &&
+                                        !x.useragent.isAndroid &&
+                                        !x.useragent.isDesktop">
+                                        MS Windows Device
+                                    </span>
+
+
+
+                                    <span ng-if="x.useragent.isTablet">
+                                        Tablet
+                                    </span>
+                                    <span ng-if="x.useragent.isiPad">
+                                        iPad
+                                        </span>
+                                        <span ng-if="x.useragent.isiPod">
+                                        iPod
+                                        </span>
+                                        <span ng-if="x.useragent.isiPhone">
+                                        iPhone
+                                        </span>
+                                        <span ng-if="x.useragent.isAndroid">
+                                        Mobile
+                                        </span>
+                                        <span ng-if="x.useragent.isDesktop">
+                                        Desktop
+                                        </span>
+                                    </td>
+
+                                <td class="text-center bgDefault">
+                                    <button ng-if="x.expanded" ng-click="x.expanded = false" class="btn btn-default btn-xs">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                    <button ng-if="!x.expanded" ng-click="expandSelected(x)" class="btn btn-default btn-xs">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            
+
+                            <tr ng-show="x.expanded && x.useragent.isExamApp">
+                                <td  colspan="4" class="pad0px">
+                                    <table class="table mrB0px innerTable" >
+
+                                    <tr>
+                                            <th class="wid20per">Examineer App </th>
+                                            <td>
+                                                    Version - {{ x.useragent.examApp }}
+                                            </td>
+                                    </tr>
+                                        
+                                    <tr>
+                                        <th class="wid20per">OS / Platfrom</th>
+                                        <td>
+                                             {{ x.useragent.platform }} 
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <th class="wid20per">Manufacturer</th>
+                                        <td>
+                                             {{ x.useragent.manufacturer }} 
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <th class="wid20per">Model</th>
+                                        <td>
+                                             {{ x.useragent.model }} 
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <th class="wid20per">IP Address</th>
+                                        <td>
+                                             {{ x.useragent.ipAddress }} 
+                                        </td>
+                                    </tr>
+
+                                   
+                                    
+                                    </table>
+                                </td>
+                            </tr>
+
+
+                            <tr ng-show="x.expanded &&  !x.useragent.isExamApp"   ng-repeat-end="" >
+                                        <td  colspan="4" class="pad0px">
+                                            <table class="table mrB0px innerTable" >
+                                                
+                                                <tr>
+                                                <th class="wid20per">OS / Platfrom</th>
+                                                <td>
+                                                    {{ x.useragent.os }} / {{ x.useragent.platform }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="wid20per">Browser</th>
+                                                <td>
+                                                    {{ x.useragent.browser }}
+                                                    <small> - {{ x.useragent.version }} </small>
+
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <th class="wid20per">IP Address</th>
+                                                <td>
+                                                     {{ x.useragent.ipAddress }} 
+                                                </td>
+                                            </tr>
+                                            
+                                            </table>
+                                        </td>
+                            </tr>
+                        </table>    
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        </div>
+    </div>
+    <!-- end of Track Activity -->
+
+
+    <!-- all Activity -->
+    <div class="modal fade" id="quizAllLogMdl" role="dialog">
+            <div class="modal-dialog modal-lg">
+            
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+    
+                        <div class="col-xs-10">
+                            <h4>All Student Activities</h4>
+                        </div>
+                        <div class="col-xs-2">
+                            <button type="button" class="pull-right btn btn-xs btn-fill closeBtnMdl" data-dismiss="modal">X</button>
+                        </div>
+                    </div>
+                    <div class="card cardRsRm">
+                
+                        <div class="card-content  table-full-width logContainer" style="padding-top: 12px;">
+                            <table class="table tablePad table-hover">
+                                <thead>
+                                    
+                                    <th class="wid20per">Time</th>
+                                    <th>Student</th>
+                                    <th>Action</th>
+                                    <th>Device</th>
+                                    <th  class="text-center wid20per">More</th>
+                                </thead>
+                                <tr ng-repeat-start="x in allLogs  | orderBy:'timeStamp':true" >
+                                    <td class="bgBlack">{{ x.timeStamp }}</td>
+                                    <td class="bgDefault text-center">{{ x.student }}</td> 
+                                    <td class="bgDefault">{{ x.message }}</td>  
+                                     
+                                    
+                                    <td class="bgDefault">
+    
+                                        <span ng-if="!x.useragent.isMobile &&
+                                            !x.useragent.isTablet &&
+                                            !x.useragent.isiPad &&
+                                            !x.useragent.isiPod &&
+                                            !x.useragent.isiPhone &&
+                                            !x.useragent.isAndroid &&
+                                            !x.useragent.isDesktop && 
+                                            !x.useragent.isExamApp">
+                                            -
+                                        </span>
+    
+                                        <span ng-if="x.useragent.isExamApp">
+                                            Examineer App
+                                        </span>
+    
+    
+                                        <span ng-if="x.useragent.isMobile &&
+                                            !x.useragent.isTablet &&
+                                            !x.useragent.isiPad &&
+                                            !x.useragent.isiPod &&
+                                            !x.useragent.isiPhone &&
+                                            !x.useragent.isAndroid &&
+                                            !x.useragent.isDesktop">
+                                            MS Windows Device
+                                        </span>
+    
+    
+    
+                                        <span ng-if="x.useragent.isTablet">
+                                            Tablet
+                                        </span>
+                                        <span ng-if="x.useragent.isiPad">
+                                            iPad
+                                            </span>
+                                            <span ng-if="x.useragent.isiPod">
+                                            iPod
+                                            </span>
+                                            <span ng-if="x.useragent.isiPhone">
+                                            iPhone
+                                            </span>
+                                            <span ng-if="x.useragent.isAndroid">
+                                            Mobile
+                                            </span>
+                                            <span ng-if="x.useragent.isDesktop">
+                                            Desktop
+                                            </span>
+                                        </td>
+    
+                                    <td class="text-center bgDefault">
+                                        <button ng-if="x.expanded" ng-click="x.expanded = false" class="btn btn-default btn-xs">
+                                            <i class="fa fa-minus"></i>
+                                        </button>
+                                        <button ng-if="!x.expanded" ng-click="expandSelected(x)" class="btn btn-default btn-xs">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                
+    
+                                <tr ng-show="x.expanded && x.useragent.isExamApp">
+                                    <td  colspan="4" class="pad0px">
+                                        <table class="table mrB0px innerTable" >
+    
+                                        <tr>
+                                                <th class="wid20per">Examineer App </th>
+                                                <td>
+                                                        Version - {{ x.useragent.examApp }}
+                                                </td>
+                                        </tr>
+                                            
+                                        <tr>
+                                            <th class="wid20per">OS / Platfrom</th>
+                                            <td>
+                                                 {{ x.useragent.platform }} 
+                                            </td>
+                                        </tr>
+    
+                                        <tr>
+                                            <th class="wid20per">Manufacturer</th>
+                                            <td>
+                                                 {{ x.useragent.manufacturer }} 
+                                            </td>
+                                        </tr>
+    
+                                        <tr>
+                                            <th class="wid20per">Model</th>
+                                            <td>
+                                                 {{ x.useragent.model }} 
+                                            </td>
+                                        </tr>
+    
+                                        <tr>
+                                            <th class="wid20per">IP Address</th>
+                                            <td>
+                                                 {{ x.useragent.ipAddress }} 
+                                            </td>
+                                        </tr>
+    
+                                       
+                                        
+                                        </table>
+                                    </td>
+                                </tr>
+    
+    
+                                <tr ng-show="x.expanded &&  !x.useragent.isExamApp"   ng-repeat-end="" >
+                                            <td  colspan="4" class="pad0px">
+                                                <table class="table mrB0px innerTable" >
+                                                    
+                                                    <tr>
+                                                    <th class="wid20per">OS / Platfrom</th>
+                                                    <td>
+                                                        {{ x.useragent.os }} / {{ x.useragent.platform }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="wid20per">Browser</th>
+                                                    <td>
+                                                        {{ x.useragent.browser }}
+                                                        <small> - {{ x.useragent.version }} </small>
+    
+                                                    </td>
+                                                </tr>
+    
+                                                <tr>
+                                                    <th class="wid20per">IP Address</th>
+                                                    <td>
+                                                         {{ x.useragent.ipAddress }} 
+                                                    </td>
+                                                </tr>
+                                                
+                                                </table>
+                                            </td>
+                                </tr>
+                            </table>    
+    
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            </div>
+    </div>
+        <!-- end of all Activity -->
+
+    <%- include ../parts/footer %>
+</div>
+</div>
+</body>
+<%- include ../parts/allJS %>
+<script>
+    $(document).ready(function() {
+    if($("#validUpto_utc").length>0){
+        var validUpto_utc = document.getElementById('validUpto_utc').value;
+        var validUpto1 = new Date(validUpto_utc);
+        // console.log(validUpto1);
+        document.getElementById('validDatewarning').innerHTML = validUpto1.toString().split("G")[0];
+    }
+  
+});
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.1.3/ui-bootstrap-tpls.min.js"></script>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/angular-ui-utils/0.1.1/angular-ui-utils.min.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular-cookies.js"></script>
+<script src="author_public/js/dirPagination.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-animate/1.8.0/angular-animate.min.js"></script>
+<script src="author_public/angularControllers/manageQuizController.js"></script>
+</html>  
+
+
+
+
+

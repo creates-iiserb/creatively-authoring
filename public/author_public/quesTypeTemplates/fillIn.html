@@ -1,0 +1,33 @@
+<!-- <div class="mathGif"></div> -->
+<div id="qusBlock" class="QuesPrecard">
+	<div class="card-content">
+
+		<div ng-if="fillInPartialGrading  && numFillIns>1" class="text-warning bold">
+			<i class="fa fa-info-circle"></i> Partial grading is On in this question. You may submit without filling all the blanks.
+		</div>	
+
+		<div class="quesMcq">
+			<span math="{{loadQuestion.object.question}}" ng-show="loadQuestion.object.question!==''"></span>
+		</div>
+		<div class="fillInOption">
+			<div class="options1" style="padding-bottom:5px;">
+				<div id="fillinStatement" class="fillin-statement">
+					<span compile="{{loadQuestion.object.statement}}"> </span>
+				</div>
+				<div class="fillInOption fillin-suggestion" ng-show="loadQuestion.object.suggestion!==''">
+					<span math="{{loadQuestion.object.suggestion}}"> </span>
+				</div>
+			</div>
+		</div>
+		<div class="hintMcq">
+			<b>Hint</b>
+			<br>
+			<span math="{{loadQuestion.object.hint}}"></span>
+		</div><br>
+		<div class="hintMcq">
+			<b>Explanation</b>
+			<br>
+			<span math="{{loadQuestion.object.explanation}}"></span>
+		</div>
+	</div>
+</div>

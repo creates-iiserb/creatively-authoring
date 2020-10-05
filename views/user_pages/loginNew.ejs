@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <meta name="viewport" content="width=device-width" />
+    <title> Examineer | Author DashBoard</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <!-- Bootstrap core CSS     -->
+    <!-- <link href="../../PaperDashBoard/css/bootstrap.min.css" rel="stylesheet" /> -->
+    <!--  Paper Dashboard core CSS    -->
+    <link href="../../author_public/PaperDashBoard/css/paper-dashboard.css" rel="stylesheet"/>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Muli:400,300' rel='stylesheet' type='text/css'> 
+    <!-- <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'> -->
+    <link href="../../author_public/PaperDashBoard/css/themify-icons.css" rel="stylesheet">
+    <!-- <link rel = "stylesheet" href="css/author1.css"> -->
+    <link rel = "stylesheet" href="../../author_public/css/author_newLogin.css">
+    <!-- <script src="../../PaperDashBoard/js/jquery-3.1.1.min.js" type="text/javascript"></script> -->
+    <style>
+        #frmDiv{
+            height: 92vh;
+            background: #f6f6f600;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        #imgDiv{
+            box-sizing: border-box;
+            position: relative;
+            height: 92vh;
+            background: #f4f3ef;
+            padding: 0
+        }
+        #footerDiv{
+            bottom:0;
+            position:absolute;
+            right: 40%;
+            /* left:50; */
+        }
+        /* nav{
+            box-shadow: #a7a5a2 0px 0px 14px 3px;
+        } */
+        
+        nav ul{
+            background-color: #ffffff;
+            color: #484541;
+            padding: 0;
+            margin: 0;
+            text-align: right;
+            overflow: hidden;
+            font-size:15px;
+            /* font-weight:bold; */
+            -webkit-transition: max-height 0.4s;
+            -ms-transition: max-height 0.4s;
+            -moz-transition: max-height 0.4s;
+            -o-transition: max-height 0.4s;
+            transition: max-height 0.4s;
+        }
+        nav ul li{
+            display: inline-block;
+            padding: 15px;
+            color: #484541;
+            font-family: 'Muli', "Helvetica", Arial, sans-serif;
+        }
+        nav ul li:hover{
+            color: #484541;
+            border-bottom: 4px solid #484541;
+            padding-bottom: 10px;
+        }
+        a{
+            text-decoration: none;
+            color: #484541;
+        }
+        .navbar-brand{
+            font-size: 23px !important;
+            color: #484541 !important;
+            font-weight: normal !important;
+            /* font-family: 'Muli', "Helvetica", Arial, sans-serif; */
+        }
+
+      
+
+        #navDiv ul li a{
+            font-size: 14px;
+    color: #878686;
+        }
+
+
+        #outer-div{
+    background:#ffff;
+    background-image: url('../../images/Multicolor-Background_10.png') ;
+    background-size:cover;
+    width: auto;
+    /* center a div insie another div*/
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+#centered-div{
+    width: 55%;
+    height: auto;
+    margin: 0 auto;
+    /* margin-left:30px; */
+    /* padding:5px; */
+    background:#ffffff;
+    position: relative;
+    box-shadow: 0 10px 50px -5px rgba(0, 0, 0, 0.4);
+    /* color:white; */
+}
+
+.carousel-inner .item img{
+    height: 92vh;width:100%
+}
+
+.form-group input {
+  /* height: 45px; */
+  /* width:350px; */
+  border-radius: 2rem;
+}
+
+#signInBtn button{
+    /* height: auto; */
+  /* width:350px; */
+}
+
+.forgot a{
+    color: #878686;
+    font-size:14px;
+    
+}
+
+@media (max-width: 1352px){
+   
+    #centered-div{
+        width: 75%;
+    }
+
+}
+
+
+@media (max-width: 1313px){
+    #centered-div{
+        width: 75%;
+    }
+
+}
+
+
+
+@media (max-width: 992px){
+
+    #centered-div{
+        width: 75%;
+    }
+    #imgDiv{
+        display: none;
+        }
+
+}
+
+
+@media (max-width: 767px){
+    #centered-div{
+        width: 75%;
+    }
+    #imgDiv{
+        display: none;
+        }
+
+}
+
+@media (max-width: 374px){
+    #centered-div{
+        width: 75%;
+    }
+    #imgDiv{
+        display: none;
+    }
+}
+        
+    </style>
+</head>
+<body>
+    <div class="wrapper"  id="outer-div">
+        <div class="">
+            <div class="content">
+                <div class="container-fluid">
+                    <!-- <div class="row"> -->
+                        <!-- <div class="col-md-10 col-md-offset-1"> -->
+                                <!-- <div class="card"> -->
+                                    <div  id="centered-div">
+                                            <div class="row">
+                                                    <div class="col-md-6 col-sm-12" >
+                                                        <div class="row col-lg-12" id="frmDiv" align="center">
+                                                                    <nav id="navDiv">
+                                                                            <a class="navbar-brand navIcon" href="#">Examineer</a>
+                                                                            <ul>
+                                                                                <li><a href="<%-studentUrl%>">Student</a></li>
+                                                                                <li><a href="#" class="active">Author</a></li>
+                                                                                <li><a href="#">Help</a></li>
+                                                                            </ul>
+                                                                        </nav><br><br><br>
+                                                                        <img src="images/logo.png" id="mainLogo" class="img-responsive logo" alt="Image">
+                                                                        <!-- <h3 class="text-center">
+                                                                            <b>Login to </b>Examineer
+                                                                        </h3><br><br> -->
+                                                                        <% if (status=='error') { %>
+                                                                            <div class="box-body" id="alert_box1">
+                                                                              <div class="alert alert-danger alert-dismissable">
+                                                                                <i class="fa fa-ban"></i>
+                                                                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">X</button>
+                                                                                <b><%=msg%></b>
+                                                                               </div>
+                                                                            </div>
+                                                                         <% } %>
+                                                                        <form role="form" name="loginForm" action="/author_login" method="post">	
+                                                                            <div class="form-group">
+                                                                                <!-- <label for="quizId">Quiz ID:</label> -->
+                                                                                <input type="email" class="form-control custom-css" placeholder="Email" name="email" required>
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <!-- <label for="uname">User Name:</label> -->
+                                                                                <input type="password" class="form-control custom-css" placeholder="Password" name="password" required>
+                                                                                <span class="pull-right"><a href="/authorforgot" style="font-size:12px;color:#d81507;;text-align:right">
+                                                                                    <b>Forgot Password?</b>
+                                                                                </a></span><br>
+                                                                            </div>
+                                                                            <div class="forgot" align="right" id="signInBtn">
+                                                                                    <button type="submit" class="btn btn-wd  btn-fill btn-move-right">
+                                                                                        <b>Sign</b> In
+                                                                                        <span class="btn-label">
+                                                                                            <i class="ti-angle-right"></i>
+                                                                                        </span>
+                                                                                    </button>
+                                                                                    <br><a href="/request" style="vertical-align: middle;text-align: center;">
+                                                                                    <b>Request for an account</b>
+                                                                                </a>
+                                                                            </div>
+                                                                            <span></span>
+                                                                        </form>
+                
+                                                                        <div class="text-center"  id="footerDiv"> 
+                                                                           <p class="category">&copy; <span id="year"> </span>, All Rights Reserved. examineer.in, v1.0.0</p>
+                                                                        </div>
+                                                           
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6  col-sm-12" id="imgDiv">
+                                                        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                                                            <!-- Indicators -->
+                                                            <ol class="carousel-indicators">
+                                                            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                                                            <li data-target="#myCarousel" data-slide-to="1"></li>
+                                                            <li data-target="#myCarousel" data-slide-to="2"></li>
+                                                            <li data-target="#myCarousel" data-slide-to="3"></li>
+                                                            <!-- <li data-target="#myCarousel" data-slide-to="4"></li>
+                                                            <li data-target="#myCarousel" data-slide-to="5"></li> -->
+                                                            </ol>
+                            
+                                                            <!-- Wrapper for slides -->
+                                                            <div class="carousel-inner">
+                                                                <div class="item active">
+                                                                    <img src="images/4.png" alt="Los Angeles">
+                                                                    <!-- <div class="carousel-caption">
+                                                                    <h3>Los Angeles</h3>
+                                                                    <p>LA is always so much fun!</p>
+                                                                    </div> -->
+                                                                </div>
+                            
+                                                                <div class="item">
+                                                                    <img src="images/1.png" alt="Chicago">
+                                                                </div>
+                                                                
+                                                                <div class="item">
+                                                                    <img src="images/2.png" alt="New York">
+                                                                </div>
+                            
+                                                                <div class="item">
+                                                                    <img src="images/3.png" alt="New York">
+                                                                </div>
+                            
+                                                             
+                                                            </div>
+                            
+                                                            <!-- Left and right controls -->
+                                                            <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+                                                            <span class="glyphicon glyphicon-chevron-left"></span>
+                                                            <span class="sr-only">Previous</span>
+                                                            </a>
+                                                            <a class="right carousel-control" href="#myCarousel" data-slide="next">
+                                                            <span class="glyphicon glyphicon-chevron-right"></span>
+                                                            <span class="sr-only">Next</span>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                    </div>
+                                
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    $(function(){
+      var currentTime = new Date();
+      var year = currentTime.getFullYear();
+      $("#year").html(year);
+    })
+  </script>
+</html>

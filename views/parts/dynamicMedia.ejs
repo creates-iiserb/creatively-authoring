@@ -1,0 +1,107 @@
+<script type="text/javascript">
+  function getMediaData(url) {
+  return new Promise(function(resolve, reject) {
+   
+      $.ajax({
+        type: 'post',
+        url: url,
+        cache: false,
+        success: function (returndata) {
+            if (returndata) {
+              resolve(returndata);
+            } else {
+               reject(new Error("error"));
+            }
+        },
+        error: function () {
+            console.error('Failed to process ajax !');
+            reject(error);
+        }
+    });
+
+  });
+}
+
+$(function() {
+  // alert(11);
+  $(".loadVideo").each(function(index) {
+    let dataurl = $(this).attr("data-url");
+    let datasrc = $(this).attr("data-vsource");
+    let ytvCaption = $(this).attr("data-caption");
+    let obj = $(this);
+    if(dataurl){
+      // data url exists
+        getMediaData('<%-ytvideo_url%>/'+dataurl).then(function(response) {
+          let url;
+          // console.log("gdfgdfg-----------"+JSON.stringify(response));
+          if(datasrc=='youtube'){
+            url ="https://www.youtube.com/embed/" +response.ytvid +"?autoplay=0&rel=0&iv_load_policy=3&showinfo=1&modestbranding=1";
+          }
+          let temp = `<div class="embed-responsive embed-responsive-16by9"><iframe src='${url}' width=\"100%\" scrolling=\"no\" frameborder=\"0\" allowfullscreen=\"allowfullscreen\"> </iframe></div>`;
+          obj.html(temp);
+          // obj.addClass("embed-responsive embed-responsive-16by9");
+          obj.append("<p style='font-family:Arial;font-size:70%;text-align:center'>"+ytvCaption+"</p>");
+      }).catch(function(err){
+        console.log("some err - "+err.message);
+      });
+    }else{
+      let dataid = $(this).attr("data-vid");
+      let url;
+
+      if(datasrc=='youtube'){
+        url ="https://www.youtube.com/embed/" +dataid +
+          "?autoplay=0&rel=0&iv_load_policy=3&showinfo=1&modestbranding=1";
+      }
+      let temp = "<iframe src='${url}'  width=\"100%\" scrolling=\"no\" frameborder=\"0\" allowfullscreen=\"allowfullscreen\"> </iframe>";
+      obj.html(temp);
+      obj.addClass("embed-responsive embed-responsive-16by9");
+      obj.append("<p style='font-family:Arial;font-size:70%;text-align:center'>"+ytvCaption+"</p>");
+    }
+       //data-vsource='youtube' data-vid="snpatsa1kRw"
+  });
+
+  $(".loadPlot").each(function(index) {
+    let plotData,plotLayout;
+    let chartUrl = $(this).attr("data-url");
+    let chartCaption = $(this).attr("data-caption");
+    let obj = $(this);
+    let divId = obj.attr("id");
+    //  console.log('<%-plotIframeLink%>');
+    if(chartUrl){
+      // obj.addClass("embed-responsive embed-responsive-4by3");
+      obj.append('<div class="embed-responsive embed-responsive-4by3"><iframe width=\"100%\" src=' + '<%-plotIframeLink%>' + chartUrl + '></iframe></div>');
+      obj.append("<p style='font-family:Arial;font-size:70%;text-align:center'>"+chartCaption+"</p>");
+      
+    }else{
+      plotData = JSON.parse(obj.attr("data-plot"));
+      plotLayout = JSON.parse(obj.attr("data-layout"));
+      Plotly.newPlot(divId, plotData,plotLayout, {displaylogo: false, modeBarButtonsToRemove: ['sendDataToCloud','hoverCompareCartesian']});
+      // obj.addClass("embed-responsive embed-responsive-4by3");
+      obj.append('<div class="embed-responsive embed-responsive-4by3"><iframe src=' + '<%-plotIframeLink%>' + chartUrl + '></iframe></div>');
+      obj.append("<p style='font-family:Arial;font-size:70%;text-align:center'>"+chartCaption+"</p>");
+    }
+  });
+
+  $(".loadPDF").each(function(index) {
+    let dataurl = $(this).attr("data-url");
+    let datasrc = $(this).attr("data-vsource");
+    let pdfCaption = $(this).attr("data-caption");
+    let obj = $(this);
+      // data url exists
+          let url;
+          // console.log("gdfgdfg-----------"+JSON.stringify(response));
+         
+            url ='<%-userMeta.pdf_url%>/'+dataurl;
+          
+          let temp = `<div class="embed-responsive embed-responsive-16by9"><iframe src='${url}' width=\"100%\" scrolling=\"yes\" frameborder=\"0\" allowfullscreen=\"allowfullscreen\"> </iframe></div>`;
+          obj.html(temp);
+          // obj.addClass("embed-responsive embed-responsive-16by9");
+          obj.append("<p style='font-family:Arial;font-size:70%;text-align:center'>"+pdfCaption+"</p><br/><br>");
+    
+    
+       //data-vsource='youtube' data-vid="snpatsa1kRw"
+  });
+
+   
+});
+</script>

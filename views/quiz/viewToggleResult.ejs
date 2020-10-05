@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <%- include('../parts/allCSS'); %>
+  <script src="author_public/PaperDashBoard/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+  
+</head>
+
+<body>
+  <div class="wrapper">
+    <%- include('../parts/leftNavBar'); %>
+      <div class="main-panel">
+        <%- include('../parts/topNavBarPart1'); %>
+          <%- include('../parts/topNavBarPart2'); %>
+            <div class="content">
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-md-8 col-md-offset-2">
+                    <div class="card">
+                      <div class="card-content">
+                          <%var data = JSON.parse(data)%>
+
+                          <% if(data.result[0].success){ %>
+                        <!-- <h3>User logout status</h3> -->
+                        <div class="success"><i class="fa fa-thumbs-o-up"></i>
+                          <p><%-  data.result[0].success%></p>
+                        </div>
+
+                        <% }else if(data.result[0].error){%>
+                        <!-- <h3>User logout tatus</h3> -->
+                        <div class="error"><i class="fa fa-exclamation-triangle"></i>
+                          <p><%-  data.result[0].error%></p>
+                        </div>
+                        <% } else{}%>
+
+                        <br/>
+
+                        <% if(data.result[1]){ %>
+                        <% if(data.result[1].success){ %>
+                        <!-- <h3>Quiz reset status</h3> -->
+                        <div class="success"><i class="fa fa-thumbs-o-up"></i>
+                          <p><%-  data.result[1].success%></p>
+                        </div>
+
+                        <% }else if(data.result[1].error){%>
+                        <div class="error"><i class="fa fa-exclamation-triangle"></i>
+                        <!-- <h3>Quiz reset status</h3> -->
+                          <p><%-  data.result[1].error%></p>
+                        </div>
+                        <% } else{}
+                        } else {}
+                        %>
+
+                      <br/>
+                      <b style="font-size:16px;">You will be redirected to "Quiz Control Board" in 10 seconds. If to want to redirect now <a href="/author_create_quiz">Click Here</a></b>
+                      <script>
+                          var timer = setTimeout(function() {
+                              window.location='/author_create_quiz'
+                          }, 10000);
+                      </script>
+
+
+                      </div>
+                  </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <%- include('../parts/footer'); %>
+      </div>
+      
+  </div>
+  </div>
+</body>
+<%- include('../parts/allJS'); %>
+</html>

@@ -1,0 +1,730 @@
+:root{
+    --flag-color:orange;
+    --charcoalGray:rgb(51,51,51);
+    --subtleSilverGray:rgb(242,242,242);
+    --corporateTeal:rgb(81,125,142);
+    --pastleAppleGreen:#DEE8CF;
+    --peechyOrange:rgb(252,188,155);
+    --refreshingWhite:rgb(255,255,255);
+    --ZenithBlack:rgb(0,0,0);
+    --IcyBlue:#c8eaf5;
+}
+
+ 
+body{
+    background-color:var(--charcoalGray);
+        font-family: 'Noto Sans';
+}
+
+
+
+.btn { /* just for this demo. */
+    margin-top: 5px;
+}
+.btn-arrow-right,
+.btn-arrow-left {
+    position: relative;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.btn-arrow-right {
+    padding-left: 36px;
+}
+.btn-arrow-left {
+    padding-right: 36px;
+}
+.btn-arrow-right:before,
+.btn-arrow-right:after,
+.btn-arrow-left:before,
+.btn-arrow-left:after { /* make two squares (before and after), looking similar to the button */
+    content:"";
+    position: absolute;
+    top: 5px; /* move it down because of rounded corners */
+    width: 22px; /* same as height */
+    height: 22px; /* button_outer_height / sqrt(2) */
+    background: inherit; /* use parent background */
+    border: inherit; /* use parent border */
+    border-left-color: transparent; /* hide left border */
+    border-bottom-color: transparent; /* hide bottom border */
+    border-radius: 0px 4px 0px 0px; /* round arrow corner, the shorthand property doesn't accept "inherit" so it is set to 4px */
+    -webkit-border-radius: 0px 4px 0px 0px;
+    -moz-border-radius: 0px 4px 0px 0px;
+}
+.btn-arrow-right:before,
+.btn-arrow-right:after {
+    transform: rotate(45deg); /* rotate right arrow squares 45 deg to point right */
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+}
+.btn-arrow-left:before,
+.btn-arrow-left:after {
+    transform: rotate(225deg); /* rotate left arrow squares 225 deg to point left */
+    -webkit-transform: rotate(225deg);
+    -moz-transform: rotate(225deg);
+    -o-transform: rotate(225deg);
+    -ms-transform: rotate(225deg);
+}
+.btn-arrow-right:before,
+.btn-arrow-left:before { /* align the "before" square to the left */
+    left: -11px;
+}
+.btn-arrow-right:after,
+.btn-arrow-left:after { /* align the "after" square to the right */
+    right: -11px;
+}
+.btn-arrow-right:after,
+.btn-arrow-left:before { /* bring arrow pointers to front */
+    z-index: 1;
+}
+.btn-arrow-right:before,
+.btn-arrow-left:after { /* hide arrow tails background */
+    background-color: #F6F5F4;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+h1{
+ /*   font-size:26px; */
+    font-weight:normal;
+}
+h2{
+  /*  font-size:20px; */
+    font-weight:normal;
+}
+
+hr{
+    border:none;
+    border-top:1px solid #ccc;
+    background:none;
+    margin-bottom:2px;
+}
+a{
+
+    color: black;
+    
+}
+.header-right{
+    padding-top:12px;
+    text-align:right;
+}
+
+.center{
+    text-align:center;
+}
+.right{
+    text-align:right;
+}
+
+.question{
+    background-color:var( --corporateTeal);
+    color:white;
+    
+    text-align:left;
+      border-radius: 8px;
+     
+
+}
+
+.question h1{
+   /* font-size:26px; */
+    font-weight:normal;
+}
+
+ .options {
+    margin: auto;
+    width:100%;
+    text-align: left;
+    padding-bottom: 5px;
+
+}
+
+ .options > div > div > label {
+        background-color: var(--subtleSilverGray);
+        color: var(--ZenithBlack);
+        cursor: pointer;
+        display: block;
+        font-family: "Noto Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+        font-weight:600;
+        margin: 1.5%;
+        text-align: left;
+   /*     font-size: 15px; */
+        border-radius: 10px;
+        width:97%;
+        height:auto;
+
+        padding: 2%;
+        vertical-align: middle;
+    }
+
+     .options input[type=checkbox] {
+        display: none;
+        height:22px;
+        width:97%;
+    }
+
+    .options input:checked + label {
+        background-color:var(--pastleAppleGreen);      
+        color: #224;
+}
+
+
+.quizNav1 {
+        margin:auto;
+        margin-top:-200px;
+        text-align:center;
+    }
+    .quizNav {
+        //margin:auto;
+        margin-top:100px;
+
+        text-align:center;
+    }
+    .quizNav ul{
+        margin:0;
+    }
+
+
+    .quizNav ul li{
+        display:inline-block;
+        list-style-type:none;
+    }
+div:focus {
+    background-color:red;
+}   
+.review{
+    text-align:center;
+
+  
+    cursor:pointer;
+    display:inline-block;
+    margin-bottom: 1%;
+ 
+  
+  
+
+
+}
+div.header{
+ 
+    background-color:#F2F2F2;
+}
+div.header1{
+    width:80%;
+    display: inline-block;
+
+    background-color:white;
+}
+.qblock{
+ 
+    background-color:var( --corporateTeal)    ;
+    height:auto;
+    vertical-align: middle;
+    margin-top: 25px;
+    padding: 1px;
+    
+}
+.glyphicon {
+    font-size: 30px;
+}
+div.review > div {
+    cursor:pointer;
+    display:inline-block;
+	
+    margin:2px;
+    width: 8%;
+
+    
+}
+
+.answered {
+    border:2px solid #000000;
+    text-align: center;
+    
+}
+
+.not-answered {
+    border:2px solid #000000;
+    text-align: center;
+}
+.not-attempted {
+    border:2px solid #ff5b56;
+    padding:5px;
+}
+.reviewed {
+    background-color:#06F;
+    border:1px solid #eeaaaa;
+    padding:5px;
+}
+
+.result{
+
+}
+
+.result-question{
+    background-color:#F6F5F4;
+
+}
+.result-question h3 {
+    font-size:18px;
+    font-weight:normal;
+}
+#quiz .result-options {
+    margin: auto;
+    max-width: 600px;
+    text-align: left;
+	
+}
+
+#quiz .result-options > div{
+    display:inline-block;
+}
+    #quiz .result-options > div > label {
+        background-color: #EDEBE9;
+        color: #224;
+        cursor: pointer;
+        display: block;
+        font-family: 'Segoe UI', Calibri, Arial;
+        font-weight:normal;
+        margin: 5px;
+        text-align: left;
+        font-size: 16px;
+        margin: 6px;
+        min-width: 300px;
+        padding: 6px 12px;
+        vertical-align: middle;
+    }
+
+    #quiz .result-options input[type=checkbox] {
+        background-color:#F6F5F4;
+        border:1px solid #ccc;
+        height:16px;
+        width:16px;
+    }
+
+    .result-correct{
+        background-color: #A5DF00;
+    }
+    
+    .result-incorrect{
+        background-color: #FE2E2E;
+    }
+    .result-skip{
+        background-color: #58ACFA;
+    }
+
+    
+/* Create Quiz Styles */
+.create-quiz .question {
+    text-align:left;
+}
+.create-quiz input[type=text]{
+    border:1px solid #ddd;
+    width:95%;
+}
+.create-quiz .tb-quiz-name{
+    background-color:#ccffcc;
+    text-align:center;
+}
+
+.create-quiz .tb-desc{
+    background-color:#fff;
+}
+
+.create-quiz .options > div{
+    margin-left:20px;
+}
+.create-quiz .options input[type=checkbox]{
+    border: 1px solid #262626;
+    display: inline-block;
+    height:20px;
+    margin-top:10px;
+    margin-bottom:0;
+    padding:0;
+    width:20px;
+    -webkit-appearance:checkbox;    
+}
+
+
+.quesOptions:hover {
+
+ min-width: 96%; display: block;
+  background-color: #DEE8Cf;  
+  border-radius: 10px; 
+
+}
+
+#hintsPos{
+
+}
+
+@media screen and (min-width: 1025px) and (max-width: 2500px) {
+#instruction {
+    word-wrap: break-word;
+position: relative;
+background-color: #F0F0F0;
+border: 3px solid #262626;
+   /* Put the left edge on the horizontal center */
+
+
+ margin-top:50%;
+margin-bottom: 5%;
+max-width: 95%;
+
+ 
+  text-align: left;   
+min-height: 250px ;
+  min-width:250px ;
+  height:auto;
+
+display: inline-block;
+border-radius: 8px;
+
+}
+
+
+#explanation  {
+    word-wrap: break-word;
+position: relative;
+background-color: #F0F0F0;
+border: 3px solid #262626;
+
+  /* Put the left edge on the horizontal center */
+   margin-top:25%;
+
+width: 95%;
+ 
+
+  text-align: left;
+min-height: 250px;
+  min-width: 250px;
+  height:auto;
+
+
+display: inline-block;
+border-radius: 8px;
+
+
+}
+#hints  {
+    word-wrap: break-word;
+position: relative;
+background-color: #F0F0F0;
+border: 3px solid #262626;
+  margin-top:20%;
+
+width: 95%;
+ 
+  
+  text-align: left;
+min-height: 250px;
+  min-width: 250px;
+  height:auto;
+
+display: inline-block;
+border-radius: 8px;
+
+
+}
+.footer-icon{
+ font-size: 220%;   
+}
+}
+
+
+@media screen and (min-width: 400px) and (max-width: 1024px) {
+#instruction {
+    word-wrap: break-word;
+position: relative;
+background-color: #F0F0F0;
+border: 3px solid #262626;
+   /* Put the left edge on the horizontal center */
+
+
+ margin-top:auto;
+ margin-bottom: 5%;
+
+width: 95%;
+ 
+   
+  text-align: left;
+       
+min-height: 250px ;
+  min-width:250px ;
+  height:auto;
+
+display: inline-block;
+border-radius: 8px;
+
+
+}
+
+#explanation  {
+    word-wrap: break-word;
+position: relative;
+background-color: #F0F0F0;
+border: 3px solid #262626;
+
+  /* Put the left edge on the horizontal center */
+ 
+ margin-top:5%;
+
+width: 95%;
+ 
+
+  text-align: left;
+min-height: 250px;
+  min-width: 250px;
+  height:auto;
+
+display: inline-block;
+
+border-radius: 8px;
+
+
+}
+#hints  {
+    word-wrap: break-word;
+position: relative;
+background-color: #F0F0F0;
+border: 3px solid #262626;
+  /* Put the left edge on the horizontal center */
+   
+ margin-top:auto;
+
+    width: 95%;
+ 
+ 
+  text-align: left;
+min-height: 250px;
+  min-width: 250px;
+  height:auto;
+
+display: inline-block;
+border-radius: 8px;
+
+}
+.footer-icon{
+ font-size: 190%;   
+}
+}
+
+@media screen and (min-width: 100px) and (max-width: 480px) {
+  #instruction {
+    word-wrap: break-word;
+position: relative;
+background-color: #F0F0F0;
+border: 3px solid #262626;
+   /* Put the left edge on the horizontal center */
+
+
+ margin-top:auto;
+margin-bottom: 5%;
+max-width: 95%;
+  
+  text-align: left;       
+min-height: 250px ;
+  min-width:250px ;
+  height:auto;
+
+display: inline-block;
+border-radius: 8px;
+
+
+}  
+
+#explanation  {
+    word-wrap: break-word;
+position: relative;
+background-color: #F0F0F0;
+border: 3px solid #262626;
+
+  /* Put the left edge on the horizontal center */
+  margin-top:5%;
+ margin-bottom:auto;
+    width: 95%;
+ 
+  text-align: left;
+
+min-height: 250px;
+  min-width: 250px;
+  height:auto;
+
+
+display: inline-block;
+border-radius: 8px;
+
+
+}
+#hints  {
+    word-wrap: break-word;
+position: relative;
+background-color: #F0F0F0;
+border: 3px solid #262626;
+  /* Put the left edge on the horizontal center */
+  margin-top:auto;
+ margin-bottom:auto;
+width: 95%;
+ 
+  text-align: left;
+
+min-height: 250px;
+  min-width: 250px;
+  height:auto;
+
+display: inline-block;
+border-radius: 8px;
+
+
+}
+.footer-icon{
+ font-size: 135%;   
+}
+
+}
+
+#iblock{
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+
+.myBox{
+
+width:100%;
+    border: 1px solid var( --corporateTeal);
+    text-align: center;
+    background-color: var( --corporateTeal);
+    cursor:pointer;
+    display:inline-block;
+   
+
+}
+#myIcons {
+color:#4d4d4d;
+    font-size: 25px ;
+        line-height: 35px;
+}
+.myIcons {
+color:white;
+    font-size: 25px ;
+        line-height: 35px;
+}
+#myExp {
+color:white;
+    font-size: 25px ;
+        line-height: 35px;
+}
+
+
+.arrangeOption{
+    background-color: var(--subtleSilverGray);
+        color: var(--ZenithBlack);
+        cursor: pointer;
+        display: block;
+        font-family: "Noto Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+        font-weight:600;
+        margin: 1.5%;
+        text-align: left;
+    /*    font-size: 15px; */
+        border-radius: 10px;
+        width:97%;
+        height:auto;
+        padding: 2%;
+        vertical-align: middle;
+}
+
+
+.fillInOption{
+    background-color: var(--corporateTeal);
+        color: white;
+        cursor: pointer;
+        display: block;
+        font-family: 'Noto Sans','Segoe UI', Calibri, Arial;
+        font-weight:600;
+        margin: 1.5px;
+        text-align: left;
+   /*     font-size: 20px;  */
+        
+        width: 97%;
+        height:auto;
+        padding: 2%;
+        vertical-align: middle;
+        border-radius: 10px
+}
+
+#divFillInBlank{
+background-color:rgb(240,240,240);
+color:black;
+width:100%;
+ padding: 2%;
+/* font-size:100%; */
+border-radius:5px;
+}
+
+#inputBlankText{
+background-color:rgb(240,240,240);
+color:var(--corporateTeal);
+border-color:black;
+border-style:none none solid none;
+font-family:Verdana;
+/* font-size:110%; */
+font-weight:bold;
+width:20%;
+}
+
+#inputBlankNumber{
+background-color:rgb(240,240,240);
+color:var(--corporateTeal);
+border-color:black;
+border-style:none none solid none;
+font-family:Verdana;
+/* font-size:100%; */
+font-weight:bold;
+width: 10%;
+}
+
+@media all and (min-width: 50px)   {  body  { font-size:0.9em;  } }
+@media all and (min-width: 100px)  {  body  { font-size:0.9em;  } }
+@media all and (min-width: 200px)  {  body  { font-size:0.9em;  } }
+@media all and (min-width: 300px)  {  body  { font-size:1.0em;  } }
+@media all and (min-width: 400px)  {  body  { font-size:1.2em;  } }
+
+@media all and (min-width: 500px)  {  body  { font-size:1.1em;  } }
+@media all and (min-width: 600px)  {  body  { font-size:1.4em;  } }
+@media all and (min-width: 700px)  {  body  { font-size:1.6em;  } }
+@media all and (min-width: 800px)  {  body  { font-size:1.7em;  } }
+@media all and (min-width: 900px)  {  body  { font-size:1.8em;  } }
+@media all and (min-width: 1000px) {  body  { font-size:1.9em;  } }
+@media all and (min-width: 1100px) {  body  { font-size:2.0em;  } }
+@media all and (min-width: 1200px) {  body  { font-size:1.1em;  } }
+@media all and (min-width: 1300px) {  body  { font-size:1.2em;  } }
+@media all and (min-width: 1400px) {  body  { font-size:1.3em;  } }
+@media all and (min-width: 1500px) {  body  { font-size:1.4em;  } }
+@media all and (min-width: 1500px) {  body  { font-size:1.4em;  } }
+@media all and (min-width: 1600px) {  body  { font-size:1.5em;  } }
+@media all and (min-width: 1700px) {  body  { font-size:1.6em;  } }

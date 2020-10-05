@@ -1,0 +1,638 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <%- include('../parts/allCSS'); %>
+
+    
+    <link rel="stylesheet" href="author_public/css/author_basket.css">
+    <script src="author_public/PaperDashBoard/js/jquery-3.1.1.min.js" type="text/javascript"></script>      
+    <script src="author_public/js/author_basket.js"></script>    
+
+    <script type="text/javascript">
+      $(document).ready(function() {
+        if (window.location.search.indexOf('msg=dberror') > -1) {
+            $('#error_db').slideDown();
+            function success_1(){
+              $('#error_db').slideUp();
+            }
+            setTimeout(success_1, 5000);
+        } else {
+            // alert('track not here');
+        }
+      });
+       $(document).ready(function() {
+        if (window.location.search.indexOf('msg=maxlist') > -1) {
+            $('#maxlist').slideDown();
+            function success_1(){
+              $('#maxlist').slideUp();
+            }
+            setTimeout(success_1, 5000);
+        } else {
+            // alert('track not here');
+        }
+      });
+
+       $(document).ready(function() {
+        if (window.location.search.indexOf('msg=timeout') > -1) {
+             $.notify({
+                icon: "",
+                message: "<b> Error - </b>Session Timeout !!!"
+              },{
+                type: "danger",
+                timer: 4000,
+                placement: {
+                    from: 'top',
+                    align: 'center'
+                }
+              });
+        } else {
+            // alert('track not here');
+        }
+      });
+      $(document).ready(function() {
+        if (window.location.search.indexOf('msg=itemAdded') > -1) {
+             $.notify({
+                icon: "",
+                message: "Item Added to playlist successfully!!!"
+              },{
+                type: "success",
+                timer: 4000,
+                placement: {
+                    from: 'top',
+                    align: 'center'
+                }
+              });
+        } else {
+            // alert('track not here');
+        }
+      });
+      $(document).ready(function() {
+        if (window.location.search.indexOf('msg=reqerror') > -1) {
+             $.notify({
+                icon: "",
+                message: "<b> Error - </b>Error creating data, Please go back and edit again after some time !!"
+              },{
+                type: "danger",
+                timer: 4000,
+                placement: {
+                    from: 'top',
+                    align: 'center'
+                }
+              });
+        } else if (window.location.search.indexOf('msg=noPlaylist') > -1) {
+          $.notify({
+             icon: "",
+             message: "<b> Error - </b>Please select playlist name !!"
+           },{
+             type: "danger",
+             timer: 4000,
+             placement: {
+                 from: 'top',
+                 align: 'center'
+             }
+           });
+     } else if (window.location.search.indexOf('msg=noItem') > -1) {
+      $.notify({
+         icon: "",
+         message: "<b> Error - </b>Please select atleast one question to add in playlist !!"
+       },{
+         type: "danger",
+         timer: 4000,
+         placement: {
+             from: 'top',
+             align: 'center'
+         }
+       });
+ } else {
+     // alert('track not here');
+ }
+      });
+    </script>
+    <style type="text/css">
+    #chkbox_ids:before, #chkall:before {
+      display: inline-block;
+      font: normal normal normal 15px/1 FontAwesome;
+      font-size: 1.2em;
+      text-rendering: auto;
+      -webkit-font-smoothing: antialiased;
+      content:"\f096";/*f1ce*/
+      opacity:1 !important;
+      margin-top:-25px;
+      appearance:none;
+      background:#fff;
+      color:rgb(86, 189, 132);
+    }
+    #chkbox_ids:checked:before, #chkall:checked:before{
+          content:"\f046";/*f011*/
+    }
+    #chkbox_ids,#chkall{
+      font-size:22px;appearance:none; -webkit-appearance:none; -moz-appearance:none;
+    }
+  
+    .display-table{
+      display: table;
+    }
+
+    .display-table-cell{
+      display: table-cell;
+    }
+
+    .fixed-table-toolbar .columns .btn{
+      border-radius: 30px !important;
+    }
+
+    .btngrplastbtn {
+      border-top-right-radius: 26px !important;
+      border-bottom-right-radius: 26px !important;
+    }
+
+    .btngrplastbtn:hover {
+      border-top-right-radius: 26px !important;
+      border-bottom-right-radius: 26px !important;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <%- include('../parts/leftNavBar'); %>
+    <div class="main-panel">
+      <%- include('../parts/topNavBarPart1'); %> Commited content 
+        <!-- <p class="category hidden-xs" style="font-weight:normal">Here is the list of questions that you have already commited. </p> -->
+      <%- include('../parts/topNavBarPart2'); %>
+      <div class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class='col-md-10 col-md-offset-1'> <!-- col-md-10 col-md-offset-1 -->
+              <div class="card">
+                <div class="card-content">
+                  <!-- <div class="row"> -->
+                    <!-- <div class="col-md-12"> -->
+                      <!-- <div class="table-responsive"> -->
+                        <div class="toolbar">
+                            <!-- <button type="submit" class="btn btn-info btn-fill btn-wd" id="add_to_playlist"  data-toggle="modal" data-target="#addtoplaylist" disabled > <i class="ti-plus"></i> Add selected items to playlist
+                            </button> -->
+
+             
+                            <div class="filterbtns mt-14px">
+                             
+                              <label>Filter:</label>
+                                <div class="btn-group" role="group" >
+                                <button id="allrows" rel="tooltip" title="All questions" onclick="showalltabdata()" type="button" class="btn btn-default btn-sm"> All</button>
+                                <button id="basketrows" rel="tooltip" title="Basket questions" onclick="filterbybasket('#commQue','recentView','table')" type="button" class="btn btn-default btn-sm "><i class="fa fa-shopping-basket" ></i></button>
+                                <button id="lastviewrows" rel="tooltip" title="Recent view" onclick="filterbyview('#commQue','recentView','table')" type="button" class="btn btn-default btn-sm btngrplastbtn">
+                                  <i class="fa fa-clock-o"></i>
+                                </button>
+                                </div> 
+
+                            </div>
+                            
+
+
+                        </div>
+                       <!--error block for new question json.result.error !-->
+                          <div class="alert alert-danger" id="error_db" style="display:none;">
+                              <button type="button" aria-hidden="true" class="close">�</button>
+                              <span>Error occurs during fetching your data, Please Contact Administrator !!</span>
+                          </div>
+                          <div class="alert alert-danger" id="maxlist" style="display:none;">
+                              <button type="button" aria-hidden="true" class="close">�</button>
+                              <span>Maximum number of items allowed in a playlist is 50  !!</span>
+                          </div>
+
+                        <table id="commQue" class="table">
+                          <thead>
+                            <tr >
+                              <!-- <th id="checkbox">
+                                <input type="checkbox" onchange="checkAll(this)" onclick="addquescheck()" id="chkall" name="chk[]" />
+                              </th> -->
+
+                             
+                             
+                              <th data-field="updatedat" data-sortable="true" class="text-center">Updated at</th>
+                             
+                              <th data-field="id" data-sortable="true" class="text-center">ID</th>
+                              <th data-field="type" data-sortable="true" class="text-center">Type</th>
+                              <th data-field="tags" data-sortable="true">Tags</th>
+                              <th data-field="comments" data-sortable="true"> Comments</th>
+                              <th data-field="actions" class="td-actions text-center" >Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <%for(var i=0; i<userdata.length;i++){
+                              var str = userdata[i];
+                              
+                            %>
+                            <script type="text/javascript">
+                              $(document).ready(function() {
+                                  var updatedAt_utc = document.getElementById('updatedAt_utc<%-i%>').value;
+                                  var d = new Date(updatedAt_utc);
+                                  var time = d.toString().split(" ")[4];
+                                  var getDate = d.getDate();
+                                  var getMonth = d.getMonth() + 1;
+                                  var getFullYear = d.getFullYear();
+                                  if(getMonth < 10)
+                                  getMonth = "0"+getMonth;
+                                  if(getDate < 10)
+                                  getDate = "0"+getDate;
+                                  var startDate = getFullYear+"-"+getMonth+"-"+getDate;
+                                  var updatedAt =  startDate.substring(0, 10) + " " + time;
+                                  document.getElementById('updatedAt<%-i%>').innerHTML = updatedAt;
+
+                              });
+                            </script>
+                            <!--  -->
+
+                              <tr id="tr<%-str[0]%>">
+                                <!-- <td>
+                                  <input type="checkbox" id="chkbox_ids" name="chkbox_ids" class="chkbox"  onclick="addquescheck()" value="<%-str[0]%>" />&nbsp;&nbsp;&nbsp;&nbsp; 
+                                </td> -->
+
+                                
+                                <td style="text-align:center;"  id="updatedAt<%-i%>"><input type="hidden" id="updatedAt_utc<%-i%>" name="updatedAt_utc<%-i%>" value="<%-str[3]%>"></td>
+                                
+                                <td><%-str[0]%></td>
+                                <td><%-str[2]%></td>
+                                <td><%-str[1]%></td>
+                                <!-- <td><%-str[4]%></td> -->
+                                <!-- var slicearr ='';
+                                  if(str[4] == undefined){
+                                    slicearr = '';
+                                    str[4] = '';
+                                  }else{
+                                    slicearr = str[4].slice(0, 50);
+                                  } -->
+                                <%if(str[4]){
+                                  var slicearr = str[4].slice(0, 50);
+                                %>
+                                <% if(str[4].length <= 50){%>
+                                    <td><%-slicearr%></td>
+                                <% } else{%>
+                                    <td><%-slicearr%><b>...</b></td>
+                                <%}}else{%>
+                                <td><%-str[4]%></td>
+                                <%}%>
+                                <td>
+                                  
+
+                                  <div class="table-icons">
+                                    <a rel="tooltip" id="view_sample" onclick="viewquestion('<%-str[0]%>','recentView')" title="View Sample" class="btn btn-simple btn-success btn-icon table-action edit"  data-item="<%-str[0]%>" data-vid="vw<%-str[0]%>"><i class="fa fa-info-circle" ></i></a>
+                                    
+
+                                    <a rel="tooltip"  title="Add to playlist" class="btn btn-simple  btn-warning btn-icon table-action edit" href="javascript:void(0)" onclick="addToPlaylistSingle('<%-str[0]%>')"  ><i class="fa fa-th-list" ></i></a>
+
+
+                                    <a rel="tooltip"  title="Add to basket" class="btn btn-simple  btn-info btn-icon table-action edit basket" href="javascript:void(0)" onclick="AddtoBasket('ad<%-str[0]%>','<%-str[0]%>','table')" id="ad<%-str[0]%>">
+                                     <i class="fa fa-shopping-basket" ></i>
+                                    </a>
+
+                                    <a rel="tooltip" title="More" onclick="viewquestion('<%-str[0]%>','recentView')" class="btn btn-simple btn-danger btn-icon table-action edit" href="author_getCommitted?id=<%-str[0]%>&pipe=<%-str[2]%>"><i class=" ti ti-more-alt " style="font-size:1.3em;"></i></a>
+                                  
+                                  </div>
+                                </td>
+                              </tr>
+                            <%}%>  
+                          </tbody>
+                        </table>
+                      <!-- </div> -->
+                    <!-- </div> -->
+                  <!-- </div> -->
+                </div> <!-- card-content -->
+              </div> <!-- card -->
+            </div> <!-- col-md-12 -->
+          </div>   <!-- row -->
+        </div>   <!-- containerfluid -->
+      </div><!--  content -->
+      <%- include('../parts/footer'); %>
+    </div> <!-- main panel -->
+  </div> <!-- wrapper -->
+ 
+    <!--  modal to add item to a playlist -->
+    <div class="modal fade" id="addtoplaylist" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+              <span aria-hidden="true">&times;</span>
+              <span class="sr-only">Close</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel"><b>Add to playlist</b></h4>
+          </div>
+          <!-- Modal Body -->
+          <div class="modal-body">
+            <form role="form" name="add_ques_ids" id="add_ques_ids" method="post" action="/author_addToPlaylist" enctype="multipart/form-data">
+              <div class="form-group">
+                <div class='row '>
+                  <div class="col-lg-12">
+                    <label for="playlist_name1">Playlist Name</label>
+                    <button type="button" rel="tooltip" title="" class="btn btn-info btn-simple btn-xs" data-original-title="<%-tooltip.tooltipPlaylist05%>">
+                      <i class="ti-help-alt fa-lg"></i>
+                    </button>
+                  </div>
+                   <div class="col-lg-7">
+                      <select class="selectpicker" data-style="btn-default" id="playlist_name1" name="playlist_name1" data-live-search="true" required>
+                        <option value="">Select</option>
+                        <optgroup label="Onwer List">
+                            <%for(var i=0; i<playlistdata.length;i++){
+                              var playlist1 = playlistdata[i];
+                            %>
+                              <option value="<%-playlist1[2]%>"><%-playlist1[1]%></option>
+                            <%}%>
+                          </optgroup>
+                          <optgroup label="Collabrator Playlist">
+                              <%for(var i=0; i<collb1.length;i++){
+                                var strcollb1 = collb1[i];
+                              %>
+                                <option value="<%-strcollb1[2]%>"><%-strcollb1[1]%></option>
+                              <%}%>
+      
+                              <%for(var i=0; i<collb2.length;i++){
+                                var strcollb2 = collb2[i];
+                              %>
+                                <option value="<%-strcollb2[2]%>"><%-strcollb2[1]%></option>
+                              <%}%>
+                          </optgroup>
+                      </select>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-12">
+                    <label for="section_name1">Section Name</label>
+                  </div>
+                  <div class="col-lg-7">
+                    <select class="form-control valid newDropCss" data-style="btn-default" id="section_name1" name="section_name1" required>
+                  </select>
+                </div>
+                </div>
+              </div>
+
+              <!-- <input type="text" class="form-control" id="ques_ids1" name="ques_ids1" readonly /> -->
+              <!-- <button type="submit" class="btn btn-default">Submit</button> -->
+              <input type="hidden" name="author" value="<%-short%>">
+              <input type="hidden" name="ques_ids1" id="ques_ids1" value="">
+              <input type="hidden" name="log_Id" id="log_Id" value="">
+              <input type="hidden" name="log_Token" id="log_Token" value="">
+              <div class="clearfix">
+                <button type='submit' class="btn btn-primary btn-fill pull-right" id="add_playlist" disabled>Add To Playlist</button>
+              </div>
+            </form>  
+          </div>
+          <!-- Modal Footer -->
+         <!--  <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div> -->
+          
+        </div> 
+      </div>
+    </div>
+    <!-- modal view sample -->
+    <div class="">
+        <div class="modal fade" id="bsModal3" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="mySmallModalLabel">View
+                            Sample
+                        </h4>
+                    </div>
+                    <div class="modal-body" id="viewModalContent">
+                        <p></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- modal close-->
+    <script type="text/javascript">
+        $(function () {
+            $('#bsModal3').on('hidden.bs.modal', function () { // do something� })
+                $("#viewModalContent").html(" <p></p>");
+            })
+        });
+    </script>
+    
+     <script type="text/javascript">
+        $(document).ready(function () {
+            $("body").on("click","#view_sample",function () {
+                var quesItm = $(this).attr("data-item");
+                $.ajax({
+                    type: 'get',
+                    url: '/author_getCommittedSampleQue?id='+quesItm,
+                    cache: false,
+                    success: function (returndata) {
+                        if (returndata) {
+                            // $('#bsModal3 .modal-body p').modal('show'); // Please right this in your Code
+                            // console.log(returndata);
+                            
+                            $('#bsModal3 .modal-body p').html(returndata);
+                            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+                            $('#bsModal3').modal('show');
+
+                           
+
+                        } else {
+                            // other code
+                        }
+                    },
+                    error: function () {
+                        console.error('Failed to process ajax !');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+<%- include('../parts/allJS'); %>
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>
+
+
+<script type="text/javascript">
+  var $table = $('#commQue');
+  $(document).ready(function(){
+    $('#commQue').bootstrapTable({
+        toolbar: ".toolbar",
+        clickToSelect: true,
+        showRefresh: false,
+        search: true,
+        showToggle: true,
+        showColumns: true,
+        pagination: true,
+        searchAlign: 'right',
+        strictSearch: false,
+        pageSize: 10,
+        clickToSelect: false,
+        pageList: [5, 10, 25, 50, 100],
+        sortName:"updatedat",
+        sortOrder :"desc",
+
+        formatShowingRows: function(pageFrom, pageTo, totalRows){
+            //do nothing here, we don't want to show the text "showing x of y from..."
+            return "showing "+pageFrom+" to "+pageTo+" of " + totalRows +" entries <br/>";
+        },
+        formatRecordsPerPage: function(pageNumber){
+            return "  "+pageNumber + " rows visible";
+        },
+        icons: {
+            refresh: 'fa fa-refresh',
+            toggle: 'fa fa-th-list',
+            columns: 'fa fa-columns',
+            detailOpen: 'fa fa-plus-circle',
+            detailClose: 'ti-close'
+        }
+    });
+    //activate the tooltips after the data table is initialized
+    $('[rel="tooltip"]').tooltip({trigger: "hover"});
+  });
+
+
+
+  $(function() {
+     $('#commQue').on('post-body.bs.table', function () {
+       
+        $('[rel="tooltip"]').tooltip({trigger: "hover"});
+        $("[rel='tooltip'][data-vid]").on('show.bs.tooltip', function(){
+         var data = $(this).attr('data-vid');
+         var qid = data.substring(2);
+         updateLastViewTime(qid,'recentView');
+        });
+
+         changecolor('#commQue','recentView','table');
+     });
+  
+  changecolor('#commQue','recentView','table'); 
+  
+  $("[rel='tooltip'][data-vid]").on('show.bs.tooltip', function(){
+         var data = $(this).attr('data-vid');
+         var qid = data.substring(2);         
+         updateLastViewTime(qid,'recentView');                    
+  });
+  
+
+});
+
+//sessionStorage.removeItem('recentView');
+
+function showalltabdata()
+{
+
+  $('#commQue').bootstrapTable('destroy');
+  $('#commQue').bootstrapTable({
+        toolbar: ".toolbar",
+        clickToSelect: true,
+        showRefresh: false,
+        search: true,
+        showToggle: true,
+        showColumns: true,
+        pagination: true,
+        searchAlign: 'right',
+        strictSearch: false,
+        pageSize: 10,
+        clickToSelect: false,
+        pageList: [5, 10, 25, 50, 100],
+        sortName:"updatedat",
+        sortOrder :"desc",
+
+        formatShowingRows: function(pageFrom, pageTo, totalRows){
+            //do nothing here, we don't want to show the text "showing x of y from..."
+            return "showing "+pageFrom+" to "+pageTo+" of " + totalRows +" entries <br/>";
+        },
+        formatRecordsPerPage: function(pageNumber){
+            return "  "+pageNumber + " rows visible";
+        },
+        icons: {
+            refresh: 'fa fa-refresh',
+            toggle: 'fa fa-th-list',
+            columns: 'fa fa-columns',
+            detailOpen: 'fa fa-plus-circle',
+            detailClose: 'ti-close'
+        }
+    });
+
+
+    $('#commQue').on('post-body.bs.table', function () {
+        $('[rel="tooltip"]').tooltip({trigger: "hover"});
+
+        $("[rel='tooltip'][data-vid]").on('show.bs.tooltip', function(){
+          var data = $(this).attr('data-vid');
+          var qid = data.substring(2);         
+          updateLastViewTime(qid,'recentView');                    
+        });
+         changecolor('#commQue','recentView','table');
+         
+     });
+  
+  changecolor('#commQue','recentView','table');  
+   
+
+
+}
+
+LoadRecentViewQuest('recentView');
+
+
+$(document).ready(function () {
+          $("#playlist_name1").change(function () {
+            var playlistId = document.getElementById('playlist_name1').value;
+            var playlistName = $("#playlist_name1 option:selected").text().trim();
+           
+            var user_data2 = new Object;
+            user_data2.name = playlistName;
+            user_data2.playlistId = playlistId;
+            // console.log(playlistName)
+
+            $.post("/author_getSectionsList", user_data2, function (data) {
+              if (data.status == 'success') {
+                  $("#section_name1").html("<option value=''>Select</option>");
+                  
+                  // console.log(data.sectionName);
+                  // console.log(data.sectionCon);
+                 let htm = '';
+                  for(var i=0;i<data.sectionName.length;i++){
+                      $('#section_name1').append('<option value="'+i+'">'+data.sectionName[i]+'</option>');
+                  }
+                  
+              }
+              else if (data.status == 'error') {
+                  // $('#section_name1').hide();
+                  swal({
+                      type: 'error',
+                      title: 'Error',
+                      html: data.msg
+                  });
+              }
+            });
+          });
+      });
+
+
+</script>
+
+
+
+<!-- <script>
+$(document).ready(function(){
+  $('#commQue').dataTable(
+    {
+      "order": [[ 0, "desc" ]],
+      "paging":   false,
+      "info":     false
+    });
+});
+</script> -->
+
+
+
+
+
+  
+  
+
+
+</html>

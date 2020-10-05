@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- <script src="PaperDashBoard/js/jquery-3.1.1.min.js" type="text/javascript"></script> -->
+  <script type="text/javascript"  src="author_public/plotchart/plotly-latest.min.js"></script>
+  <script type="text/javascript" src="author_public/plotchart/plotchart.js"></script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      showMathMenu: false,
+      CommonHTML: { linebreaks: { automatic: true } },
+      "HTML-CSS": { linebreaks: { automatic: true } },
+             SVG: { linebreaks: { automatic: true } }
+    });
+  </script>
+  <script type="text/javascript">
+    $(function() {
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+  });
+  </script>
+      <!-- <script src="PaperDashBoard/js/jquery-3.1.1.min.js" type="text/javascript"></script> -->
+</head>
+
+<body>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="card">
+
+
+                      <%if(success==true){%>
+                      <%var results = JSON.parse(result)%>
+                        <%if(results.errors==false){%>
+                      <div class="card-header clearfix">
+                        <div class="pull-right">
+                          <div class="row">
+                            <div class="col-sm-12">
+                              <div class='col-sm-6'>
+                                <form name="authfrm4" id="authfrm4" method="post" action="/author_createquiz">
+                                  <input type="hidden" id="type" name="type" value="create_quiz">
+                                  <input type="hidden" id="username" name="username" value="<%-short%>">
+                                  <input type="hidden" id="commdata" name="commdata" value=" <%=JSON.stringify(results.quizObject)%>">
+                                  <input type="hidden" name="log_Id" id="log_Id" value="">
+                                  <input type="hidden" name="log_Token" id="log_Token" value="">
+                                  <button class="btn btn-success btn-wd btn-fill"  type='submit'><i class="fa fa-clipboard"></i>&nbsp;Create</button>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <hr>
+                      <%}%>
+                      <div class="card-content">
+                      <%-results.messages%>
+                      </div>
+                      <%}else{%>
+                       
+                          <div class="error">
+                            <%-result%>
+                          </div>
+                        
+                      <%}%>
+                  </div>
+                  </div>
+                </div>
+</body>
+<%- include('../parts/dynamicMedia'); %>
+</html>

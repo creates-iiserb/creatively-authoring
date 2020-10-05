@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <%- include('../../parts/allCSS'); %>
+  <script src="author_public/PaperDashBoard/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+ 
+</head>
+
+<body>
+  <div class="wrapper">
+    <%- include('../../parts/leftNavBar'); %>
+      <div class="main-panel">
+        <%- include('../../parts/topNavBarPart1'); %>
+          <%- include('../../parts/topNavBarPart2'); %>
+            <div class="content">
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-md-8 col-md-offset-2">
+                    <div class="card">
+                      <div class="card-header clearfix">
+                        <div class="pull-left">
+                          <button type="button" class="btn btn-wd btn-default btn-move-left" onclick="window.location.href='/author_create_quiz'">
+                            <span class="btn-label"><i class="ti-angle-left"></i></span>
+                             Back To Quiz DashBoard
+                          </button>
+                        </div>
+                      </div>
+                      <hr>
+                      <div class="card-content">
+                        <div class="success">
+                            <i class="fa fa-thumbs-o-up"></i>
+                            <p>You have submitted the live quiz <b><%=resData.quizId%></b>, <%=resData.serverRes%></p>
+                        </div>
+                      </div>
+                  </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <%- include('../../parts/footer'); %>
+      </div>
+      
+  </div>
+  </div>
+</body>
+<%- include('../../parts/allJS'); %>
+</html>

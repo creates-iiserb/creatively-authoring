@@ -1,0 +1,883 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <%- include('../parts/allCSS'); %>
+        <script src="author_public/PaperDashBoard/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+        <link rel="stylesheet" href="author_public/css/author_workbook.css">
+        <link href="author_public/css/ng-tags-input.min.css" rel="stylesheet" />
+       
+        <style>
+            tags-input .tags .tag-item.selected {
+                background: #68B3C8;
+            }
+
+            tags-input .tags .tag-item {
+                background: #68B3C8;
+                color: #fff;
+                border-radius: 12px;
+                padding-left: 0.8em;
+            }
+
+            tags-input .tags .input.invalid-tag,
+            tags-input .tags .tag-item .remove-button:active {
+                color: #fff;
+            }
+
+            tags-input .tags .tag-item .remove-button {
+                color: #fff;
+            }
+            tags-input .tags{
+                background-color: #F3F2EE;
+                border: 1px solid #e8e7e3;
+                border-radius: 4px;
+                color: #66615b;
+                font-size: 14px;
+                padding: 4px 10px;
+                /* height: 40px; */
+                -webkit-box-shadow: none;
+                box-shadow: none;
+            }
+           .tags .input{
+            background-color: #F3F2EE !important;
+            }
+            .tags .input:focus{
+            background-color: #ffffff !important;
+            }
+            
+            tags-input .tags.focused{
+                border: 1px solid #e8e7e3;
+                background-color: #FFFFFF;
+                -webkit-box-shadow: none;
+                box-shadow: none;
+                outline: 0 !important;
+            }
+            .current {
+  color: green;
+}
+
+#pagin li {
+  display: inline-block;
+}
+  
+        </style>
+         <link href="author_public/angularControllers/angular-ui-carousel/dist/ui-carousel.min.css" rel="stylesheet" />
+         
+    </head>
+     <body  class="sidebar-mini" ng-app="workbookApp" ng-controller="workbookController" ng-init="wbEditFunc('<%-token%>')"> <!-- -->
+        <div class="wrapper"  id="wbedit">
+                <div class="ld ld-ring ld-spin"></div>
+            <%- include('../parts/leftNavBar'); %>
+            <div class="main-panel" style="display:none;" id="mainPanel">
+                <%- include('../parts/topNavBarPart1'); %> Edit Workbook <br> <small>(Id: <%-token%>)</small>
+                <%- include('../parts/topNavBarPart2'); %>
+
+                    <div class="content">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-lg-2 col-md-4">
+                                    <div class="card card-user ">
+                                        <div class="image">
+                                            <div> <!-- style="height: 150px;width: 200px;" -->
+                                                <img ng-src="{{wb.dev.logo}}" alt="..." ng-cloak/>
+                                            </div>
+                                            <div class="text-block"> 
+                                                <textarea class="form-control" rows="3" id="logo" style="display:none;" ng-model="wb.dev.logo"></textarea>
+                                                <button id="cameraBtn" type="button" class="btn btn-icon btn-fill" data-toggle="modal" data-target="#CameraMdl" rel="tooltip" data-original-title="Change Logo">
+                                                    <span><i class="fa fa-camera"></i></span>
+                                                </button>     
+                                            </div>
+                                        </div>
+                                        <div class="Wbhead" ng-cloak> <!-- card-content -->
+                                            <h5 class=" text-center text-primary" ng-cloak>{{wb.title}}</h5>
+                                            <div class=" text-center" ng-show="ratingData!=false"  style="margin-left:10px;">
+                                                <ul class="star-rating reviews-stars">
+                                                    <li>
+                                                        <p style="cursor: pointer;" ng-click="openReviewDetails(wb._id,ratingData['rate'])" >&nbsp;&nbsp;{{ratingData.reviewlength}} reviews</p>
+                                                    </li>
+                                                    <li class="small-star {{ratingData['rate']['totalRatings']>=5? 'rated-star':''}}">
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                    </li>
+                                                    <li class="small-star {{ratingData['rate']['totalRatings']>=4? 'rated-star':''}}">
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                    </li>
+                                                    <li class="small-star {{ratingData['rate']['totalRatings']>=3? 'rated-star':''}}">
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                    </li>
+                                                    <li class="small-star {{ratingData['rate']['totalRatings']>=2? 'rated-star':''}}">
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                    </li>
+                                                    <li class="small-star {{ratingData['rate']['totalRatings']>=1? 'rated-star':''}}">
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="text-left" style="margin-bottom:20px;line-height:1.6;margin-left:10px;">
+                                                <small ng-cloak class="text-success" ng-show="(wb.lastPublished)"><b>Last Published on</b> {{utcToLocal(wb.lastPublished)}}</small><br/>
+                                                <small ng-cloak class="text-info"  ng-show="(wb.lastBetaPublished)"><b>Last Beta Published on</b> {{utcToLocal(wb.lastBetaPublished)}} </small><br/>
+                                                <small ng-cloak><b>Version:</b> {{wb.version}}</small><br />
+                                                <small ng-cloak><b>Created on</b> {{utcToLocal(wb.createdOn)}}</small><br />
+                                                <small ng-cloak><b>Last Update on</b> {{utcToLocal(wb.dev.lastUpdate)}} </small><br/>
+                                                <small ng-cloak><b>Publisher:</b> {{wb.publisher.name}} , {{wb.publisher.organization}} </small>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="text-center">
+                                            <div class="row">
+                                                <div class="col-md-3 col-md-offset-1">
+                                                    <h5 ng-cloak>{{wb.dev.sheets.length}}<br /><small>Worksheets</small></h5>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <h5 ng-cloak>{{wb.dev.pricing.period}} <br /><small>Period (days)</small></h5>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <h5 ng-cloak>{{wb.dev.pricing.price}}<br /><small>Price</small></h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-10 col-md-8">
+                                    <div class="card  card-big previewDiv">
+                                        <form id="frmWb"  name="frmWb" class="form-horizontal" method="post" ng-submit="updateWB(frmWb)" ng-validate="validationOptions">
+                                        <div class="card-header clearfix">
+                                            <div class="pull-left">
+                                                <h3 class="card-title">Edit Workbook</h3>
+                                                <p class="category"></p>
+                                            </div>
+                                            <div class="pull-right">
+                                                <div class='col-sm-4'>
+                                                    <!-- <form role="form" name="wbDelete" id="wbDelete" method="post" action="" enctype="multipart/form-data" class='inline'> -->
+                                                        <input type="hidden" name="author" ng-model="wb.author">
+                                                        <button type='submit' class="btn btn-warning btn-fill btn-wd btnmargin" id="updateWb">
+                                                            <i class="ti ti-save"></i>&nbsp;&nbsp;Update
+                                                        </button>
+                                                    <!-- </form> -->
+                                                </div>
+                                                <div class='col-sm-4'>
+                                                    <!-- <form role="form" name="wbSheets" id="wbSheets" method="post" action="" enctype="multipart/form-data" class='inline'> -->
+                                                        <button type='button' class="btn btn-success btn-fill btn-wd btnmargin" id="wbGetSheets" onclick="window.location.href='author_getWorkSheets?id=<%-token%>'">
+                                                            <i class="fa fa-file-text"></i>&nbsp;&nbsp;Worksheets
+                                                        </button>
+                                                    <!-- </form> -->
+                                                    </div>
+                                                <div class="col-sm-4">
+                                                    <div class="dropdown">
+                                                        <a href="#" class="btn dropdown-toggle btn-primary btn-fill btn-wd btnmargin" data-toggle="dropdown" aria-expanded="false">
+                                                        More &nbsp;
+                                                        <b class="caret"></b>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li>
+                                                                <!-- <form role="form" name="wbBeta" id="wbBeta" method="post" action="" enctype="multipart/form-data" class='inline'> -->
+                                                                    <button type='button' class="" id="betaWbBtn" data-toggle="modal" data-target="#betaUsersMdl">
+                                                                        <i class="fa fa-upload"></i>&nbsp;&nbsp;Publish Beta
+                                                                    </button>
+                                                                <!-- </form> -->
+                                                            </li>
+                                                            <!-- <li>
+                                                                    <button type='button' class="" id="publishWbBtn">
+                                                                        <i class="fa fa-cloud-upload"></i>&nbsp;&nbsp;Publish
+                                                                    </button>
+                                                            </li> -->
+                                                            <li>
+                                                                <!-- <form role="form" name="wbBeta" id="wbBeta" method="post" action="" enctype="multipart/form-data" class='inline'>  -->
+                                                                    <button type='button' class="" id="mangeWBBtn" name="mangeWBBtn"  onclick="window.location.href='/author_getWorkbookVersionManagePage?id=<%-token%>'">
+                                                                        <i class="fa fa-upload"></i>&nbsp;&nbsp;Manage WB Versions
+                                                                    </button>
+                                                                <!-- </form> -->
+                                                            </li>
+                                                           
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="card-content"  style="padding-right:2px;">
+                                            <div class="nav-tabs-navigation">
+                                                <div class="nav-tabs-wrapper">
+                                                    <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+                                                        <li class="active"><a href="#meta" data-toggle="tab">Meta</a></li>
+                                                        <li><a href="#category" data-toggle="tab">Category</a></li>
+                                                        <li><a href="#publish" data-toggle="tab">Pricing</a></li>
+                                                        <li><a href="#publisherProfile" data-toggle="tab">Publisher Profile</a></li>
+                                                        <!-- <li><a href="#image" data-toggle="tab">Image</a></li> -->
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div id="my-tab-content" class="tab-content ">
+                                                <div class="tab-pane active" id="meta">
+                                                    <!-- <form  class="form-horizontal"> -->
+                                                        <fieldset>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label"><small class="text-danger">*</small> Name 
+                                                                    <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                                                    <i class="ti-help-alt fa-lg"></i>
+                                                                    </button>
+                                                                </label>
+                                                                <div class="col-lg-9">
+                                                                    <input type="text" class="form-control" id="wbname" name="wbname" maxlength="100" ng-model="wb.title" >
+                                                                </div>
+                                                            </div>
+                                                        </fieldset>
+                                                        <fieldset>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label"><small class="text-danger">*</small> Description
+                                                                    <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                                                        <i class="ti-help-alt fa-lg"></i>
+                                                                    </button>
+                                                                </label>
+                                                                <div class="col-lg-9"  id="wbdescrDiv">
+                                                                        <textarea id="wbdescr" name="wbdescr"  maxlength="2000"></textarea>
+                                                                    <span class="pull-right text-danger" id="charLimit"><small><b id="charCount"></b></small></span>
+                                                                    <!-- <textarea ng-model="wb.dev.description" id="wbdescr" name="wbdescr" data-ck-editor></textarea> -->
+
+                                                                   <div id="descDiv" style="display:none"></div>  
+
+                                                                </div>
+                                                                <!-- <textarea class="form-control" rows="3"   ng-model="wb.description" ></textarea> -->
+                                                            </div>
+                                                        </fieldset>
+                                                        
+                                                        <fieldset>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label"><small class="text-danger">*</small> Support Email Id 
+                                                                    <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                                                        <i class="ti-help-alt fa-lg"></i>
+                                                                    </button>
+                                                                </label>
+                                                                <div class="col-lg-9">
+                                                                    <input type="email" class="form-control" id="email" name="email"  ng-model="wb.email" >
+                                                                </div>
+                                                            </div>
+                                                        </fieldset>
+                                                    <!-- </form>   -->
+                                                </div>
+                                                <div class="tab-pane" id="category">
+                                                    <!-- <form  class="form-horizontal"> -->
+                                                        <fieldset>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label"><small class="text-danger">*</small> Country 
+                                                                    <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                                                        <i class="ti-help-alt fa-lg"></i>
+                                                                    </button>
+                                                                </label>
+                                                                <div class="col-lg-6">
+                                                                    <select selectpicker ng-model="wb.category.country" id="country" name="country" ng-options="wbcon.id as wbcon.val for wbcon in country" multiple data-live-search="true" data-max-options="10" required>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </fieldset>
+                                                        <fieldset>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label"><small class="text-danger">*</small> Language 
+                                                                    <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                                                        <i class="ti-help-alt fa-lg"></i>
+                                                                    </button>
+                                                                </label>
+                                                                <div class="col-lg-6">
+                                                                    <!-- <input type="text" class="form-control" id="language" name="language" ng-model="wb.category.language" > -->
+                                                                    <select selectpicker ng-model="wb.category.language" id="language" name="language" ng-options="wblang.id as wblang.val for wblang in language" data-live-search="true" required>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </fieldset>
+                                                        <fieldset>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label"><small class="text-danger">*</small> Subjects 
+                                                                    <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                                                        <i class="ti-help-alt fa-lg"></i>
+                                                                    </button>
+                                                                </label>
+                                                                <div class="col-lg-9">
+                                                                    <tags-input placeholder=" " id="subject" name="subject"  add-on-blur="true" replace-spaces-with-dashes="false" ng-model="wb.category.subject" remove-selected="false" min-length="1" add-on-paste="true"></tags-input>
+                                                                    <input type="hidden" name="mysub" id="mysub">
+                                                                </div>
+                                                            </div>
+                                                        </fieldset>
+                                                        <fieldset>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label"><small class="text-danger">*</small> Relevance 
+                                                                    <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                                                        <i class="ti-help-alt fa-lg"></i>
+                                                                    </button>
+                                                                </label>
+                                                                <div class="col-lg-6">
+                                                                    <select selectpicker ng-model="wb.category.relevance" id="relevance" name="relevance" ng-options="wbrev.id as wbrev.val for wbrev in relevance" multiple data-live-search="true" data-max-options="5" required>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </fieldset>
+                                                        <fieldset>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label"><small class="text-danger">*</small> Difficulty Level 
+                                                                    <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                                                        <i class="ti-help-alt fa-lg"></i>
+                                                                    </button>
+                                                                </label>
+                                                                <div class="col-lg-3">
+                                                                    <select selectpicker ng-model="wb.category.level" id="level" name="level" ng-options="wblevel.id as wblevel.val for wblevel in level">
+                                                                   </select>
+                                                                </div>
+                                                            </div>
+                                                        </fieldset>
+                                                    <!-- </form>  -->
+                                                </div>
+                                                <div class="tab-pane" id="publish">
+                                                    <!-- <form  class="form-horizontal"> -->
+                                                        <!-- <h5 class="text-default">&nbsp;&nbsp;&nbsp;&nbsp;Pricing Details</h5> -->
+                                                        <fieldset>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label"><small class="text-danger">*</small> Currency
+                                                                    <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                                                        <i class="ti-help-alt fa-lg"></i>
+                                                                    </button>
+                                                                </label>
+                                                                <div class="col-lg-9">
+                                                                    <!-- <input type="text" class="form-control" id="pcurrency" name="pcurrency" ng-model="wb.dev.pricing.currency"> -->
+                                                                    <select selectpicker ng-model="wb.dev.pricing.currency" id="pcurrency" name="pcurrency" ng-options="wbcur.id as wbcur.val for wbcur in currency" data-live-search="true" required disabled>
+                                                                        </select>
+                                                                </div>
+                                                            </div>
+                                                        </fieldset>
+                                                        <fieldset>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label"><small class="text-danger">*</small>Price (INR)
+                                                                    <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                                                        <i class="ti-help-alt fa-lg"></i>
+                                                                    </button>
+                                                                </label>
+                                                                <div class="col-lg-9">
+                                                                    <input type="number" class="form-control" id="pPrice" name="pPrice" min="0" ng-model="wb.dev.pricing.price">
+                                                                </div>
+                                                                <!-- <input type="hidden" name="ctypelogo" id="ctypelogo" ng-model="wb.logo"> -->
+                                                            </div>
+                                                        </fieldset>
+                                                        <fieldset>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label"><small class="text-danger">*</small>Subscription Period
+                                                                    <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                                                        <i class="ti-help-alt fa-lg"></i>
+                                                                    </button>
+                                                                </label>
+                                                                <div class="col-lg-3">
+                                                                    <input type="number" class="form-control" id="pPeriod" name="pPeriod" ng-model="wb.dev.pricing.period">
+                                                                </div>
+                                                                <div class="col-lg-7">
+                                                                    <strong class="text-default" style="vertical-align: bottom;line-height:0;">Days</strong><br/>
+                                                                    <strong class="text-danger" style="vertical-align: bottom;line-height:2;"><small>* Subscription Period should be from 30 to 366 days.</small></strong>
+                                                                </div>
+                                                                <!-- <div class="col-lg-9">
+                                                                    <input type="number" class="form-control" id="pPeriod" name="pPeriod" min="0" max="180" ng-model="wb.dev.pricing.period">
+                                                                </div> -->
+                                                            </div>
+                                                        </fieldset>
+                                                        <fieldset>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">Discount
+                                                                    <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                                                        <i class="ti-help-alt fa-lg"></i>
+                                                                    </button>
+                                                                </label>
+                                                                <div class="col-lg-9">
+                                                                    <input type="number" class="form-control" id="pDiscount" name="pDiscount" min="0" ng-model="wb.dev.pricing.discount">
+                                                                </div>
+                                                            </div>
+                                                        </fieldset>
+                                                        <fieldset>
+                                                                <div class="form-group">
+                                                                    <label class="col-lg-2 control-label"> Pricing Feature
+                                                                        <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                                                            <i class="ti-help-alt fa-lg"></i>
+                                                                        </button>
+                                                                    </label>
+                                                                    <div class="col-lg-9"  id="wbpfeatureDiv">
+                                                                        <textarea id="wbPriceFeature" name="wbPriceFeature"  maxlength="500"></textarea>
+                                                                        <span class="pull-right text-danger" id="charLimitFeature"><small><b id="charCountFeature"></b></small></span>
+                                                                       <div id="featureDiv" style="display:none"></div>  
+                                                                    </div>
+                                                                    <!-- <textarea class="form-control" rows="3"   ng-model="wb.description" ></textarea> -->
+                                                                </div>
+                                                            </fieldset>
+                                                    <!-- </form>   -->
+                                                </div>
+                                                 <div class="tab-pane" id="publisherProfile">
+                                                        <fieldset>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">
+                                                                    <input id="pubNameCheck" name="pubNameCheck" type="checkbox" ng-click="checkBoxpubName()" checked>
+                                                                     Name 
+                                                                    <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                                                    <i class="ti-help-alt fa-lg"></i>
+                                                                    </button>
+                                                                </label>
+                                                                <div class="col-lg-9">
+                                                                    <input type="text" class="form-control" id="pubName" name="pubName" ng-model="wb.publisher.name">
+                                                                </div>
+                                                            </div>
+                                                        </fieldset>
+                                                        <fieldset>
+                                                                <div class="form-group">
+                                                                    <label class="col-lg-2 control-label"> 
+                                                                        <input id="pubDesgCheck" name="pubDesgCheck" type="checkbox"  ng-click="checkBoxpubDesg()">
+                                                                        Designation 
+                                                                        <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                                                        <i class="ti-help-alt fa-lg"></i>
+                                                                        </button>
+                                                                    </label>
+                                                                    <div class="col-lg-9">
+                                                                        <input type="text" class="form-control" id="pubDesg" name="pubDesg" ng-model="wb.publisher.designation">
+                                                                    </div>
+                                                                </div>
+                                                            </fieldset>
+                                                        <fieldset>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">
+                                                                    <input id="pubOrgCheck" name="pubOrgCheck" type="checkbox"  ng-click="checkBoxpubOrg()" checked>
+                                                                     Organization
+                                                                    <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                                                        <i class="ti-help-alt fa-lg"></i>
+                                                                    </button>
+                                                                </label>
+                                                                <div class="col-lg-9">
+                                                                    <input type="text" class="form-control" id="pubOrgnanization" name="pubOrgnanization" ng-model="wb.publisher.organization">
+                                                                </div>
+                                                                <!-- <textarea class="form-control" rows="3"   ng-model="wb.description" ></textarea> -->
+                                                            </div>
+                                                        </fieldset>
+
+                                                    <fieldset>
+                                                        <div class="form-group">
+                                                            <label class="col-lg-2 control-label">
+                                                                <input id="pubAbtPubCheck" name="pubAbtPubCheck" type="checkbox"  ng-click="checkBoxAbtPub()">
+                                                                About Publisher
+                                                                <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                                                    <i class="ti-help-alt fa-lg"></i>
+                                                                </button>
+                                                            </label>
+                                                            <div class="col-lg-9">
+                                                                    <textarea class="form-control" rows="5" id="pubAbout" ng-model="wb.publisher.aboutPublisher" maxlength="2000"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </fieldset>
+                                                    <fieldset>
+                                                        <div class="form-group">
+                                                            <label class="col-lg-2 control-label"> 
+                                                                <!-- <input id="pubAreaExpCheck" name="pubAreaExpCheck" type="checkbox"  ng-click="checkBoxAreaExp()"> -->
+                                                                Areas of expertise
+                                                                <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                                                    <i class="ti-help-alt fa-lg"></i>
+                                                                </button>
+                                                            </label>
+                                                            <div class="col-lg-9">
+                                                                <tags-input placeholder=" "  id="pubAreaExp" name="pubAreaExp" add-on-blur="true" replace-spaces-with-dashes="false" ng-model="wb.publisher.areaOfExp" remove-selected="false" min-length="1" add-on-paste="true"></tags-input>
+                                                                <input type="hidden"  name="mypubAreaExp" id="mypubAreaExp" data-min="1">
+                                                            </div>
+                                                        </div>
+                                                    </fieldset>
+                                                    <fieldset>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label"> 
+                                                                    <input id="pubPicCheck" name="pubPicCheck" type="checkbox"  ng-click="checkBoxpubPic()">
+                                                                    Publisher Photo 
+                                                                    <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                                                    <i class="ti-help-alt fa-lg"></i>
+                                                                    </button>
+                                                                </label>
+                                                                <div class="col-lg-9">
+                                                                    <img src="{{wb.publisher.photoURL}}" class="img-circle" alt="" width="100" height="100">
+                                                                    <button id="profileCameraBtn" type="button" class="btn btn-icon btn-fill" data-toggle="modal" data-target="#profileCameraMdl" rel="tooltip" data-original-title="Change profile picture">
+                                                                        <span><i class="fa fa-camera"></i></span>
+                                                                    </button>  
+                                                                    <!-- <input type="text" class="form-control" id="pubDesg" name="pubDesg" ng-model="wb.publisher.publisherPhoto"> -->
+                                                                </div>
+                                                            </div>
+                                                        </fieldset>
+                                                </div> 
+                                                
+                                            </div>
+                                        </div>
+                                        </form>
+                                        <!-- Modal to add new playlist-->
+                                        <div class="modal fade" id="CameraMdl" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg">
+                                                    <div class="modal-content">
+                                                        <!-- Modal Header -->
+                                                        <div class="modal-header">
+                                                            <div class="col-md-12">
+                                                                <div class="pull-left">
+                                                                    <h4 class="modal-title" id="myModalLabel"><b>Upload Image</b></h4>
+                                                                </div>
+                                                                <div class="pull-right">
+                                                                    <button type="button" class="close" data-dismiss="modal">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                        <span class="sr-only">Close</span>
+                                                                        </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Modal Body -->
+                                                        <div class="modal-body">
+                                                            <div class="row" id="uploadOptions">
+                                                                
+                                                            </div>
+                                                            <div class="row" id="imgfrmGallaryDiv" >
+                                                                <div class="col-md-12">
+                                                                    <div class="col-lg-4 col-sm-6" id="uploadNewImg">
+                                                                        <div class="thumbnail" style="height: 150px;" >
+                                                                            <div><img src="author_public/myicon/upload1.png" style="width: 120px;"/></div>
+                                                                            <div><b>Upload From Device</b></div>
+                                                                            <!-- <img src="author_public/myicon/plus.png" height="200px" width="200px"> -->
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-4 col-sm-6"  ng-repeat="img in imgArry"> 
+                                                                        <div class="thumbnail">
+                                                                            <img src="author_public/images/subjectLogo/{{img}}" alt="" ng-click="getImgBase64(img)"/>  
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <input id="fileInput" type="file"/>
+                                                                </div>
+                                                            </div><br>
+                                                            <div class="row" id="uploadImgDiv">
+                                                                <div class="col-md-7">
+                                                                    <p class="caption">Original Image:</p>
+                                                                    <div class="cropArea">
+                                                                        <ui-cropper image="myImage" area-type="rectangle" aspect-ratio="1.7" result-image="myCroppedImage" result-image-size='{w: 340,h: 200}' init-max-area="true"></ui-cropper>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <p class="caption">Cropped Image:</p>
+                                                                    <div><img ng-src="{{myCroppedImage}}" /></div>
+                                                                </div>
+                                                            </div><br/><hr>
+                                                            <div class=" pull-right">
+                                                                    <!-- <button id="logosave" type="button" class="btn btn-primary" ng-click="saveLogo()">Done</button> -->
+                                                                    <button id="logosave" type="button" class="btn btn-success btn-fill" rel="tooltip" data-original-title="Save"  ng-click="saveLogo('<%-token%>')">
+                                                                        <span><i class="ti ti-save"></i>&nbsp;&nbsp;Save</span>
+                                                                    </button>
+                                                                    <button id="cancelBtn" type="button" class="btn btn-default btn-fill"  data-dismiss="modal">
+                                                                        <span>Cancel</span>
+                                                                    </button>
+                                                                </div>
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                        <!-- Modal Footer -->
+                                                       
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Modal to add new playlist-->
+
+                                        <!-- Modal to add new workbook-->
+                                        <div class="modal fade" id="betaUsersMdl" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <!-- Modal Header -->
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal">
+                                                                <span aria-hidden="true">&times;</span>
+                                                                <span class="sr-only">Close</span>
+                                                            </button>
+                                                            <h4 class="modal-title" id="myModalLabel">
+                                                                <b>Add Beta Users</b>
+                                                            </h4>
+                                                        </div>
+                                                        <!-- Modal Body -->
+                                                        <div class="modal-body">
+                                                            <form role="form" name="beta_wb" id="beta_wb" method="post" ng-submit="wbBetaVersion(beta_wb,frmWb)" ng-validate="validationBetaUsers">
+                                                                <div class="form-group">
+                                                                    <label for="playlist_name">Beta Users</label>
+                                                                    <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title=""></span>
+                                                                    <tags-input placeholder=" "  id="betaUsers" name="betaUsers" add-on-blur="true" replace-spaces-with-dashes="false" ng-model="wb.betaUsers" remove-selected="false" min-length="1" add-on-paste="true"></tags-input>
+                                                                    <input type="hidden"  name="mybeta" id="mybeta" data-min="1">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <!-- <input id="checkboxmand" type="checkbox" ng-model="wb.updateMandatory"> -->
+                                                                    <input type="checkbox" bs-switch id="checkboxmand" name="checkboxmand"  ng-model="wb.meta.updateRequired"> 
+                                                                    <label for="checkboxmand">
+                                                                            Update Required
+                                                                    </label>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                        <label for="playlist_name">What's New in Latest Version</label>
+                                                                        <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title=""></span>
+                                                                        <textarea id="id_commentsSt" name="id_commentsSt"  maxlength="500"></textarea>
+                                                                        <span class="pull-right text-danger" id="charLimitFeature"><small><b id="charCountFeature"></b></small></span>
+                                                                        <div id="whatsNewDiv" style="display:none"></div>  
+                                                                        <!-- <textarea class="form-control" rows="5" id="id_commentsSt" ng-model="wb.meta.updateMsg" maxlength="500" required></textarea>
+                                                                        <span class="pull-right text-danger"><b>Character Remaining: </b><b id="charCountInst">{{500 - wb.meta.updateMsg.length}}</b></span><br> -->
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <!-- <input id="checkboxmand" type="checkbox" ng-model="wb.updateMandatory"> -->
+                                                                    <input type="checkbox" id="checkTerm" name="checkTerm" required> 
+                                                                    <label for="checkTerm">
+                                                                            We (the author/publisher) either own all the contents, images, logo, graphics and videos or we have obtained appropriate permission for the same from the copyright owner to use the items in this workbook. We, here by, agree to obey all terms and conditions of the Examineer platform at all times
+                                                                    </label>
+                                                                </div>
+                                                                <div class="clearfix">
+                                                                    <button type='submit' class="btn btn-primary btn-fill pull-right" id="twoToneButton" ng-disabled="beta_wb.$invalid">Publish in Beta</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Modal to add new workbook-->
+                                            <!-- Modal to add new playlist-->
+                                        <div class="modal fade" id="profileCameraMdl" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg">
+                                                <div class="modal-content">
+                                                    <!-- Modal Header -->
+                                                    <div class="modal-header">
+                                                        <div class="col-md-12">
+                                                            <div class="pull-left">
+                                                                <h4 class="modal-title" id="myModalLabel"><b>Upload Profile Image</b></h4>
+                                                            </div>
+                                                            <div class="pull-right">
+                                                                <button type="button" class="close" data-dismiss="modal">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                    <span class="sr-only">Close</span>
+                                                                    </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Modal Body -->
+                                                    <div class="modal-body">
+                                                        <div class="row" id="uploadOptions1">
+                                                           
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <input id="fileInputProfile" type="file"/>
+                                                                <input type="hidden" class="form-control" id="profileImgBase64" name="profileImgBase64" ng-model="wb.publisher.photoURL">
+                                                            </div>
+                                                        </div><br>
+                                                        <div class="row" id="uploadProImgDiv">
+                                                            <div class="col-md-7">
+                                                                <p class="caption">Original Image:</p>
+                                                                <div class="cropArea">
+                                                                    <ui-cropper image="myImageProfile" area-type="square" result-image="myCroppedImageProfile" result-image-size='{w: 340,h: 340}' init-max-area="true"></ui-cropper>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <p class="caption">Cropped Image:</p>
+                                                                <div><img ng-src="{{myCroppedImageProfile}}" /></div>
+                                                            </div>
+                                                        </div><br/><hr>
+                                                        <div class=" pull-right">
+                                                                <!-- <button id="logosave" type="button" class="btn btn-primary" ng-click="saveLogo()">Done</button> -->
+                                                                <button id="profilelogosave" type="button" class="btn btn-success btn-fill" rel="tooltip" data-original-title="Save"  ng-click="saveProfileLogo('<%-token%>')">
+                                                                    <span><i class="ti ti-save"></i>&nbsp;&nbsp;Done</span>
+                                                                </button>
+                                                                <button id="cancelBtn" type="button" class="btn btn-default btn-fill"  data-dismiss="modal">
+                                                                    <span>Cancel</span>
+                                                                </button>
+                                                            </div>
+                                                        <div class="clearfix"></div>
+                                                    </div>
+                                                    <!-- Modal Footer -->
+                                                   
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Modal to add new playlist-->
+
+                                         <!-- Modal to add new workbook-->
+                                        <div class="modal fade" id="reviewDetailsMdl" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog  modal-lg">
+                                                <div class="modal-content">
+                                                    <!-- Modal Header -->
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal">
+                                                            <span aria-hidden="true">&times;</span>
+                                                            <span class="sr-only">Close</span>
+                                                        </button>
+                                                        <h4 class="modal-title" id="myModalLabel">
+                                                            <b>Review</b>
+                                                        </h4>
+                                                    </div>
+                                                    <!-- Modal Body -->
+                                                    <div class="modal-body">
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                <!-- <p class="heading"><b>Reviews</b></p> -->
+                                                                <table>
+                                                                    <tr>
+                                                                        <td><span class="rating-value">{{mdlData.rateDta['totalRatings']}}</span></td>
+                                                                        <td class="star-reviews">
+                                                                            <div>
+                                                                                <ul class="star-rating reviews-stars">
+                                                                                    <li class="small-star {{mdlData.rateDta['totalRatings']>=5? 'rated-star':''}}">
+                                                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                                                    </li>
+                                                                                    <li class="small-star {{mdlData.rateDta['totalRatings']>=4? 'rated-star':''}}">
+                                                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                                                    </li>
+                                                                                    <li class="small-star {{mdlData.rateDta['totalRatings']>=3? 'rated-star':''}}">
+                                                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                                                    </li>
+                                                                                    <li class="small-star {{mdlData.rateDta['totalRatings']>=2? 'rated-star':''}}">
+                                                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                                                    </li>
+                                                                                    <li class="small-star {{mdlData.rateDta['totalRatings']>=1? 'rated-star':''}}">
+                                                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                                                    </li>
+                                                                                </ul>
+                                                                            </div>
+                                                                            <p>{{mdlData.reviewDta.length}} reviews</p>
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                                <br>
+                                                                <table width="100%" class="ratings" style="font-weight: normal;">
+                                                                    <tr>
+                                                                        <td width="60">5 Star&nbsp;</td>
+                                                                        <td>
+                                                                            <div class="progress" style="margin-bottom:0px;">
+                                                                                <div class="progress-bar progress-bar-primary" role="progressbar"  ng-style="{'width': (mdlData.rateDta['5star']/mdlData.reviewDta.length)*100}" aria-valuenow="(mdlData.rateDta['5star']/mdlData.reviewDta.length)*100" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td width="20">&nbsp;&nbsp;{{mdlData.reviewDta.length==0? 0:((mdlData.rateDta['5star']/mdlData.reviewDta.length)*100).toFixed(0)}}%</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>4 Star&nbsp;</td>
+                                                                        <td>
+                                                                            <div class="progress" style="margin-bottom:0px;">
+                                                                                <div class="progress-bar progress-bar-primary " role="progressbar" ng-style="{'width': (mdlData.rateDta['4star']/mdlData.reviewDta.length)*100}" aria-valuenow="(mdlData.rateDta['4star']/mdlData.reviewDta.length)*100" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>&nbsp;&nbsp;{{mdlData.reviewDta.length==0? 0:((mdlData.rateDta['4star']/mdlData.reviewDta.length)*100).toFixed(0)}}%</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>3 Star&nbsp;</td>
+                                                                        <td>
+                                                                            <div class="progress" style="margin-bottom:0px;">
+                                                                                <div class="progress-bar progress-bar-primary " role="progressbar" ng-style="{'width': (mdlData.rateDta['3star']/mdlData.reviewDta.length)*100}" aria-valuenow="(mdlData.rateDta['3star']/mdlData.reviewDta.length)*100" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>&nbsp;&nbsp;{{mdlData.reviewDta.length==0? 0:((mdlData.rateDta['3star']/mdlData.reviewDta.length)*100).toFixed(0)}}%</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>2 Star&nbsp;</td>
+                                                                        <td>
+                                                                            <div class="progress" style="margin-bottom:0px;">
+                                                                                <div class="progress-bar progress-bar-primary" role="progressbar"  ng-style="{'width': (mdlData.rateDta['2star']/mdlData.reviewDta.length)*100}"" aria-valuenow="(mdlData.rateDta['2star']/mdlData.reviewDta.length)*100" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>&nbsp;&nbsp;{{mdlData.reviewDta.length==0? 0:((mdlData.rateDta['2star']/mdlData.reviewDta.length)*100).toFixed(0)}}%></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>1 Star&nbsp;</td>
+                                                                        <td>
+                                                                            <div class="progress" style="margin-bottom:0px;">
+                                                                                <div class="progress-bar progress-bar-primary" role="progressbar" ng-style="{'width': (mdlData.rateDta['1star']/mdlData.reviewDta.length)*100}" aria-valuenow="(mdlData.rateDta['1star']/mdlData.reviewDta.length)*100" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>&nbsp;&nbsp;{{mdlData.reviewDta.length==0? 0:((mdlData.rateDta['1star']/mdlData.reviewDta.length)*100).toFixed(0)}}%</td>
+                                                                    </tr>
+                                                                </table>
+                                                            </div>
+                                                            <div class="col-md-1"></div>
+                                                            <div class="col-md-8">
+                                                                <div  class="line-content" dir-paginate="reviews in mdlData.reviewDta | itemsPerPage:5 "> 
+                                                                    <div class="users-reviews" >
+                                                                        <div>
+                                                                            <ul class="star-rating reviews-stars">
+                                                                                <li class="small-star {{reviews.rating>=5? 'rated-star':''}}">
+                                                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                                                </li>
+                                                                                <li class="small-star {{reviews.rating>=4? 'rated-star':''}}">
+                                                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                                                </li>
+                                                                                <li class="small-star {{reviews.rating>=3? 'rated-star':''}}">
+                                                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                                                </li>
+                                                                                <li class="small-star {{reviews.rating>=2? 'rated-star':''}}">
+                                                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                                                </li>
+                                                                                <li class="small-star {{reviews.rating>=1? 'rated-star':''}}">
+                                                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                                                </li>
+                                                                            </ul>
+                                                                        </div>
+                                                                        <p class="byuser font-weight-bold text-default"><small>by {{reviews.wbuser.split('@')[0]}} &nbsp;&nbsp; {{utcToLocal(reviews.timestamp)}}</small></p>
+                                                                        <p class="user-comment text-default">{{reviews.statement}}</p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="pull-right">
+                                                                            <dir-pagination-controls max-size="5" direction-links="true" boundary-links="true">
+                                                                            </dir-pagination-controls>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Modal Footer -->
+                                                   
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Modal to add new workbook-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <%- include('../parts/footer'); %>
+            </div>
+        </div>
+    </body>
+<%- include('../parts/allJS'); %>
+<script type="text/javascript" src="author_public/js/author_workbook.js"></script>
+    <script src="author_public/js/ng-tags-input.min.js" type="text/javascript"></script>
+    <script src="author_public/ckeditor/ckeditor.js"></script>
+    <!-- <script src="https://cdn.ckeditor.com/4.5.6/standard/ckeditor.js"></script> -->
+    <script src="author_public/angularControllers/customdirective/angular-validate.min.js"></script>  
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/ng-ckeditor/0.2.1/ng-ckeditor.min.js"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/ng-img-crop/0.3.2/ng-img-crop.js"></script> -->
+    <script src="https://rawgit.com/CrackerakiUA/ui-cropper/master/compile/unminified/ui-cropper.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/CrackerakiUA/ui-cropper/master/compile/minified/ui-cropper.css">
+    <!-- <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/alexk111/ngImgCrop/master/compile/minified/ng-img-crop.css"> -->
+    <script src="author_public/js/dirPagination.js" type="text/javascript"></script>
+    <script src="author_public/angularControllers/workbookController.js"></script>
+    <script src="author_public/angularControllers/customdirective/selectpicker.js"></script>   
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.1.3/ui-bootstrap-tpls.min.js"></script>
+    <script src="author_public/angularControllers/customdirective/bsSwitch.js"></script>
+<script src="author_public/angularControllers/angular-ui-carousel/dist/ui-carousel.min.js"></script>
+    <script>
+        
+    CKEDITOR.replace('wbdescr', {
+        mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML'
+    });
+
+     CKEDITOR.replace('wbPriceFeature', {
+        mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML'
+    });
+
+    CKEDITOR.replace('id_commentsSt', {
+        mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML'
+    });
+    
+        $(function(){
+            $("#uploadNewImg").on('click', function(e){
+                e.preventDefault();
+                $("#fileInput:hidden").trigger('click');
+            });
+        });
+
+       
+    </script>
+    
+    <script>
+
+
+        
+    </script>
+</html>

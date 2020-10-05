@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <%- include('../parts/allCSS'); %>
+        <script src="author_public/PaperDashBoard/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+        <script src="author_public/js/author_dashboard.js"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                if (window.location.search.indexOf('msg') > -1) {
+                    $('#error_db').slideDown();
+                    function success_1() {
+                        $('#error_db').slideUp();
+                    }
+                    setTimeout(success_1, 5000);
+                } else {
+                    // alert('track not here');
+                }
+            });
+        </script>
+</head>
+
+<body>
+    <div class="wrapper">
+        <%- include('../parts/leftNavBar'); %>
+            <div class="main-panel">
+                <%- include('../parts/topNavBarPart1'); %>Admin Dashboard
+                    <%- include('../parts/topNavBarPart2'); %>
+                        <div class="content">
+                            <!--error block for new question json.result.error !-->
+                            <div class="alert alert-danger" id="error_db" style="display:none;">
+                                <button type="button" aria-hidden="true" class="close">�</button>
+                                <span>
+                                    <%-msg%>
+                                </span>
+                            </div>
+                            <div class="container-fluid">
+                                <style>
+                                    .chead {
+                                        font-size: 18px;
+                                    }
+
+                                    .cnumber {
+                                        padding: 1px;
+                                        margin: 2px 0px 0px;
+                                    }
+                                </style>
+                                <div class="row">
+                                    <div class="col-md-10 col-md-offset-1">
+                                        <div class="row">
+                                            <div class="col-lg-3 col-sm-6">
+                                                <div class="card">
+                                                    <div class="card-content">
+                                                        <div class="row">
+                                                            <div class="col-xs-4">
+                                                                <div class="icon-big icon-warning text-center">
+                                                                    <i class="ti-user"></i>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-8">
+                                                                <div class="numbers">
+                                                                    <p>Authors</p>
+                                                                    <%=authorCounter%>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-footer">
+                                                        <hr>
+                                                        <div class="footer-title">View Author</div>
+                                                        <div class="pull-right">
+                                                            <a class="btn btn-warning  btn-icon btn-sm" href="/author_adminAuthorList">
+                                                                <i class="ti-angle-right"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-3 col-sm-6">
+                                                <div class="card">
+                                                    <div class="card-content">
+                                                        <div class="row">
+                                                            <div class="col-xs-4">
+                                                                <div class="icon-big icon-success text-center">
+                                                                    <i class="ti-book"></i>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-8">
+                                                                <div class="numbers">
+                                                                    <p>Workbooks</p>
+                                                                    <%=wbPublishCounter%>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-footer">
+                                                        <hr>
+                                                        <div class="footer-title">View</div>
+                                                        <div class="pull-right">
+                                                            <a class="btn btn-success  btn-icon btn-sm" href="/author_adminWbList">
+                                                                <i class="ti-angle-right"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-lg-3 col-sm-6">
+                                                <div class="card">
+                                                    <div class="card-content">
+                                                        <div class="row">
+                                                            <div class="col-xs-4">
+                                                                <div class="icon-big icon-danger text-center">
+                                                                    <i class="fa fa-line-chart"></i>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-8">
+                                                                <div class="numbers">
+                                                                    <p>Analytics</p>
+                                                                    
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-footer">
+                                                        <hr>
+                                                        <div class="footer-title">View</div>
+                                                        <div class="pull-right">
+                                                            <a class="btn btn-danger  btn-icon btn-sm" href="/author_adminAnalyticsPage">
+                                                                <i class="ti-angle-right"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                           
+                                         
+                                           
+                                        </div>
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <%- include('../parts/footer'); %>
+            </div>
+    </div>
+    </div>
+    </div>
+</body>
+<%- include('../parts/allJS'); %>
+
+</html>

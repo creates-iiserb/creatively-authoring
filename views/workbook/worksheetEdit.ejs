@@ -1,0 +1,876 @@
+<!doctype html>
+<html lang="en">
+   <head>
+      <%- include('../parts/allCSS'); %>
+      <script src="author_public/PaperDashBoard/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+      <link rel="stylesheet" href="author_public/css/author_worksheet.css">      
+      <link href="author_public/css/ng-tags-input.min.css" rel="stylesheet" />
+      <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/angularjs-slider/7.0.0/rzslider.min.css"/>
+
+      <style>
+            tags-input .tags .tag-item.selected {
+                background: #68B3C8;
+            }
+                tags-input .tags .tag-item {
+                background: #68B3C8;
+                color: #fff;
+                border-radius: 12px;
+                padding-left: 0.8em;
+            }
+            tags-input .tags .input.invalid-tag,
+            tags-input .tags .tag-item .remove-button:active {
+                color: #fff;
+            }
+            tags-input .tags .tag-item .remove-button {
+                color: #fff;
+            }
+            tags-input .tags{
+                background-color: #F3F2EE;
+                border: 1px solid #e8e7e3;
+                border-radius: 4px;
+                color: #66615b;
+                font-size: 14px;
+                padding: 4px 10px;
+                /* height: 40px; */
+                -webkit-box-shadow: none;
+                box-shadow: none;
+            }
+            .tags .input{
+                background-color: #F3F2EE !important;
+            }
+            .tags .input:focus{
+                background-color: #ffffff !important;
+            }
+            tags-input .tags.focused{
+                border: 1px solid #e8e7e3;
+                background-color: #FFFFFF;
+                -webkit-box-shadow: none;
+                box-shadow: none;
+                outline: 0 !important;
+            }
+            .text-block {
+                position: absolute;
+                bottom: 2px;
+                right: 10px;
+                /* background-color: black; */
+                /* color: white; */
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+      </style>
+
+   </head>
+   <body  class="sidebar-mini" ng-app="workSheetApp" ng-controller="workSheetController"  ng-init="wsEditFunc('<%-token%>')">
+      <!-- -->
+      <div class="wrapper">
+            <!-- <div class="ld ld-ring ld-spin"></div> -->
+         <%- include('../parts/leftNavBar'); %>
+         <div class="main-panel" >
+            <%- include('../parts/topNavBarPart1'); %> Edit Worksheet <br>
+            <%- include('../parts/topNavBarPart2'); %>
+            <div class="content">
+               <div class="container-fluid">
+                  <div class="row">
+                     <div class="col-lg-3 col-md-4">
+                        <div class="card card-user previewDiv" ng-cloak style="display:none;" id="previewWSDiv">
+                           <div class="" >
+                              <div class="">
+                                 <h4 class="text-center text-primary" ng-cloak>{{sheetDta.wsTitle}}</h4>
+                              </div>
+                              <div class="text-center">
+                                 <span class="label label-warning ">{{sheetDta.mode}}</span>
+                                 <span class="label label-success ">{{ (sheetDta.publish == true)?'Publish':'' }}</span>
+                                 <br /><br />
+                                 <small ng-cloak><b>Last Updated:</b> {{utcToLocal(worksheetDta.lastUpdate)}}</small><br/><br />
+                              </div>
+                           </div>
+                           <hr>
+                           <div class="text-center">
+                              <div class="row">
+                                 <div class="col-md-3 col-md-offset-1">
+                                    <h5 ng-cloak><b style="font-size:20px;font-weight:normal">{{(sheetDta.choose)? sheetDta.choose:'0'}}</b>/{{sheetDta.elements.length}}<br /><small>Items</small></h5>
+                                 </div>
+                                 <div class="col-md-4">
+                                    <h5 ng-cloak>{{sheetDta.time}} <br /><small>duration (mins)</small></h5>
+                                 </div>
+                                 <div class="col-md-3">
+                                    <h5 ng-cloak>{{version}}<br /><small>Version</small></h5>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="card">
+                           <div class="card-header clearfix previewDiv">
+                              <div class="pull-left">
+                                 <h5 class="card-title">Worksheets</h5>
+                              </div>
+                              <div class="pull-right">
+                                 <btn class="btn  btn-icon  btn-fill btn-sm" rel="tooltip" ng-show="sheetsList.length" data-original-title="Update Order" ng-click="sortWorkSheetMdl()" >
+                                     <img src="author_public/images/updown.png" alt="Arrage Worksheet">
+                                    <!-- <i class="fa fa-sort" ></i>
+                                 -->
+                                </btn>
+                                 <btn class="btn btn-info btn-fill btn-icon btn-sm"  ng-click="addNewWorksheet()" rel="tooltip" data-original-title="Add Worksheet"><i class="ti-plus"></i></btn>
+                              </div>
+                           </div>
+                           <div class="card-content">
+                               <input type="text" class="form-control" ng-model="searchWorkSheet" placeholder="Search" >
+                              <ul class="list-unstyled team-members search-list mt-10px" >
+                                    <!-- | workSheetFilter:searchWorkSheet -->
+                                 <li   dir-paginate="wsdata in sheetsList  | workSheetFilter:searchWorkSheet | itemsPerPage:10"   ng-class="{'activeLi': activeSheet == wsdata.wsId}" class="wsSearchList" ng-click="getSheetDta(wsdata.wsId,true)">
+                                    <div class="row">
+                                       <div class="col-xs-12" ng-cloak>
+                                          <a ng-cloak  style="font-weight:normal;">{{wsdata.wsTitle}} </a>&nbsp;
+                                          <span class="label label-primary "><b style="font-size:12px;font-weight:normal"> {{(wsdata.choose)? wsdata.choose:'0'}}</b> / {{wsdata.elements.length}}</span>
+                                          <span class="label label-success " ng-show="wsdata.publish == true" title="publish"><i class="fa fa-thumbs-up"></i></span>
+                                       </div>
+                                    </div>
+                                 </li>
+                              </ul>
+
+
+                              <div class="text-center">
+                                    <dir-pagination-controls max-size="5" direction-links="true" >
+                                    </dir-pagination-controls>   
+                                        
+
+                                        <div>
+                                          <small class="text-orange ALS" style="display:none;"   ><b> Total Worksheets: {{sheetsList.length}} </b> </small>
+                                        </div> 
+                              </div>
+
+                              
+                              
+                           </div>
+                        </div>
+                        
+                     </div>
+                     <div class="col-lg-9 col-md-8" >
+                         <form id="frmWS"  name="frmWS" id="frmWS" class="form-horizontal" method="post" ng-submit="updateSheetDta(frmWS)" ng-validate="validationOptions">
+                        <div class="card  card-big previewDiv" style="display:none" id="editWSDiv">
+                           <div class="card-header clearfix">
+                              <div class="pull-left">
+                                 <h3 class="card-title">Edit Worksheet</h3>
+                                
+                              </div>
+                              <div class="pull-right">
+                                 <div class='col-sm-6'>
+                                    <button type="button" class="btn btn-wd btn-default btn-move-left" onclick="window.location.href='/author_getWorkbookPage?id=<%-token%>'">
+                                    <span class="btn-label">
+                                    <i class="ti-angle-left"></i>
+                                    </span>
+                                    Back
+                                    </button>
+                                 </div>
+                                 <div class='col-sm-6'>
+                                       <button type='submit' class="btn btn-warning btn-fill btn-wd btnmargin">  
+                                       <i class="ti ti-save"></i>&nbsp;&nbsp;Update
+                                       </button>
+                                 </div>
+                                
+                              </div>
+                           </div>
+                           <hr>
+                           <div class="card-content"  >
+                                <input type="hidden" name="author" id="author" value="<%= author%>">
+                                <input type="hidden" name="wbID" id="wbID" >
+                                <input type="hidden" name="wsID" id="wsID" >
+
+                              <div class="nav-tabs-navigation">
+                                 <div class="nav-tabs-wrapper">
+                                    <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+                                       <li class="active"><a href="#meta" data-toggle="tab">Meta</a></li>
+                                       <li><a href="#properties" data-toggle="tab">Properties</a></li>                                       
+                                       <li><a href="#elements" data-toggle="tab">Items</a></li>
+                                       <li><a href="#free" data-toggle="tab" ng-click="refreshSlider()">Free</a></li>
+                                    </ul>
+                                 </div>
+                              </div>
+                              <div id="my-tab-content" class="tab-content ">
+                                 <div class="tab-pane active" id="meta">
+                                       <fieldset>
+                                          <div class="form-group">
+                                             <label class="col-lg-2 control-label"><small class="text-danger">*</small> Name 
+                                             <button type="button" data-toggle="popover" class="btn btn-info btn-simple btn-xs" data-content="hi">
+                                             <i class="ti-help-alt fa-lg"></i>
+                                             </button>
+                                             </label>
+                                             <div class="col-lg-9">
+                                                <input type="text" class="form-control" id="wsTitle" name="wsTitle" maxlength="100" ng-model="sheetDta.wsTitle">
+                                             </div>
+                                          </div>
+                                       </fieldset>
+                                       <fieldset>
+                                          <div class="form-group">
+                                             <label class="col-lg-2 control-label">Description
+                                             <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                             <i class="ti-help-alt fa-lg"></i>
+                                             </button>
+                                             </label>
+                                             <!--  -->
+                                             <div class="col-lg-9" id="wsdescrDiv"> 
+                                                <textarea id="wsdescr" name="wsdescr"  maxlength="2000"></textarea>
+                                                <span class="pull-right text-danger"><small><b id="charCountDesp"></b></small></span>
+                                             </div>
+                                          </div>
+                                       </fieldset>
+                                       <fieldset>
+                                          <div class="form-group">
+                                             <label class="col-lg-2 control-label">Tags
+                                             <button type="button" data-toggle="popover" class="btn btn-info btn-simple btn-xs" data-content="">
+                                             <i class="ti-help-alt fa-lg"></i>
+                                             </button>
+                                             </label>
+                                             <div class="col-lg-9">
+                                                <tags-input placeholder=" " ng-model="sheetDta.tags" id="wsTags" name="wsTags" replace-spaces-with-dashes="false" add-on-blur="true" remove-selected="false" min-length="1" add-on-paste="true"></tags-input>
+                                                <input type="hidden"   name="mytags" id="mytags" data-min="3">
+                                             </div>
+                                          </div>
+                                       </fieldset>
+                                       <fieldset>
+                                          <div class="form-group">
+                                             <label class="col-lg-2 control-label"><small class="text-danger">*</small> Mode
+                                             <button type="button" data-toggle="popover" class="btn btn-info btn-simple btn-xs" data-content="">
+                                             <i class="ti-help-alt fa-lg"></i>
+                                             </button>
+                                             </label>
+                                             <div class="col-lg-4">
+                                               
+                                                <select selectpicker ng-model="sheetDta.mode" id="mode" name="mode" >
+                                                     <option value="">Nothing Selected</option>
+                                                        <option value="lesson">Lesson</option>
+                                                        <option value="quiz" >Quiz</option>
+                                                </select>
+
+                                             </div>
+                                          </div>
+                                       </fieldset>
+                                       <fieldset>
+                                          <div class="form-group">
+                                             <label class="col-lg-2 control-label"><small class="text-danger">*</small> Suggested duration 
+                                             <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                             <i class="ti-help-alt fa-lg"></i>
+                                             </button>
+                                             </label>
+                                             <div class="col-lg-2 pd-r0px">
+                                                <input type="number" class="form-control" id="wsTime" name="wsTime" min="5" ng-model="sheetDta.time">
+                                             </div>
+
+                                             <div class="col-lg-8">
+                                                <strong class="text-default" style="
+                                                vertical-align: bottom;
+                                                line-height: 0;"> Minutes</strong>
+                                                <strong class="text-danger" style="vertical-align: bottom;line-height:0;">(minimum 5 mins)</strong>
+                                             </div>
+
+                                             
+
+                                          </div>
+                                       </fieldset>
+                                       <fieldset>
+                                          <div class="form-group">
+                                             <label class="col-lg-2 control-label">Publish 
+                                             <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                             <i class="ti-help-alt fa-lg"></i>
+                                             </button>
+                                             </label>
+                                             <div class="col-lg-9">
+                                                <input type="checkbox" bs-switch id="publish" name="publish"  ng-model="sheetDta.publish"> 
+                                                <br>
+                                                <label ng-if="unauthData.length" class="pub-error">This worksheet can not be publish  because there is unauthorized items in the elements</label>
+                                             </div>
+                                          </div>
+                                       </fieldset>
+                                   
+                                 </div>
+
+                                 <div class="tab-pane" id="properties">
+                                   
+                                       <fieldset>
+                                          <div class="form-group">
+                                             <label class="col-lg-2 control-label"><small class="text-danger">*</small> Instruction
+                                             <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                             <i class="ti-help-alt fa-lg"></i>
+                                             </button>
+                                             </label>
+                                             <div class="col-lg-9" id="wsinstrDiv">
+                                                <textarea class="form-control" id="wsinstr" name="wsinstr" rows="3"   maxlength="2000"></textarea>
+                                                <div id="instrDiv" style="display:none"></div>
+                                                <span class="pull-right text-danger"><small><b id="charCountInst"></b></small></span>
+                                             </div>
+                                             <!--quiz_intr.getValue(); -->
+                                          </div>
+                                       </fieldset>
+                                       <fieldset>
+                                          <div class="form-group">
+                                             <label class="col-lg-2 control-label">Help Level Selector
+                                             <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                             <i class="ti-help-alt fa-lg"></i>
+                                             </button>
+                                             </label>
+                                             <div class="col-lg-5">
+                                                <select selectpicker ng-model="sheetDta.wshelpAllowed" id="helpAllowed" ng-options="hls.id as hls.value for hls in helpLevelSel" >
+                                                </select>
+                                             </div>
+                                          </div>
+                                       </fieldset>
+                                       <fieldset>
+                                          <div class="form-group">
+                                             <label class="col-lg-2 control-label">Grading Matrix
+                                             <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                             <i class="ti-help-alt fa-lg"></i>
+                                             </button>
+                                             </label>
+                                             <div class="col-lg-9">
+                                                <!-- ng-model="sheetDta.wsGradingMatrix" -->
+                                                <div class="">
+                                                   <div class="">
+                                                      <div class="table-responsive">
+                                                         <table class="table table-center table-responsive" style="border: 1px solid #ededed;border-radius:5px;">
+                                                            <thead>
+                                                               <tr>
+                                                                  <th></th>
+                                                                  <th>No help used</th>
+                                                                  <th ng-show="!(sheetDta.wshelpAllowed == 0)" >Hint used</th>
+                                                                  <th ng-show="(sheetDta.wshelpAllowed == 2)">Explanation used</th>
+                                                               </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                               <tr>
+                                                                  <td>
+                                                                     <b>Correct Score</b>
+                                                                  </td>
+                                                                  <td>
+                                                                     <input type="number" id="correctsc" ng-model="sheetDta.wsGradingMatrix[0][0]" class="form-control" min="-1000" max="1000" style="background-color:rgba(161, 234, 194, 0.4);">
+                                                                  </td>
+                                                                  <td>
+                                                                     <input type="number" id="correctsc" ng-model="sheetDta.wsGradingMatrix[0][1]" ng-show="!(sheetDta.wshelpAllowed == 0)" class="form-control" min="-1000" max="1000" style="background-color:rgba(241, 209, 142, 0.4);">
+                                                                  </td>
+                                                                  <td>
+                                                                     <input type="number" id="correctsc" ng-model="sheetDta.wsGradingMatrix[0][2]" ng-show="(sheetDta.wshelpAllowed == 2)" class="form-control" min="-1000" max="1000" style="background-color:rgba(170, 216, 228, 0.4);">
+                                                                  </td>
+                                                               </tr>
+                                                               <tr>
+                                                                  <td>
+                                                                     <b>Skip Score</b>
+                                                                  </td>
+                                                                  <td>
+                                                                     <input type="number" id="skipsc" ng-model="sheetDta.wsGradingMatrix[1][0]" min="-1000" max="1000" class="form-control" style="background-color:rgba(161, 234, 194, 0.4);">
+                                                                  </td>
+                                                                  <td>
+                                                                     <input type="number" id="skipsc" ng-model="sheetDta.wsGradingMatrix[1][1]" ng-show="!(sheetDta.wshelpAllowed == 0)" min="-1000" max="1000" class="form-control" style="background-color:rgba(241, 209, 142, 0.4);">
+                                                                  </td>
+                                                                  <td>
+                                                                     <input type="number" id="skipsc" ng-model="sheetDta.wsGradingMatrix[1][2]" ng-show="(sheetDta.wshelpAllowed == 2)" min="-1000" max="1000" class="form-control" style="background-color:rgba(170, 216, 228, 0.4);">
+                                                                  </td>
+                                                               </tr>
+                                                               <tr>
+                                                                  <td>
+                                                                     <b>Incorrect Score</b>
+                                                                  </td>
+                                                                  <td>
+                                                                     <input type="number" id="incorrectsc" ng-model="sheetDta.wsGradingMatrix[2][0]" min="-1000" max="1000" class="form-control" style="background-color:rgba(161, 234, 194, 0.4);">
+                                                                  </td>
+                                                                  <td>
+                                                                     <input type="number" id="incorrectsc" ng-model="sheetDta.wsGradingMatrix[2][1]"  ng-show="!(sheetDta.wshelpAllowed == 0)" min="-1000" max="1000" class="form-control" style="background-color:rgba(241, 209, 142, 0.4);">
+                                                                  </td>
+                                                                  <td>
+                                                                     <!-- <input type="number" id="incorrectsc"  onkeypress='return isNumberKeys(event)' value="-1"> -->
+                                                                     <input type="number" id="incorrectsc" ng-model="sheetDta.wsGradingMatrix[2][2]" ng-show="(sheetDta.wshelpAllowed == 2)" min="-1000" max="1000" class="form-control" style="background-color:rgba(170, 216, 228, 0.4);">
+                                                                  </td>
+                                                               </tr>
+                                                            </tbody>
+                                                         </table>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </fieldset>
+                                       <fieldset>
+                                          <div class="form-group">
+                                             <label class="col-lg-2 control-label">Help Selector In Review Mode
+                                             <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                             <i class="ti-help-alt fa-lg"></i>
+                                             </button>
+                                             </label>
+                                             <div class="col-lg-5">
+                                                <select selectpicker ng-model="sheetDta.helpLevelSelAtReview" id="helpAllowedAtReview" ng-options="hlsr.id as hlsr.value for hlsr in helpLevelSelAtReview" required>
+                                                </select>
+                                             </div>
+                                          </div>
+                                       </fieldset>
+                                    
+                                 </div>
+                                
+                                 <div class="tab-pane" id="elements">
+                                    <div class="row" ng-if="unauthData.length>0 " ng-cloak>
+                                        <div class="col-md-12">
+                                            <div class="error">
+                                                <b>
+                                                    <i class="ti-alert"></i> &nbsp;Their are some unauthorized items in this worksheet.
+                                                    You are authorized to keep content that is authored by you
+                                                </b>
+                                            </div><br/>
+                                        </div>
+                                    </div>
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                                    <h3 class="card-title">Items</h3><strong></strong>
+                                            </div>
+                                                 
+                                            <div class="col-lg-6 col-md-6 col-sm-12">    
+                                                <div class="dropdown mt-10px pull-right">
+                                                <button type="button" class="btn dropdown-toggle btn-primary btn-fill btn-wd btnmargin" data-toggle="dropdown" aria-expanded="false">
+                                                Fetch Items &nbsp;
+                                                <b class="caret"></b>
+                                                </button>
+                                                        <ul class="dropdown-menu pull-right">
+                                                            <li>                                                                        
+                                                                <a  id="getFrmBasket" ng-click="addAllBasketItms()">
+                                                                <i class="fa fa-shopping-basket" ></i>  
+                                                                From Basket
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a id="getFrmPlaylist" data-toggle="modal" data-target="#playlistMdl">
+                                                                <i class="ti-list"></i> From Playlist
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                                <div class="col-lg-4 col-md-1 col-sm-12">
+                                                        <label for="checkbox2">Select the number of items in worksheet</label>
+                                                        <input type="number" id="choose" name="choose" class="form-control" ng-model="sheetDta.choose " >  
+                                                </div>
+
+                                                    <div class="col-lg-3 col-md-9 col-sm-12 text-right mt-10px txt-left">
+        
+                                                            <div class="checkbox">
+                                                                    <input id="checkbox2" type="checkbox" ng-model="sheetDta.random">
+                                                                    <label for="checkbox2">
+                                                                         Randomize the order of items
+                                                                     </label>
+                                                           </div>
+                                                           
+        
+                                                    </div>  
+                                        </div>
+                                        <div  class="row"><br/><br/>
+                                            <div class="col-md-12">
+                                                <div ui-sortable="sortableItems" ng-model="sheetDta.elements"  class="wsQuestions  row EH-row">
+                                                   <div class="col-md-4 col-sm-6 col-xs-12 wsquest" ng-cloak ng-repeat="itms in sheetDta.elements">
+                                                      <div class="card boxshadowEff {{ (unauthData.indexOf(itms.id)>-1)?'unauthDiv':'' }}">
+                                                         <div class="card-content">
+                                                            <div class="row">
+                                                               <div class="col-md-8 col-sm-8 col-xs-8 text-left">
+                                                                <span class="orderNumber">{{$index+1}}.</span>
+                                                                  <a class="btn btn-info btn-icon btn-simple btnsmall pd-l0px" id="sample" data-item="{{itms.id}}" title="View Sample"
+                                                                     rel="tooltip">
+                                                                  <b id="ques" style="font-size:16px;">{{itms.id}}</b>
+                                                                  </a>
+                                                                  <!-- <span>
+                                                                  <i class="text-default fa fa-globe"  ng-show="itms.public" title="Public" rel="tooltip" ></i>
+                                                                  </span> -->
+                                                                  <span class="label  lableTag {{ (itms.author !='unknown')?'label-primary':'label-danger' }}" >{{ (itms.author !='unknown')?itms.author:'Question Deleted' }}</span>
+                                                                  <span class="label  lableTag label-info" >{{itms.type}}</span>
+                                                               </div>
+                                                               <div class="col-md-4 col-sm-4 col-xs-4 text-right">
+                                                                  <a class="btn btn-danger btn-icon btn-simple btnsmall" id="delItem" title="Delete Item" rel="tooltip" ng-click="removeWsQuest(itms.id)">
+                                                                  <i class="ti-close"></i>
+                                                                  </a>
+                                                               </div>
+                                                            </div>
+                                                            <div class="text-left">
+                                                                <span class="label label-success lableTag mr-2px" ng-repeat="tag in itms.tags | limitTo:3">{{tag}}</span>
+                                                            </div>
+                                                            <div class="text-left mt-10px">
+                                                               <p class="fs-12px">
+                                                                {{ itms.comments | limitTo: 65 }} {{itms.comments.length > 65 ? '...' : ''}}
+                                                               </p>
+                                                            </div>
+                                                            <span class="label lableTag label-danger" ng-show="NotCommitted(itms)" >Not Committed</span>
+                                                         </div>
+                                                      </div>
+                                                    </div>
+                                                </div>   <!--end of wsQuestions -->
+                                                <!-- end of basket uili questions -->
+                                                </div>
+                                            </div>                                 
+                                 </div>
+
+                                 <div class="tab-pane" id="free">
+                                        <label><p>Select number of content allowed without subscription </p></label>
+                                       <fieldset>
+                                          <div class="form-group">
+                                                <label class="col-lg-2 control-label">Item
+                                                <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                                <i class="ti-help-alt fa-lg"></i>
+                                                </button>
+                                                </label>
+                                                <div class="col-lg-9">
+                                                    <rzslider rz-slider-model="sliderItm.value" rz-slider-options="sliderItm.options"></rzslider>
+                                                    <!-- <input type="hidden" class="form-control" id="freeItm" name="freeItm" min="0" ng-model="sliderItm.value"> -->
+                                                </div>
+                                          </div>
+                                       </fieldset>
+                                       <fieldset>
+                                          <div class="form-group">
+                                             <label class="col-lg-2 control-label">Hint
+                                             <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                             <i class="ti-help-alt fa-lg"></i>
+                                             </button>
+                                             </label>
+                                             <div class="col-lg-9">
+                                                <rzslider rz-slider-model="sliderHint.value" rz-slider-options="sliderHint.options" ></rzslider>
+                                                <!-- <input type="hidden" class="form-control" id="freeHint" name="freeHint" min="0"  ng-model="sheetDta.free.hints"> -->
+                                             </div>
+                                          </div>
+                                       </fieldset>
+                                       <fieldset>
+                                          <div class="form-group">
+                                             <label class="col-lg-2 control-label">Explanation
+                                             <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                             <i class="ti-help-alt fa-lg"></i>
+                                             </button>
+                                             </label>
+                                             <div class="col-lg-9">
+                                                <rzslider rz-slider-model="sliderExp.value" rz-slider-options="sliderExp.options" ></rzslider>
+                                                <!-- <input type="hidden" class="form-control" id="freeExp" name="freeExp" min="0"  ng-model="sheetDta.free.explanations"> -->
+                                             </div>
+                                          </div>
+                                       </fieldset>
+
+
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="reminder reminderwidth">
+                                                    <p><i class="fa fa-bell" style="font-size:1.5em;"></i> Hint and explanation can not be greater than free item </p>
+                                                </div>
+                                            </div>
+                                 </div>
+                              </div>
+                           </div>
+
+                        </div>
+                        </form>
+                     </div>
+                  </div>
+               </div>
+            </div>
+
+
+    <!-- Modal to add new workbook-->
+    <div class="modal fade" id="newWorksheet" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+               <div class="modal-content">
+                <form id="frmAddWS"  name="frmAddWS" id="frmAddWS"  method="post" ng-submit="saveNewWS(frmAddWS)" ng-validate="validationOptionsAddWS">
+                  <!-- Modal Header -->
+                  <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal">
+                     <span aria-hidden="true">&times;</span>
+                     <span class="sr-only">Close</span>
+                     </button>
+                     <h4 class="modal-title" id="myModalLabel">
+                        <b>Add New Worksheet</b>
+                     </h4>
+                  </div>
+                  <!-- Modal Body -->
+                  <div class="modal-body">
+                    
+                        <div class="form-group">
+                           <label for="playlist_name">Worksheet Name</label>
+                           <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title=""></span>
+                           <input type="text" class="form-control" id="newWsTitle" name="newWsTitle" ng-model="wsTitle"  maxlength="75"/>
+                        </div>
+                        <div class="clearfix">
+                           <button type='submit' class="btn btn-primary btn-fill pull-right"   >Add</button>
+                        </div>
+                     
+                  </div>
+                  <!-- Modal Footer -->
+                 
+                </form>     
+               </div>
+            </div>
+    </div>
+    <!-- Modal to add new workbook-->                       
+
+    <!-- modal view sample -->
+    <div class="">
+        <div class="modal fade" id="bsModal3" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="mySmallModalLabel">View Sample
+                    </h4>
+                </div>
+                <div class="modal-body" id="viewModalContent">
+                    <p></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+    <!-- modal close-->
+    <!--  modal to add item to a playlist -->
+    <div class="modal fade" id="playlistMdl" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+                <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                <b>Fetch from playlist</b>
+                </h4>
+                </div>
+                <div class="modal-body">
+                    
+                        <div class="form-group">
+                            <div class='row '>
+                                <div class="col-lg-12">
+                                    <label>Playlist Name</label>
+                                    <button type="button" rel="tooltip" title="" class="btn btn-info btn-simple btn-xs" data-original-title="<%-tooltip.tooltipPlaylist05%>">
+                                    <i class="ti-help-alt fa-lg"></i>
+                                    </button>
+                                </div>
+                                <div class="col-lg-7">
+                                    <!-- <select class="form-control" id="playlist_name" name="playlist_name" data-live-search="true" required> -->
+                                    <select class="form-control" data-style="btn-default" id="playlist_name" name="playlist_name"  data-live-search="true" required>
+                                        <option value="">Select</option>
+                                        <%for(var i=0; i<playlistdata.length;i++){
+                                        var playlist1 = playlistdata[i];
+                                        %>
+                                        <option value="<%-playlist1[2]%> - <%-playlist1[1]%>">
+                                        <%-playlist1[1]%>
+                                        </option>
+                                        <%}%>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <label>Section Name</label>
+                                    <button type="button" rel="tooltip" title="" class="btn btn-info btn-simple btn-xs" data-original-title="">
+                                    <i class="ti-help-alt fa-lg"></i>
+                                    </button>
+                                </div>
+                                <div class="col-lg-7">
+                                    <select class="form-control" data-style="btn-default" id="section_name" name="section_name" style="display:none;" required>
+                                    <!-- <option value="">Select</option> -->
+                                    </select>
+                                    <input type="hidden" id="sectionCon" name="sectionCon" value=""/>
+                                    <input type="hidden" id="id_question" value="">
+                                    <small id="emptyErr" class="text-danger" style="display:none;font-weight:bold">Section Is Empty</small>
+                                </div>
+                            </div>
+                        </div>
+                  
+                <div class="clearfix">
+                <button type='button' class="btn btn-primary btn-fill pull-right" id="addPlaylistItms" ng-click="fetchItms()" disabled>Fetch Items</button>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end of modal playlist -->
+
+
+
+    <!--  modal to sort worksheet -->
+    <div class="modal fade" id="sortWorksheetMdl" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+
+
+                <div class="modal-header">
+                    <button type="button" class="btn btn-defualt btn-fill btn-sm pull-right" data-dismiss="modal" style="
+                    margin-left: 4px;"><i class="ti-close"></i></button>
+                    <button type="button" ng-click="saveWorksheetOrder()" class="btn  btn-primary btn-fill btn-sm pull-right">
+                    <i class="ti-save"></i>    
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                    <b>Arrange worksheet</b>
+                    </h4>
+                </div>
+
+
+              
+                <div class="modal-body">
+
+                        <div class="card">                                
+                                <div class="card-content">
+                                   <ul  ui-sortable="sortableWorkSheets"  class="list-unstyled team-members orderlist wsList" id="wsList" ng-model="sheetsOrderList">
+
+                                    <!-- <ul  ui-sortable="sortableWorkSheets"  class="list-unstyled team-members orderlist wsList" id="wsList" ng-model="sheetsList"> -->
+                                      <li ng-repeat="wsdata in sheetsOrderList track  by $index" class="wsListItems"  >
+                                         <div class="row">
+                                            <div class="col-xs-12" ng-cloak>
+                                                <span class="orderNumber">{{$index+1}} </span>&nbsp;
+                                               <a ng-cloak  style="font-weight:normal;">{{wsdata.wsTitle}} </a> &nbsp;&nbsp;&nbsp;
+                                               <span class="label label-primary ">{{wsdata.elements.length}}</span>
+                                               <span class="label label-success ">{{ (wsdata.publish == true)?'Publish':'' }}</span>
+                                            </div>
+                                         </div>
+                                      </li>
+                                   </ul>
+                                </div>
+                             </div>
+                                 
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end of modal sort worksheet -->
+
+            <%- include('../parts/footer'); %>
+         </div>
+      </div>
+   </body>
+   <%- include('../parts/allJS'); %>
+
+   <script src="author_public/ckeditor/ckeditor.js"></script>
+   <script type="text/javascript" src="author_public/js/author_workbook.js"></script>
+   <script src="author_public/js/ng-tags-input.min.js" type="text/javascript"></script>  
+   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>  
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+
+   <script src="author_public/angularControllers/customdirective/angular-validate.min.js"></script>   
+   <script src="author_public/js/backforwardPagination.js" type="text/javascript"></script>
+   
+   <script src="author_public/angularControllers/worksheetController.js"></script>
+   <script src="author_public/angularControllers/customdirective/selectpicker.js"></script> 
+   <script src="author_public/angularControllers/customdirective/bsSwitch.js"></script>
+   <script src="author_public/angularControllers/customdirective/sortable.js"></script>    
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/angularjs-slider/7.0.0/rzslider.min.js"></script>
+   <script type="text/javascript">
+      $(document).ready(function () {
+        $("body").on("click", "#sample", function () {
+            var quesItm = $(this).attr("data-item");
+            $.ajax({
+            type: 'get',
+            url: '/author_getCommittedSampleQue?id=' + quesItm,
+            cache: false,
+            success: function (returndata) {
+                if (returndata) {
+                // $('#bsModal3 .modal-body p').modal('show'); // Please right this in your Code
+                // console.log(returndata);
+                
+                  $('#bsModal3 .modal-body p').html(returndata);
+                  MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+                  $('#bsModal3').modal('show');
+                } else {
+                // other code
+                }
+            },
+                error: function () {
+                console.error('Failed to process ajax !');
+                }
+            });
+        });
+      });
+      
+
+
+
+    CKEDITOR.replace('wsdescr', {
+       
+        mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML'
+    });
+
+    CKEDITOR.replace('wsinstr', {
+       
+        mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML'
+    });
+
+
+   </script>
+   <script type="text/javascript">
+      $(function () {
+        $('#bsModal3').on('hidden.bs.modal', function () { // do something� })
+         $("#viewModalContent").html(" <p></p>");
+        });
+      });
+   </script>
+   <script type="text/javascript">
+      $(function () {
+        $('#playlist_name').on('change', function() {
+            var plname = document.getElementById('playlist_name').value;
+            var res = plname.split(" - ");
+            var playlistId = res[0];
+            var playlistName = res[1];
+            if (plname != '') {
+                var user_data2 = new Object;
+                user_data2.name = playlistName;
+                user_data2.playlistId = playlistId;
+                $.post("/author_getSectionsList", user_data2, function (data) {
+                if (data.status == 'success') {
+                $("#section_name").html("<option value=''> Select </option>");
+                $('#section_name').show();
+                //console.log(data.sectionName);
+                // console.log(data.sectionCon);
+                $("#sectionCon").val(JSON.stringify(data.sectionCon));
+                console.log(data.sectionName.length);
+                for(var i=0;i<data.sectionName.length;i++){
+                $('#section_name').append('<option value="'+data.sectionName[i]+'">'+data.sectionName[i]+'</option>');
+                }
+                }
+                else if (data.status == 'error') {
+                $('#section_name').hide();
+                swal({
+                type: 'error',
+                title: 'Error',
+                html: data.msg
+                });
+                }
+                });
+            } else {
+                $('#section_name').hide();
+                swal({
+                type: 'error',
+                title: 'Error',
+                html: 'Please select playlist name !!'
+                });
+            }
+        });
+      
+        $('#section_name').on('change', function() {
+        var sectionName = document.getElementById('section_name').value;
+        // console.log(sectionName)
+        var secCon = JSON.parse(document.getElementById('sectionCon').value);
+        // console.log(document.getElementById('sectionCon').value);
+        var queLen = secCon[sectionName];
+        // console.log(queLen);
+        // console.log("id_question length"+queLen.length);
+        
+            if(queLen == undefined){
+                document.getElementById('id_question').value = '';
+                document.getElementById("addPlaylistItms").disabled=true;//add disabled attribute from button
+                $('#emptyErr').show();
+            }else{
+                document.getElementById('id_question').value = queLen;
+                if(queLen != ""){
+                document.getElementById("addPlaylistItms").disabled=false; //remove disabled attribute from button
+                $('#emptyErr').hide();
+                }
+                else if(queLen == ""){
+                document.getElementById("addPlaylistItms").disabled=true; //add disabled attribute from button
+                $('#emptyErr').show();
+                }
+            }
+        
+        });
+    });
+   </script>
+</html>

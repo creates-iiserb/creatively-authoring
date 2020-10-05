@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <style>
+      .loader {
+        margin-top: 80px;
+        border: 8px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 8px solid #68B3C8;
+        width: 60px;
+        height: 60px;
+        -webkit-animation: spin 1.5s linear infinite;
+        animation: spin 1.5s linear infinite;
+      }
+
+       @-webkit-keyframes spin {
+        0% {
+          -webkit-transform: rotate(0deg);
+        }
+        100% {
+          -webkit-transform: rotate(360deg);
+        }
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+<body>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="card">
+                      <div class="card-content">
+                            <%var data = JSON.parse(all_data)%>
+
+                            <% if(data.result[0].success){ %>
+                            <h4>Quiz reset status</h4>
+                            <div class="success"><i class="fa fa-thumbs-o-up"></i>
+                              <%-  data.result[0].success%>
+                            </div>
+  
+                            <% }else if(data.result[0].error){%>
+                            <h4>Quiz reset status</h4>
+                            <div class="error"><i class="fa fa-exclamation-triangle"></i>
+                              <%-  data.result[0].error%>
+                            </div>
+                            <% } else{}%>
+  
+                            <br/>
+  
+                            <% if(data.result[1].success){ %>
+                            <h4>Password Change Status</h4>
+                            <div class="success"><i class="fa fa-thumbs-o-up"></i>
+                              <%-  data.result[1].success%>
+                            </div>
+  
+                            <% }else if(data.result[1].error){%>
+                            <div class="error"><i class="fa fa-exclamation-triangle"></i>
+                            <h4>Password Change Status</h4>
+                              <%-  data.result[1].error%>
+                            </div>
+                            <% } else{}%> 
+                            <br/>
+                        
+                      </div>
+                  </div>
+                  </div>
+                </div>
+
+</body>
+</html>

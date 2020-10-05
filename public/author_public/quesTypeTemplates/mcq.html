@@ -1,0 +1,26 @@
+<!--Question block-->
+<!-- <br> -->
+<div class="QuesPrecard">
+    <div class="">
+        <div class="quesMcq">
+            <span math="{{loadQuestion.object.question}}"></span>
+        </div>
+        <div id="mcqOptions" class="options1" style="padding-bottom:5px;">
+            <div ng-repeat="option in loadQuestion.object.options">
+                <div class="">
+                    <label>
+                        <span math={{option.statement}}></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="hintMcq">
+            <b>Hint</b><br>
+            <span math="{{loadQuestion.object.hint}}"></span>
+        </div><br>
+        <div class="hintMcq">
+            <b>Explanation</b><br>
+            <span math="{{loadQuestion.object.explanation}}"></span>
+        </div>
+    </div>
+</div>

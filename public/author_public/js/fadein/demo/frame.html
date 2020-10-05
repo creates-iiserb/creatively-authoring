@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>jQuery FadeInAmate</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="style.css" rel="stylesheet" type="text/css">
+    <link href="style.css" rel="stylesheet" type="text/css">
+    <link href="bootstrap.css" rel="stylesheet" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <script src="../src/jquery.fadeInAmate.js"></script>
+</head>
+<body>
+<div id="main" class="container">
+    <!-- Header -->
+    <header>
+        <hgroup>
+            <h2>jQuery FadeInAmate</h2>
+            <h4>a simple plugin for that effect you see everywhere</h4>
+            <h5><a href="https://github.com/jforaker/jQuery-FadeInAmate">source</a> </h5>
+        </hgroup>
+    </header>
+
+    <div class="row">
+
+        <div class="col-xs-6">
+            <div class="span5 fadeInAmate">
+                <div class="box">
+                    <h3>jQuery FadeInAmate</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Vestibulum porta accumsan elit vitae euismod.
+                        Nunc sed nisl varius, cursus libero at, interdum orci. Etiam pharetra lacinia odio.</p>
+                    <a class="check" href="#">Like a hot knife through butter</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="span5 fadeInAmate">
+                <div class="box">
+                    <h3>FadeInAmate</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Vestibulum porta accumsan elit vitae euismod.
+                        Nunc sed nisl varius, cursus libero at, interdum orci. Etiam pharetra lacinia odio.</p>
+                    <a class="check" href="#">Check it out</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="span5 fadeInAmate">
+                <div class="box">
+                    <h3>FadeInAmate</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Vestibulum porta accumsan elit vitae euismod.
+                        Nunc sed nisl varius, cursus libero at, interdum orci. Etiam pharetra lacinia odio.</p>
+                    <a class="check" href="#">Check it out</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="span5 fadeInAmate">
+                <div class="box">
+                    <h3>FadeInAmate</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Vestibulum porta accumsan elit vitae euismod.
+                        Nunc sed nisl varius, cursus libero at, interdum orci. Etiam pharetra lacinia odio.</p>
+                    <a class="check" href="#">Check it out</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="span5 fadeInAmate">
+                <div class="box">
+                    <h3>FadeInAmate</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Vestibulum porta accumsan elit vitae euismod.
+                        Nunc sed nisl varius, cursus libero at, interdum orci. Etiam pharetra lacinia odio.</p>
+                    <a class="check" href="#">Check it out</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="span5 fadeInAmate">
+                <div class="box">
+                    <h3>FadeInAmate</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Vestibulum porta accumsan elit vitae euismod.
+                        Nunc sed nisl varius, cursus libero at, interdum orci. Etiam pharetra lacinia odio.</p>
+                    <a class="check" href="#">Check it out</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    $(function() {
+
+        function getParameterByName(name) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                    results = regex.exec(location.search);
+            return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+
+        var initialDelay = getParameterByName('initialDelay');
+        var fadeInSpeed = getParameterByName('fadeInSpeed');
+        var animationDelay = getParameterByName('animationDelay');
+
+
+        $(".fadeInAmate").fadeInAmate({
+            initialDelay: initialDelay,
+            fadeInSpeed: fadeInSpeed,
+            animationDelay: animationDelay,
+            bounce: true
+        });
+    });
+
+</script>
+</body>
+</html>

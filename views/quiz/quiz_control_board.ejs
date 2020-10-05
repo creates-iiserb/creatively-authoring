@@ -1,0 +1,954 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <%- include('../parts/allCSS'); %>
+    <script src="author_public/PaperDashBoard/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+
+
+    <script type="text/javascript" src="author_public/plotchart/plotly-latest.min.js"></script>
+    <script type="text/javascript" src="author_public/plotchart/plotchart.js"></script>
+    <link rel="stylesheet" href="author_public/css/author_quiz.css">
+    <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous"> -->
+</head>
+
+<body>
+  <div class="wrapper">
+    <%- include('../parts/leftNavBar'); %>
+      <div class="main-panel">
+        <%- include('../parts/topNavBarPart1'); %> Quiz Settings (Quiz Id:
+          <%-data._id%>)
+            <%- include('../parts/topNavBarPart2'); %>
+              <%
+          var validUpto = new Date(data.validUpto);
+           var quizStopped = false;
+           if(new Date(validUpto) < new Date()){
+            quizStopped=false;
+           }else{
+            quizStopped=true;
+           }
+
+           var sections = data.sections;
+
+          %>
+                <div class="content">
+                  <div class="container-fluid">
+                    <div class="col-md-10 col-md-offset-1">
+                        <% if(!isSection){ %>
+                        <div class="row animated zoomIn delay-2s">
+                            <div class="col-lg-12">
+                              <div class="errorAlert boxShadow">
+                              <p><i class="fa fa-exclamation-triangle"></i>Simple quiz is deprecated. Support for this quiz will end on  "<span id="validDatewarning"></span>".</p></div>
+                            </div>
+                        </div>
+                        <%}%>
+                      <div class="card">
+                        <div class="card-header clearfix">
+                          <div class="pull-left">
+                            <button type="button" class="btn btn-wd btn-default btn-move-left" onclick="window.location.href='/author_create_quiz'">
+                              <span class="btn-label">
+                                <i class="ti-angle-left"></i>
+                              </span>
+                              Back
+                            </button>
+                          </div>
+                          <div class="pull-right">
+                            <!-- <div class="row"> -->
+                            <!-- <div class="col-sm-12"> -->
+                            <div class='col-sm-4'>
+                              <form role="form" name="add_form" id="add_form" method="post" action="/author_editQuizControlBoard" enctype="multipart/form-data"
+                                class='inline'>
+                                <input type="hidden" name="author" value="<%-short%>">
+
+                                <input type="hidden" name="quiz_id" id="quiz_id" value="<%-data._id%>">
+                                <input type="hidden" name="log_Id" id="log_Id" value="">
+                                <input type="hidden" name="log_Token" id="log_Token" value="">
+                                <button <%if(quizStopped==false){%>disabled
+                                  <%}%> type='submit' class="btn btn-success btn-fill btn-wd btnmargin" id="arrange_ids">
+                                    <i class="fa fa-pencil-square-o"></i>&nbsp;Edit Quiz</button>
+                              </form>
+                            </div>
+                            <div class='col-sm-4'>
+                              <form role="form" name="add_form1" id="add_form1" method="post" action="/author_getTakersData" enctype="multipart/form-data"
+                                class='inline'>
+                                <input type="hidden" name="author" value="<%-short%>">
+                                <input type="hidden" name="quiz_id" id="quiz_id" value="<%-data._id%>">
+                                <!-- <input type="hidden" name="quiz_reset_ids" id="quiz_reset_ids" value=""> -->
+                                <input type="hidden" name="log_Id" id="log_Id" value="">
+                                <input type="hidden" name="log_Token" id="log_Token" value="">
+                                <button <%if(quizStopped==false){%>disabled
+                                  <%}%> type='submit' class="btn btn-warning btn-fill btn-wd btnmargin" id="btnTaker">
+                                    <i class="fa fa-clipboard"></i>&nbsp;Manage Quiz</button>
+                              </form>
+                            </div>
+                            <div class='col-sm-4'>
+                              <div class="dropdown">
+                                <a href="#" class="btn dropdown-toggle btn-primary btn-fill btn-wd btnmargin" data-toggle="dropdown" aria-expanded="false">
+                                  More &nbsp;
+                                  <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                  <li>
+                                    <form role="form" name="add_form2" id="add_form2" method="post" action="/author_toggle_quiz_status" enctype="multipart/form-data">
+                                      <input type="hidden" name="author" value="<%-short%>">
+
+                                      <input type="hidden" name="quiz_id" id="quiz_id" value="<%-data._id%>">
+                                      <!-- <input type="hidden" name="quiz_reset_ids" id="quiz_reset_ids" value=""> -->
+                                      <input type="hidden" id="type" name="type" value="toggle_examineer_quiz_status">
+                                      <input type="hidden" id="data" name="data" value="">
+                                      <input type="hidden" name="log_Id" id="log_Id" value="">
+                                      <input type="hidden" name="log_Token" id="log_Token" value="">
+                                      <% if(data.status== "active"){  %>
+                                        <button <%if(quizStopped==false){%>disabled
+                                          <%}%> type='submit' id="btnToggle">
+                                            <i class="fa fa-ban "></i>&nbsp;&nbsp; Deactivate</button>
+                                        <% }else if(data.status== "inactive"){  %>
+                                          <button <%if(quizStopped==false){%>disabled
+                                            <%}%> type='submit' id="btnToggle">
+                                              <i class="fa fa-check-circle"></i>&nbsp;&nbsp; Activate</button>
+                                          <% }else{} %>
+                                            <!-- <button type='submit' class="btn btn-success" id="btnToggle" style="width:250px;">Activate</button> -->
+                                    </form>
+                                    <!-- <a href="#" id="cloneQue">
+                                                            <i class="ti-files"></i> 
+                                                            &nbsp; Clone 
+                                                        </a> -->
+                                  </li>
+                                  <% if(isSection){ %>
+                                  <li>
+                                    <form role="form" name="add_form2" id="add_form2" method="post" action="/author_quizItemsToInherit" enctype="multipart/form-data">
+                                      <!-- <input type="text" class="form-control" id="ques_ids2" name="ques_ids2" value="" readonly><br/> -->
+                                      <input type="hidden" name="author" value="<%-short%>">
+
+                                      <input type="hidden" name="quiz_id" id="quiz_id" value="<%-data._id%>">
+                                      <input type="hidden" name="log_Id" id="log_Id" value="">
+                                      <input type="hidden" name="log_Token" id="log_Token" value="">
+                                      <button type='submit' class="" id="newquiz">
+                                        <i class="ti-layout-cta-center"></i>&nbsp;&nbsp; New Quiz From Template</button>
+                                    </form>
+                                  </li>
+                                  <%}%>
+                                  <li>
+                                    <a href="/author_summaryCSV?quizid=<%-data._id%>" id="downloadPwd">
+                                      <i class="ti-import"></i>
+                                      &nbsp; Performance Summary (csv/xlsx)
+                                    </a>
+                                  </li>
+                                  <li>
+                                    <a href="/author_downloadPwd?quizid=<%-data._id%>" id="downloadPwd">
+                                      <i class="fa fa-download"></i>
+                                      &nbsp; Download Credentials (csv)
+                                    </a>
+                                  </li>
+                                  <li>
+                                    <!-- <input type="hidden" name="quiz_id" id="quiz_id" value="<%-data._id%>"> -->
+                                    <a href="" id="downloadPdf" data-toggle="modal" data-target="#mdlDownloadPdf">
+                                      <i class="fa fa-file-pdf-o"></i>
+                                      &nbsp; Login Credentials (pdf)
+                                    </a>
+                                  </li>
+                                  <li>
+                                    <a href="/author_quizLogCSV?quizid=<%-data._id%>" id="quizLogcsv">
+                                      <i class="ti-import"></i>
+                                      &nbsp; Download Quiz Log Analysis (xlsx)
+                                    </a>
+                                  </li>
+                                  <li>
+                                    <form>
+                                      <input type="hidden" value="<%-data._id%>" id="quizidhidden">
+                                    </form>
+                                    <a href="#" id='delQuiz'>
+                                      <i class="ti-trash"></i>
+                                      &nbsp; Delete
+                                    </a>
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+                            <!--  modal to download pdf for quiz credentials -->
+                            <div class="modal fade" id="mdlDownloadPdf" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">
+                                      <span aria-hidden="true">&times;</span>
+                                      <span class="sr-only">Close</span>
+                                    </button>
+                                    <h4 class="modal-title" id="myModalLabel">
+                                      <b> Do You Want To Add Any Instructions</b>
+                                    </h4>
+                                  </div>
+                                  <div class="modal-body" id="viewMediaModal">
+                                    <div id="htmlContent"></div>
+                                    <form role="form" name="pdfInstfrm" id="pdfInstfrm" method="post" action="" enctype="multipart/form-data">
+                                      <div class="form-group">
+                                        <div class='row '>
+                                          <div class="col-lg-12">
+                                            <label for="ins">Instructions</label>
+                                            <textarea class="form-control" id="ins" name="ins" placeholder="Maximum 1000 character allowed" rows="5" maxlength="1000"></textarea>
+                                            <input type="hidden" id="newins" value="">
+                                          </div>
+                                        </div>
+                                        <div class="row">
+
+                                        </div>
+                                      </div>
+                                      <div class="clearfix">
+                                        <div class="col-lg-6">
+                                          <b id="count" style="line-height:2"></b>
+                                          <div id="linehide">
+                                            <span id="linesUsed"></span>
+                                          </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                          <button type="button" class="btn btn-primary  btn-fill pull-right" id="but">Download Pdf</button>
+                                        </div>
+                                      </div>
+                                    </form>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <!--  modal to download pdf for quiz credentials -->
+                            <!-- </div> -->
+                            <!-- </div> -->
+                          </div>
+                        </div>
+                        <hr>
+                        <div class="card-content">
+                          <div class="row">
+                            <div class="col-lg-2 col-sm-4 quizbox primary-box">
+                              <h4 class="text-center text-primary"> Status</h4>
+                              <hr class="small">
+                              <div class="text-center">
+                                <br>
+                                <% if(data.status== "active"){  %>
+                                  <p>
+                                    <span class="fa fa-check-circle" aria-hidden="true" style="color:#54b07d;font-size:1.3em;"></span>&nbsp;
+                                    <b style="color:#54b07d;font-weight:bold;font-size: 25px;">
+                                      <%-data.status%>
+                                    </b>
+                                  </p>
+
+                                  <% }else if(data.status== "inactive"){  %>
+                                    <p>
+                                      <span class="fa fa-ban" aria-hidden="true" style="color:#EB5E28;font-size:1.3em;"></span>&nbsp;
+                                      <b style="color:#EB5E28;font-weight:bold;font-size: 25px;">
+                                        <%-data.status%>
+                                      </b>
+                                    </p>
+                                    <% }else if(data.status== "expire"){  %>
+                                      <p>
+                                        <span class="fa fa-stop-circle" aria-hidden="true" style="color:f0a810;font-size:1.3em;"></span>&nbsp;
+                                        <b style="color:#f0a810;font-weight:bold;font-size: 25px;">
+                                          <%-data.status%>
+                                        </b>
+                                      </p>
+                                      <% } else{} %>
+                              </div>
+                            </div>
+                            <div class="col-lg-2 col-sm-4 quizbox info-box">
+                              <h4 class="text-center text-info">
+                                <i class="fa fa-calendar-check-o"></i>&nbsp;Opens At</h4>
+                              <hr class="small">
+                              <div class="text-center">
+                                <h5 id="beginTime">
+                                  <input type="hidden" id="begin_time_utc" name="begin_time_utc" value="<%-data.beginTime%>">
+                                </h5>
+                              </div>
+                            </div>
+                            <div class="col-lg-2 col-sm-4 quizbox danger-box">
+                              <h4 class="text-center text-danger">
+                                <i class="fa fa-calendar-times-o"></i>&nbsp;Deadline</h4>
+                              <hr class="small">
+                              <div class="text-center">
+                                <h5 id="endTime">
+                                  <input type="hidden" id="end_time_utc" name="end_time_utc" value="<%-data.endTime%>">
+                                </h5>
+                              </div>
+                            </div>
+                            <div class="col-lg-2 col-sm-4  quizbox success-box">
+                              <h4 class="text-center text-success">
+                                <i class="fa fa-calendar-plus-o"></i>&nbsp;Created On</h4>
+                              <hr class="small">
+                              <div class="text-center">
+                                <h5 id="createdOn">
+                                  <input type="hidden" id="createdOn_utc" name="createdOn_utc" value="<%-data.createdOn%>">
+                                </h5>
+                              </div>
+                            </div>
+                            <div class="col-lg-2 col-sm-4 quizbox warning-box">
+                              <h4 class="text-center text-warning">
+                                <i class="fa fa-calendar-minus-o"></i>&nbsp;Valid Upto</h4>
+                              <hr class="small">
+                              <div class="text-center">
+                                <h5 id="validUpto">
+                                  <input type="hidden" id="validUpto_utc" name="validUpto_utc" value="<%-data.validUpto%>">
+                                </h5>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                     
+                      <div class="card">
+                        <div class="card-header">
+                          <% if(data.quizType=='live'){%>
+                          <div class="pull-right">
+                            <!-- <div class='col-sm-3'> -->
+                              <form role="form" name="add_form1" id="add_form1" method="post" action="/author_getLiveQuizManagePage" enctype="multipart/form-data"
+                                class='inline'>
+                                <input type="hidden" name="author" value="<%-short%>">
+                                <input type="hidden" name="quiz_id" id="quiz_id" value="<%-data._id%>">
+                                <input type="hidden" name="log_Id" id="log_Id" value="">
+                                <input type="hidden" name="log_Token" id="log_Token" value="">
+                                <button <%if(quizStopped==false){%>disabled
+                                  <%}%> type='submit' class="btn btn-info btn-fill btn-wd btnmargin" id="btnLiveManage">
+                                    <i class="fa fa-clipboard"></i>&nbsp;Manage Live Quiz</button>
+                              </form>
+                            <!-- </div> -->
+                          </div>
+                          <%}%>
+                          <div class="pull-left">
+                            <h4>Quiz Details</h4>
+                          </div><br>
+                        </div>
+                        <div class="card-content">
+                          <!-- <div class="row"> -->
+                          <!-- <div class="col-md-12"> -->
+                          <!-- <div class="card"> -->
+                          <div class="card-content details">
+                            <table id="quiz_details" class="table table-full-width">
+                              <tr>
+                                <th>Quiz Title</th>
+                                <td>
+                                  <%-data.title%>
+                                </td>
+                              </tr>
+                              <tr>
+                                <th>Tags</th>
+                                <td>
+                                  <%-data.tags%>
+                                    <!-- <input type="text" value="<%-data.tags%>" data-role="tagsinput" disabled  class="white"/>     -->
+                                </td>
+                              </tr>
+                              <tr>
+                                <th>Description</th>
+                                <td>
+                                  <%-data.description%>
+                                </td>
+                              </tr>
+                              <!-- if not sectioned quiz -->
+                              <% if(!isSection){ %>
+                              <tr>
+                                <th>Playlist Name</th>
+                                <td>
+                                  <%-data.playlist%>
+                                </td>
+                              </tr>
+                              <%}%>
+                              <tr>
+                                <th>Duration</th>
+                                <td>
+                                  <%-data.duration%>
+                                </td>
+                              </tr>
+                              <tr>
+                                <th>Login Time</th>
+                                <% if(data.loginTime == "actual"){  %>
+                                  <td>
+                                    <b>
+                                      <%-data.loginTime%>:</b> Total time is used to calculate by adding time taken per question. Recommoded
+                                    mode for a regular homework.</td>
+
+                                  <% }else if(data.loginTime== "absolute"){  %>
+                                    <td>
+                                      <b>
+                                        <%-data.loginTime%>:</b> Time used is calculated since the first login. Total duration is considered
+                                      to be difference between absolute first login and absolute submission time. </td>
+
+                                    <% } else{} %>
+                              </tr>
+                              <!-- if not sectioned quiz -->
+                              <% if(!isSection){ %>
+                                <tr>
+                                  <th>Help Allowed</th>
+                                  <% if(data.helpAllowed == "0"){  %>
+                                    <td>No Help Allowed</td>
+                                  <% }else if(data.helpAllowed == "1"){  %>
+                                    <td>Hint Allowed</td>
+                                  <% }else if(data.helpAllowed == "2"){  %>
+                                    <td>Hint and Explanation Allowed</td>
+                                  <% } else{ %>
+                                    <td></td>
+                                  <% } %>
+                                </tr>
+                              <%}%>
+                              <tr>
+                                <th>Score Available After </th>
+                                <td>
+                                  <%-data.score%>
+                                </td>
+                              </tr>
+                              <tr>
+                                <th>Review (After Deadline)</th>
+                                <td>
+                                  <%-data.review%>
+                                </td>
+                              </tr>
+                              <tr>
+                                <th>Security</th>
+                                <% if(data.security == "regular"){  %>
+                                  <td>
+                                    <b>
+                                      <%-data.security%>:</b> Warning is presented if a non-recommended browser is used when the student lands
+                                    on the quiz login page. 
+                                  </td>
+                                <% }else if(data.security== "high"){  %>
+                                  <td>
+                                    <b>
+                                      <%-data.security%>:</b> In high security mode student is not allowed to login on a non-recommended
+                                    browser - a check done by the quizapp back-end.
+                                  </td>
+                                <% }else if(data.security == "chromeOnly"){  %>
+                                  <td>
+                                    <b>
+                                      <%-data.security%>:</b> Warning is presented if a non-recommended browser is used when the student lands
+                                    on the quiz login page. 
+                                  </td>
+                                <% } else{} %>
+                              </tr>
+                              <tr>
+                                <th>Calculator</th>
+                                <td>
+                                  <%-(data.calculator)?data.calculator:'Scientific'%>
+                                </td>
+                              </tr>
+                              <tr>
+                                <th>Focus Change</th>
+                                <td>
+                                  
+                                  <%if(data.allowFC == true){  %>
+                                    Allowed
+                                  <% } else{ %>
+                                    Not Allowed
+                                  <% } %>
+                                </td>
+                              </tr>
+                              <tr>
+                                <th>Show Class statistics at review</th>
+                                <td>
+                                  
+                                  <%-data.allowStats%>
+                                </td>
+                              </tr>
+                            </table>
+                          </div>
+                          <!-- </div> -->
+                          <!-- </div> -->
+                          <!-- </div> -->
+                        </div>
+                      </div>
+                      <!-- <div class="card"> -->
+                      <!-- <div class="card-header">
+                          <h4>Instruction</h4>
+                        </div> -->
+                      <div class="card-content details">
+                        <div class="row">
+                          <div id="acordeon" class="col-md-12">
+                            <div class="panel-group" id="accordion">
+                              <div class="panel panel-border panel-default white">
+                                <a data-toggle="collapse" href="#collapseOne" class="" aria-expanded="true">
+                                  <div class="panel-heading white">
+                                    <h4 class="panel-title">
+                                      Quiz Instruction
+                                      <i class="ti-angle-down"></i>
+                                    </h4>
+                                  </div>
+                                </a>
+                                <div id="collapseOne" class="panel-collapse collapse " aria-expanded="false" style="">
+                                  <div class="panel-body">
+                                    <%-data.instruction%>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <% if(isSection){ %>
+                        <div class="card">
+                          <div class="card-header"><h4>Section Details</h4></div>
+                            <div class="card-content details">
+                              <% for(var i =0;i<sections.length;i++){ %>
+                                <div class="row">
+                                  <div id="acordeon" class="col-md-12">
+                                    <div class="panel-group" id="accordion">
+                                      <div class="panel panel-border panel-default white">
+                                        <a data-toggle="collapse" href="#collapse<%-i%>" class="" aria-expanded="true">
+                                          <div class="panel-heading white">
+                                            <h4 class="panel-title">
+                                              Section <%-i+1%>
+                                              <i class="ti-angle-down" style="font-size:1em"></i>
+                                            </h4>
+                                          </div>
+                                        </a>
+                                        <div id="collapse<%-i%>" class="panel-collapse collapse " aria-expanded="false">
+                                          <div class="panel-body">
+                                            <div class="">
+                                              <table class="table table-responsive">
+                                                  <tr>
+                                                      <th>Section Title</th>
+                                                      <td><%-sections[i].title%></td>
+                                                  </tr>
+                                                  <tr>
+                                                      <th>Section Instruction</th>
+                                                      <td><%-sections[i].displayInstruction%></td>
+                                                  </tr>
+                                                  <tr>
+                                                      <th>Playlist / Section Name</th>
+                                                      <td><%-sections[i].playlist%> / <%-sections[i].sectionName%></td>
+                                                  </tr>
+                                                  <tr>
+                                                      <th>Help Allowed</th>
+                                                      <% if(sections[i].helpAllowed == "0"){  %>
+                                                        <td>No Help Allowed</td>
+                                                      <% }else if(sections[i].helpAllowed == "1"){  %>
+                                                        <td>Hint Allowed</td>
+                                                      <% }else if(sections[i].helpAllowed == "2"){  %>
+                                                        <td>Hint and Explanation Allowed</td>
+                                                      <% } else{ %>
+                                                        <td></td>
+                                                      <% } %>
+                                                  </tr>
+                                                  <tr>
+                                                    <th>Grading Matrix</th>
+                                                    <td>
+                                                        <div class="">
+                                                            <div class="">
+                                                                <div class=" table-responsive">
+                                                                    <table class="table table-center table-responsive" style="border:#ccc5b8 1px solid;border-radius:5px;">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th></th>
+                                                                                <th>No help used</th>
+                                                                                <th <% if(sections[i].helpAllowed == "0" ){%> style="display:none;" <%}%> >Hint used</th>
+                                                                                <th <% if(sections[i].helpAllowed == "0" || sections[i].helpAllowed == "1"){%> style="display:none;" <%}%> >Explanation used</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <th>Correct Score</th>
+                                                                                <td style="background-color:rgba(161, 234, 194, 0.4);">
+                                                                                        <%-sections[i].gradingMatrix[0][0]%>
+                                                                                </td>
+                                                                                <td  style="background-color:rgba(241, 209, 142, 0.4); <% if(sections[i].helpAllowed == "0" ){%> display:none; <%}%>" >
+                                                                                        <%-sections[i].gradingMatrix[0][1]%>
+                                                                                </td>
+                                                                                <td style="background-color:rgba(170, 216, 228, 0.4);<% if(sections[i].helpAllowed == "0" || sections[i].helpAllowed == "1"){%> display:none;<%}%>">
+                                                                                        <%-sections[i].gradingMatrix[0][2]%>
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th>Skip Score</th>
+                                                                                <td style="background-color:rgba(161, 234, 194, 0.4);">
+                                                                                        <%-sections[i].gradingMatrix[1][0]%>
+                                                                                </td>
+                                                                                <td style="background-color:rgba(241, 209, 142, 0.4); <% if(sections[i].helpAllowed == "0" ){%> display:none; <%}%>">
+                                                                                        <%-sections[i].gradingMatrix[1][1]%>
+                                                                                </td>
+                                                                                <td style="background-color:rgba(170, 216, 228, 0.4); <% if(sections[i].helpAllowed == "0" || sections[i].helpAllowed == "1"){%> display:none;<%}%>">
+                                                                                        <%-sections[i].gradingMatrix[1][2]%>
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th>Incorrect Score</th>
+                                                                                <td style="background-color:rgba(161, 234, 194, 0.4);">
+                                                                                        <%-sections[i].gradingMatrix[2][0]%>
+                                                                                </td>
+                                                                                <td style="background-color:rgba(241, 209, 142, 0.4); <% if(sections[i].helpAllowed == "0" ){%> display:none; <%}%>">
+                                                                                        <%-sections[i].gradingMatrix[2][1]%>
+                                                                                </td>
+                                                                                <td style="background-color:rgba(170, 216, 228, 0.4); <% if(sections[i].helpAllowed == "0" || sections[i].helpAllowed == "1"){%> display:none; <%}%>">
+                                                                                        <%-sections[i].gradingMatrix[2][2]%>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                  <th>Help Allowed At Review</th>
+                                                  <% if(sections[i].helpAtReview == "0"){  %>
+                                                    <td>No Help Allowed</td>
+                                                  <% }else if(sections[i].helpAtReview == "1"){  %>
+                                                    <td>Hint Allowed</td>
+                                                  <% }else if(sections[i].helpAtReview == "2"){  %>
+                                                    <td>Hint and Explanation Allowed</td>
+                                                  <% } else{ %>
+                                                    <td></td>
+                                                  <% } %>
+                                              </tr>
+                                              <tr>
+                                                <th>Partial Grading</th>
+                                                <td>
+                                                  <%if(sections[i].partialGrading == true){  %>
+                                                    Allowed
+                                                  <% } else{ %>
+                                                    Not Allowed
+                                                  <% } %>
+                                                </td>
+                                            </tr>
+                                              </table>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              <% } %>
+                            </div>
+                        </div>
+                      <% }else{ %>
+                        <div class="card">
+                            <div class="card-header">
+                              <h4>Grading Matrix</h4>
+                            </div>
+                            <div class="card-content">
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <div class="">
+                                    <div class="">
+                                     
+                                      <div class="table-responsive details">
+                                        <table class="table table-center table-responsive " style="border:#ccc5b8 1px solid;border-radius:5px;">
+                                          <thead>
+                                            <tr>
+                                              <th></th>
+                                              <th style="font-weight:bold;">No help used </th>
+                                              <th style="font-weight:bold;">Hint used </th>
+                                              <th style="font-weight:bold;">Explanation used</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            <tr>
+                                              <th>Correct Score</th>
+                                              <td style="background-color:rgba(161, 234, 194, 0.4);">
+                                                <%-data.gradingMatrix[0][0]%>
+                                              </td>
+                                              <td style="background-color:rgba(241, 209, 142, 0.4);">
+                                                <%-data.gradingMatrix[0][1]%>
+                                              </td>
+                                              <td style="background-color:rgba(170, 216, 228, 0.4);">
+                                                <%-data.gradingMatrix[0][2]%>
+                                              </td>
+                                            </tr>
+                                            <tr>
+                                              <th>Skip Score</th>
+                                              <td style="background-color:rgba(161, 234, 194, 0.4);">
+                                                <%-data.gradingMatrix[1][0]%>
+                                              </td>
+                                              <td style="background-color:rgba(241, 209, 142, 0.4);">
+                                                <%-data.gradingMatrix[1][1]%>
+                                              </td>
+                                              <td style="background-color:rgba(170, 216, 228, 0.4);">
+                                                <%-data.gradingMatrix[1][2]%>
+                                              </td>
+                                            </tr>
+                                            <tr>
+                                              <th>Incorrect Score</th>
+                                              <td style="background-color:rgba(161, 234, 194, 0.4);">
+                                                <%-data.gradingMatrix[2][0]%>
+                                              </td>
+                                              <td style="background-color:rgba(241, 209, 142, 0.4);">
+                                                <%-data.gradingMatrix[2][1]%>
+                                              </td>
+                                              <td style="background-color:rgba(170, 216, 228, 0.4);">
+                                                <%-data.gradingMatrix[2][2]%>
+                                              </td>
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                      <%}%>
+                      <!-- </div> -->
+                    </div>
+                  </div>
+                </div>
+                <%- include('../parts/footer'); %>
+      </div>
+  </div>
+  </div>
+
+  </div>
+  </div>
+
+</body>
+<%- include('../parts/allJS'); %>
+  <script type="text/javascript" src="author_public/js/author_quiz.js"></script>
+  <%- include('../parts/dynamicMedia'); %>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+    <script type="text/javascript">
+      /*count function*/
+
+      function wordCount(val) {
+
+        var wom = val.match(/\S+/g);
+        return {
+          //charactersNoSpaces: val.replace(/\s+/g, '').length,
+          characters: val.length,
+          //words: wom ? wom.length : 0,
+          liness: val.split(/\r*\n/).length
+        };
+      }
+
+
+      var textarea = document.getElementById("ins");
+      var result = document.getElementById("result");
+
+      textarea.addEventListener("input", function () {
+        var v = wordCount(this.value);
+        // alert(v);
+        result.innerHTML = (
+          "<br>Characters (and spaces): " + v.characters + "<br>Lines: " + v.liness
+          /*"<br>Characters (no spaces):  " + v.charactersNoSpaces +
+              "<br>Characters (and spaces): " + v.characters +
+              "<br>Words: " + v.words +
+              "<br>Lines: " + v.lines*/
+        );
+      },
+        false);
+
+
+    </script>
+
+    <script>
+      /*To count lines*/
+      $(document).ready(function () {
+
+        /*"var lines = 5; will decide no of lines to be displayed"*/
+        var lines = 5;
+        var linesUsed = $('#linesUsed');
+
+        $('#ins').keydown(function (e) {
+
+          newLines = $(this).val().split("\n").length;
+          linesUsed.text("Lines: " + newLines);
+
+          if (e.keyCode == 13 && newLines >= lines) {
+            linesUsed.text("Lines exceed").css({ 'color': '#c84513', 'font-weight': 'bold' });
+
+            return false;
+          }
+          else {
+            linesUsed.css({ 'color': '#3c763d', 'font-weight': 'bold' });
+          }
+        });
+
+
+
+        /*for character count*/
+        $("#ins").keyup(function () {
+
+          let val = $(this).val();
+          var v = wordCount(val);
+          var r = JSON.stringify(v);
+          // console.log("r  " + r);
+          var par = JSON.parse(r);
+          // console.log(par);
+          if (v.characters > 999) {
+            $("#linehide").hide();
+            $("#count").html("Characters Limit Exceed").css("color", "#c84513");
+            //swal("Only 1000 character allowed")
+          }
+          else {
+            $("#linehide").show();
+            $("#count").html("characters:" + par.characters + "/1000").css("color", "#3c763d");
+          }
+
+        });
+
+        /*for pdf*/
+        $("#but").click(function () {
+          var ins = $("#ins").val();
+          document.getElementById('newins').value = ins;
+          htmlToPdfMake('#htmlContent');
+          // $("#ins").val('');
+          // $('#mdlDownloadPdf').modal('hide');
+        });
+      });
+
+      function htmlToPdfMake(elementID) {
+        var quiz_id = document.getElementById('quiz_id').value;
+        var user_data = new Object;
+        user_data.quiz_id = quiz_id;
+        // var token = document.getElementById('token').value;
+        $.post("/author_dwnLoginCredential", user_data, function (result) {
+          if (result.status == 'success') {
+            var i, x;
+            var takers = new Array();
+            var pwd = new Array();
+            takers = Object.keys(result.credentials);
+            pwd = Object.keys(result.credentials).map(function (key) {
+              return result.credentials[key];
+            });
+            if (takers.length == pwd.length) {
+              var mjson = {
+                content: [],
+                styles:
+                  {
+                    header1:
+                      {
+                        bold: false,
+                        fontsize: 60,
+                      },
+                    header1:
+                      {
+                        bold: false,
+
+                      },
+                    subheader:
+                      {
+                        fontSize: 12,
+                        bold: false,
+                        margin: [0, 5, 0, 5]
+                      },
+                    tableExample:
+                      {
+                        fontSize: 12,
+                        margin: [0, 5, 0, 5],
+                      },
+                    innertable:
+                      {
+                        margin: [5, 5, 5, 5],
+                        widths: ['*', 'auto', 100, '*'],
+                        alignment: 'center',
+                        bold: true,
+                        fontSize: 14,
+                      },
+                  },
+
+              };
+
+
+              var instruction = $("#newins").val();
+              for (i = 0; i < takers.length; i++) {
+                if (instruction == "") {
+                  mjson.content.push([
+                    {
+                      table: {
+                        dontBreakRows: true,
+                        body: [
+                          [
+                            {
+                              style: 'tableExample',
+                              alignment: 'justify',
+                              table: {
+
+
+                                widths: [80, 20, 380, 1], style: 'header',
+                                body: [[{
+                                  colSpan: 3,
+                                  text: 'Examineer Login Instructions',
+                                  style: 'innertable',
+                                }, '', ''], [{
+                                  colSpan: 3,
+                                  text: '' + result.quizTitle,
+                                  style: 'innertable',
+                                }, '', ''],
+                                [{ colSpan: 3, text: "Goto https://examineer.in/ and use the following credentials:", style: 'subheader' }, '', ''],
+                                [{ text: "Quiz Id", bold: true }, ":", { text: result.quizId, bold: true }],
+                                [{ text: "user Id", bold: true }, ":", { text: takers[i], bold: true }],
+                                [{ text: "Password", bold: true }, ":", { text: pwd[i], bold: true }],
+                                ],
+                              },
+                              layout: 'noBorders'
+                            },
+                          ]
+                        ]
+                      },
+                      margin: [0, 0, 0, 20]
+                    }
+                  ]
+                  )
+                }
+                else {
+                  mjson.content.push([
+                    {
+                      table: {
+                        dontBreakRows: true,
+                        body: [
+                          [
+                            {
+                              style: 'tableExample',
+                              alignment: 'justify',
+                              table: {
+                                dontBreakRows: true,
+                                widths: [80, 20, 380, 1], style: 'header1',
+                                body: [[{
+                                  colSpan: 3,
+                                  text: 'Examineer Login Instructions',
+                                  style: 'innertable',
+                                }, '', ''], [{
+                                  colSpan: 3,
+                                  text: '' + result.quizTitle,
+                                  style: 'innertable',
+                                }, '', ''],
+                                [{ colSpan: 3, text: "Goto https://examineer.in/ and use the following credentials:", style: 'subheader' }, '', ''],
+                                [{ text: "Quiz Id", bold: true }, ":", { text: result.quizId, bold: true }],
+                                [{ text: "user Id", bold: true }, ":", { text: takers[i], bold: true }],
+                                [{ text: "Password", bold: true }, ":", { text: pwd[i], bold: true }],
+                                [{ colSpan: 3, text: ''}, '', ''],
+                                [{ colSpan: 3, text: "Instructions:", bold: true, underLine: true }, '', ''],
+                                [{ colSpan: 3, text: instruction }, '', '']
+                                ],
+                              },
+                              layout: 'noBorders'
+                            },
+                          ]
+                        ]
+                      },
+                      
+                      margin: [0, 0, 0, 20]
+                    }
+                  ]
+                  )
+                }
+                //console.log("pdf" + JSON.stringify(mjson));
+              }
+              pdfMake.createPdf(mjson).download(result.quizId + 'LoginCredentials.pdf');
+            }else{
+              swal({
+                type: 'error',
+                title: 'Error',
+                html: 'Invalid Data, Please Contact Administrator!'
+              });
+            }
+          } else if (result.status == 'error') {
+            swal({
+              type: 'error',
+              title: 'Error',
+              html: data.msg
+            });
+          } else {
+            swal({
+              type: 'error',
+              title: 'Error',
+              html: 'Credentials not found'
+            });
+          }
+        });
+      }
+    </script>
+</html>

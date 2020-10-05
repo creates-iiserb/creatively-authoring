@@ -1,0 +1,49 @@
+<div class='col-lg-5 col-sm-12 outer sticky'>
+    <div class="card card-big">
+        <div class="card-header clearfix">
+            <div class="pull-left">
+                <h3 class="card-title">Preview
+                    <button type="button" data-toggle="popover" class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipQuePreview01%>">
+                        <i class="ti-help-alt fa-lg"></i>
+                    </button>
+                </h3>
+            </div>
+            <div class="pull-right">
+                <div class='col-lg-6'>
+                    <form name="authfrm2" id="authfrm2" method="post" action="<%-commitUrl%>">
+                        <!-- <input type="text" id="data21" name="data21" value="<%-commitUrl%>">
+                        <input type="text" id="data21e" name="data21e" value="<%-verifyType%>"> -->
+                        <input type="hidden" id="data" name="data" value="">
+                        <input type="hidden" id="type" name="type" value="<%-verifyType%>">
+                        <input type="hidden" name="token" id="token" value="<%-token%>">
+                        <input type="hidden" id="authorname" name="authorname" value="<%-author%>">
+                        <input type="hidden" name="log_Id" id="log_Id" value="">
+                        <input type="hidden" name="log_Token" id="log_Token" value="">
+                        <input type="hidden" id="data_req1" name="data_req1" value="">
+                        <button title="Verify: Alt + v" class='btn  btn-info btn-fill btn-wd ' type='submit' id='btnGetEval' accesskey="v">Verify</button>
+                    </form>
+                </div>
+                <div class='col-lg-6'>
+                    <form name="authfrm3" id="authfrm3" method="post" action="<%-commitUrl%>" class='inline'>
+                        <!-- <input type="text" id="data21" name="data21" value="<%-commitUrl%>">
+                        <input type="text" id="data21e" name="data21e" value="<%-giv5Type%>"> -->
+                        <input type="hidden" id="data1" name="data" value="">
+                        <input type="hidden" id="type" name="type" value="<%-giv5Type%>">
+                        <input type="hidden" name="token" id="token" value="<%-token%>">
+                        <input type="hidden" id="authorname" name="authorname" value="<%-author%>">
+                        <input type="hidden" name="log_Id" id="log_Id" value="">
+                        <input type="hidden" name="log_Token" id="log_Token" value="">
+                        <input type="hidden" id="data_req2" name="data_req2" value="">
+                        <button title="Give 5: Alt + g" class='btn  btn-danger btn-fill  btn-wd ' type='submit' id='btnGetG5' accesskey="g">Give 5</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="card-content" style="padding:2px;">
+            <iframe name='ipreview' id="ipreview" type="text/html" width='100%' height="100%" src='' scrolling='yes' frameborder="0"
+                allowfullscreen="allowfullscreen"></iframe>
+            <br>
+        </div>
+    </div>
+</div>

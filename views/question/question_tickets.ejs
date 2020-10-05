@@ -1,0 +1,820 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <%- include('../parts/allCSS'); %>
+
+    
+  <link rel="stylesheet" href="author_public/css/author_ticket.css">  
+  <script src="author_public/PaperDashBoard/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+  <script src="author_public/js/author_ticket.js"></script>
+
+
+   
+  
+</head>
+<body>
+  <div class="wrapper">
+    <%- include('../parts/leftNavBar'); %>
+    <div class="main-panel">
+      <%- include('../parts/topNavBarPart1'); %> Tickets 
+        <!-- <p class="category hidden-xs" style="font-weight:normal">Here is the list of questions that you have already commited. </p> -->
+      <%- include('../parts/topNavBarPart2'); %>
+      <div class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class='col-md-10 col-md-offset-1'> <!-- col-md-10 col-md-offset-1 -->
+              <div class="card">
+                <div class="card-content">
+
+
+                   
+                    <!-- <div class="row">
+                        
+                         <div class="col-md-offset-3">
+                        <div class="col-lg-2 col-sm-12 col-md-2  quizbox danger-box text-center">
+                           
+                            <h5 class="text-center text-danger ticketHeading">
+                              Open  tickets</h5>
+                            <hr class="small">
+                            <div class="text-center">
+                                <h4 class="tickNumbers"><%= openTickets.length %></h4>
+                            </div>
+                          </div>
+
+                          <div class="col-lg-2 col-sm-12 col-md-2 quizbox success-box text-center">
+                            
+                              <h5 class="text-center text-success ticketHeading">
+                              Closed tickets</h5>
+                              <hr class="small">
+                              <div class="text-center">
+                                  <h4 class="tickNumbers"><%= closeTickets.length %></h4>
+                              </div>
+                            </div>
+
+                            <div class="col-lg-2 col-sm-12 col-md-2 quizbox warning-box text-center">
+                               
+                                <h5 class="text-center text-warning ticketHeading">
+                                  Raised by me</h5>
+                                <hr class="small">
+                                <div class="text-center">
+                                    <h4 class="tickNumbers"><%= raiseByMe.length %></h4>
+                                </div>
+                              </div>
+
+                            </div>
+
+                      </div>  -->
+
+
+            
+                       
+                  
+                        <div class="nav-tabs-navigation">
+                          <div class="nav-tabs-wrapper">
+                            <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+
+                              <% 
+                                 if(userMeta.access.includes('publicWrite')){
+                              %>
+                                 
+                                <li class="active">
+                                  <a href="#raiseTickets" data-toggle="tab">Open Tickets
+                                      <span class="badge label-info ticketCounters" ><%= openTickets.length %></span>
+                                  </a>
+                                </li>
+                                <li><a href="#resolvedTickets" data-toggle="tab">Closed Tickets
+                                  <span class="badge label-info ticketCounters" ><%= closeTickets.length %></span>
+                                </a>
+                                </li>
+                                
+                              <% 
+                                }
+
+                                let acClass = false;
+                                if(userMeta.access.includes('publicWrite') ||  userMeta.access.includes('publicRead')){
+                                  if(!userMeta.access.includes("publicWrite")){
+                                    acClass = true;
+                                  }
+                              %>
+                              <li class="<%-acClass?'active':''%>" ><a href="#raisedByMe" data-toggle="tab">Raised by me
+                                <span class="badge label-info ticketCounters" ><%= raiseByMe.length %></span>
+                              </a>
+                              </li>
+                              <% 
+                                }
+                              %>
+                              
+                              
+                            </ul>
+                          </div>
+                        </div>
+                      <div id="my-tab-content" class="tab-content ">
+
+                        <% 
+                          if(userMeta.access.includes('publicWrite')){
+                        %>
+                          <div class="tab-pane active" id="raiseTickets">
+                           
+                              <div class="toolbar1">
+                                <div class="mt-14px">
+                             
+                                  <label>Agree with issue:</label>
+                                    <div class="btn-group" role="group" >
+                                    <button  rel="tooltip" title="All Issues" onclick="showAllIssueTickets()" type="button" class="btn btn-default btn-sm"> All</button>
+                                    <button  rel="tooltip" title="Yes agree with issue" onclick="filterByAgreeTicketIssue('yes')" type="button" class="btn btn-default btn-sm ">Yes</button>
+                                    <button  rel="tooltip" title="Not agree with issue" onclick="filterByAgreeTicketIssue('no')" type="button" class="btn btn-default btn-sm btngrplastbtn">
+                                     No
+                                    </button>
+                                    </div> 
+    
+                                </div>
+                              </div>
+                              
+                              <div class="commQueTab">
+                               
+                              <table id="commQue1" class="table">
+                                <thead>
+                                  <tr > 
+                                    <th data-field="updatedat" data-sortable="true" class="text-center">Raised At</th>
+                                    <th data-field="qid" data-sortable="true" class="text-center">QuestionId</th>
+                                    <th data-field="raiseby" data-sortable="true" class="text-center">Raised By</th>
+                                    <th data-field="description" data-sortable="true">Description</th>
+                                    <th data-field="isIssue" class="text-center" data-sortable="true">Agree</th>                      
+                                    <th data-field="id" data-sortable="true" class="text-center">ID</th>        
+                                    <th data-field="actions" class="td-actions text-center" >Actions</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <%for(var i=0; i<openTickets.length;i++){
+                                    var str = openTickets[i];
+                                    
+                                  %>
+                                  <script type="text/javascript">
+                                    $(document).ready(function() {
+                                        var updatedAt_utc = document.getElementById('updatedAt_utcd<%-i%>').value;
+                                        var d = new Date(updatedAt_utc);
+                                        var time = d.toString().split(" ")[4];
+                                        var getDate = d.getDate();
+                                        var getMonth = d.getMonth() + 1;
+                                        var getFullYear = d.getFullYear();
+                                        if(getMonth < 10)
+                                        getMonth = "0"+getMonth;
+                                        if(getDate < 10)
+                                        getDate = "0"+getDate;
+                                        var startDate = getFullYear+"-"+getMonth+"-"+getDate;
+                                        var updatedAt =  startDate.substring(0, 10) + " " + time;
+                                        document.getElementById('updatedAtd<%-i%>').innerHTML = updatedAt;
+                                        
+                                    });
+                                  </script>
+                                  <!--  -->
+                                    <tr id="tropen<%-str._id%>">                        
+                                      <td style="text-align:center;"  id="updatedAtd<%-i%>">
+                                        <input type="hidden" id="updatedAt_utcd<%-i%>" name="updatedAt_utcd<%-i%>" value="<%-str.raisedAt%>">
+                                      </td>
+                                      
+                                      <td><%-str.contentId%></td>
+                                      <td><%-str.raiseByfullName%></td>
+                                      <td ><%- str.issue.substring(0,40) %> <%- str.issue.length>=40?'...':'' %>    </td>
+      
+                                      <td id="isIssue<%-str._id%>" class="text-center">
+                                        
+                                        <% 
+                                         var isIssue = '-';
+                                        if( str.isIssue === true ){                                        
+                                          isIssue = '<span class="label label-success">Yes</span>'
+                                        }else if( str.isIssue === false ){
+                                          isIssue = '<span class="label label-danger">No</span>';                                        
+                                        } %>
+
+                                        <%-isIssue%>
+                                      
+                                      </td>
+                                      <td><%-str._id%></td>
+                                      <td>
+                                        <div class="table-icons">
+                                          <a rel="tooltip"  title="View Sample"  id="view_sample" class="btn btn-simple btn-success btn-icon table-action edit"   data-item="<%-str.contentId%>" href="javascript:void(0);"   ><i class="fa fa-info-circle" ></i></a>
+                                          <a rel="tooltip" title="Ticket Description"  class="btn btn-simple btn-danger btn-icon table-action edit" href="javascript:void(0);" onclick="replytoTicketUser('<%-str._id%>')"  ><i class="fa fa-comments-o"></i>
+                                          </a>
+                                        </div>
+                                      </td>
+                                    </tr>
+                                  <%}%>  
+                                </tbody>
+                              </table>
+      
+                              </div>
+
+
+                          </div>
+                        
+                          <div class="tab-pane" id="resolvedTickets">
+                              <div class="toolbar">
+                                  <!-- <button type="submit" class="btn btn-info btn-fill btn-wd" id="add_to_playlist"  data-toggle="modal" data-target="#addtoplaylist" disabled > <i class="ti-plus"></i> Add selected items to playlist
+                                  </button> -->
+                              </div>
+                              
+                              <div class="commQueTab">
+                               
+                              <table id="commQue2" class="table">
+                                <thead>
+                                  <tr > 
+                                    <th data-field="updatedat" data-sortable="true" class="text-center">Resolved At</th>
+                                    <th data-field="qid" data-sortable="true" class="text-center">QuestionId</th>
+                                    <th data-field="raiseby" data-sortable="true" class="text-center">Raised By</th>
+                                    <th data-field="description" data-sortable="true">Description</th>                      
+                                    <th data-field="id" data-sortable="true" class="text-center">ID</th>        
+                                    <th data-field="actions" class="td-actions text-center" >Actions</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <%for(var i=0; i<closeTickets.length;i++){
+                                    var str = closeTickets[i];
+                                    
+                                  %>
+                                  <script type="text/javascript">
+                                    $(document).ready(function() {
+                                        var updatedAt_utc = document.getElementById('updatedAt_utc2<%-i%>').value;
+                                        var d = new Date(updatedAt_utc);
+                                        var time = d.toString().split(" ")[4];
+                                        var getDate = d.getDate();
+                                        var getMonth = d.getMonth() + 1;
+                                        var getFullYear = d.getFullYear();
+                                        if(getMonth < 10)
+                                        getMonth = "0"+getMonth;
+                                        if(getDate < 10)
+                                        getDate = "0"+getDate;
+                                        var startDate = getFullYear+"-"+getMonth+"-"+getDate;
+                                        var updatedAt =  startDate.substring(0, 10) + " " + time;
+                                        document.getElementById('updatedAt2<%-i%>').innerHTML = updatedAt;
+      
+                                    });
+                                  </script>
+                                  <!--  -->
+                                    <tr id="<%-str._id%>">                        
+                                      <td style="text-align:center;"  id="updatedAt2<%-i%>"><input type="hidden" id="updatedAt_utc2<%-i%>" name="updatedAt_utc2<%-i%>" value="<%-str.resolvedAt%>"></td>
+                                      
+                                      <td><%-str.contentId%></td>
+                                      <td><%-str.raiseByfullName%></td>
+                                      <td><%- str.issue.substring(0,40) %> <%- str.issue.length>=40?'...':'' %>    </td>
+      
+                                      <td><%-str._id%></td>
+                                      <td>
+                                        <div class="table-icons">
+                                          <a rel="tooltip"  title="View Sample"  id="view_sample" class="btn btn-simple btn-success btn-icon table-action edit"   data-item="<%-str.contentId%>" href="javascript:void(0);"   ><i class="fa fa-info-circle" ></i></a>
+
+                                         
+
+                                          <a rel="tooltip" title="Ticket Detail" onclick="closeticketDetail('<%-str._id%>')" class="btn btn-simple btn-danger btn-icon table-action edit" href="javascript:void(0);"  data-original-title="More"><i class=" ti ti-more-alt " style="font-size:1.3em;"></i></a>
+                                          
+                                        </div>
+                                      </td>
+                                    </tr>
+                                  <%}%>  
+                                </tbody>
+                              </table>
+      
+                              </div>
+
+                             
+                          </div>
+                        <% 
+                         }
+                          if(userMeta.access.includes('publicWrite') ||  userMeta.access.includes('publicRead')){
+                        %>
+                          <div class="tab-pane <%-acClass?'active':''%>" id="raisedByMe">
+                              
+                                  <div class="toolbar3">
+                                      <div class="mt-14px">
+                                   
+                                        <label>Resolved:</label>
+                                          <div class="btn-group" role="group" >
+                                          <button  rel="tooltip" title="All Issues" onclick="showAllRaisedByMeTickets()" type="button" class="btn btn-default btn-sm"> All</button>
+                                          <button  rel="tooltip" title="Resolved" onclick="filterByResolvedTicket('yes')" type="button" class="btn btn-default btn-sm ">Yes</button>
+                                          <button  rel="tooltip" title="Not resolve" onclick="filterByResolvedTicket('no')" type="button" class="btn btn-default btn-sm btngrplastbtn">
+                                           No
+                                          </button>
+                                          </div> 
+          
+                                      </div>
+                                    </div>
+                             
+                              
+                              <div class="commQueTab">
+                               
+                              <table id="commQue3" class="table">
+                                <thead>
+                                  <tr > 
+                                    <th data-field="updatedat" data-sortable="true" class="text-center">Raised At</th>
+                                    <th data-field="qid" data-sortable="true" class="text-center">QuestionId</th>
+                                    <th data-field="raiseby" data-sortable="true" class="text-center">Author</th>
+                                    <th data-field="description" data-sortable="true">Description</th>    
+                                    
+                                    <th data-field="resolved" data-sortable="true">Resolved</th> 
+
+                                    <th data-field="id" data-sortable="true" class="text-center">ID</th>        
+                                    <th data-field="actions" class="td-actions text-center" >Actions</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <%for(var i=0; i<raiseByMe.length;i++){
+                                    var str = raiseByMe[i];
+                                    
+                                  %>
+                                  <script type="text/javascript">
+                                    $(document).ready(function() {
+                                        var updatedAt_utc = document.getElementById('updatedAt_utc3<%-i%>').value;
+                                        var d = new Date(updatedAt_utc);
+                                        var time = d.toString().split(" ")[4];
+                                        var getDate = d.getDate();
+                                        var getMonth = d.getMonth() + 1;
+                                        var getFullYear = d.getFullYear();
+                                        if(getMonth < 10)
+                                        getMonth = "0"+getMonth;
+                                        if(getDate < 10)
+                                        getDate = "0"+getDate;
+                                        var startDate = getFullYear+"-"+getMonth+"-"+getDate;
+                                        var updatedAt =  startDate.substring(0, 10) + " " + time;
+                                        document.getElementById('updatedAt3<%-i%>').innerHTML = updatedAt;
+      
+                                    });
+                                  </script>
+                                  <!--  -->
+                                    <tr id="<%-str._id%>">                        
+                                      <td style="text-align:center;"  id="updatedAt3<%-i%>"><input type="hidden" id="updatedAt_utc3<%-i%>" name="updatedAt_utc3<%-i%>" value="<%-str.raisedAt%>"></td>
+                                      
+                                      <td><%-str.contentId%></td>
+                                      <td><%-str.authorfullName%></td>
+                                      <td><%- str.issue.substring(0,40) %> <%- str.issue.length>=40?'...':'' %>    </td>
+
+                                      <td id="isIssue<%-str._id%>">
+
+                                          <% 
+                                           var isResolved = '<span class="label label-danger">No</span>';
+                                          if( str.resolved == true ){                                        
+                                            isResolved = '<span class="label label-success">Yes</span>'
+                                          } %>
+  
+                                          <%-isResolved%>
+                                        
+                                      </td>
+      
+                                      <td><%-str._id%></td>
+                                      <td>
+                                        <div class="table-icons">
+                                          <a rel="tooltip"  title="View Sample"  id="view_sample" class="btn btn-simple btn-success btn-icon table-action edit"   data-item="<%-str.contentId%>" href="javascript:void(0);"   ><i class="fa fa-info-circle" ></i></a>
+
+                                        
+                                           
+                                          <a rel="tooltip" title="Ticket Detail" onclick="closeticketDetail('<%-str._id%>')" class="btn btn-simple btn-danger btn-icon table-action edit" href="javascript:void(0);"  data-original-title="More"><i class=" ti ti-more-alt " style="font-size:1.3em;"></i></a>
+                                          
+                                          
+                                        </div>
+                                      </td>
+                                    </tr>
+                                  <%}%>  
+                                </tbody>
+                              </table>
+      
+                              </div>
+
+                             
+                          </div>
+                        <% 
+                         }
+                       %>
+
+                      </div>
+                      
+                      
+                 
+                      
+                </div> <!-- card-content -->
+              </div> <!-- card -->
+            </div> <!-- col-md-12 -->
+          </div>   <!-- row -->
+        </div>   <!-- containerfluid -->
+      </div><!--  content -->
+      <%- include('../parts/footer'); %>
+    </div> <!-- main panel -->
+  </div> <!-- wrapper -->
+ 
+
+    <!-- modal view sample -->
+    <div class="">
+        <div class="modal fade" id="bsModal3" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="mySmallModalLabel">View
+                            Sample
+                        </h4>
+                    </div>
+                    <div class="modal-body" id="viewModalContent">
+                        <p></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <!-- <button type="button" class="btn btn-primary"> Save Changes</button> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- modal close-->
+
+
+     <!-- modal Ticket Raise -->     
+      <div class="modal fade" id="mdlTicketRaise" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <form method="post" id="frmRaiseTicket">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title" id="mySmallModalLabel">Ticket Description</h4>
+              <small class="questionLbl">(Question Id: <span id="mdlQuesLbl"></span>)</small>
+            </div>
+            <div class="modal-body" id="ticketModalContent">
+                
+                  <fieldset>
+                      <div class="form-group">
+                         <div class="row">                                          
+                          <div class="col-sm-12">
+                                  <label>Issue Description</label>
+                                  <p id="rt_description" style="margin-bottom: 0px;"></p>
+                          </div>   
+                          </div>     
+                      </div>
+
+                     
+
+                      <div class="row">                                          
+                            <div class="col-sm-5">
+                            <label> Do you agree with issue raised </label> 
+                        </div>
+                        <div class="col-sm-5">
+                            <input type="checkbox" id="isIssue" checked  name="isIssue" value="true" >
+                        </div>
+
+                      </div>
+
+
+                      <div class="row">                                          
+                          <div class="col-sm-5">
+                              <label> Have you resolved this issue </label> 
+                          </div>
+                          <div class="col-sm-5">
+                             <input type="checkbox" id="isResolved" name="isResolved" value="true" >
+                          </div>
+                      </div>
+
+
+                      <div class="form-group"  >
+                          <div class="row">                                          
+                           <div class="col-sm-12">
+                              <label id="issueLbl">Response</label> <small>(minimum 10 characters)</small>
+                              <textarea placeholder="Author Response"  rows="5" name="rt_message" class="form-control" id="rt_message"></textarea>
+                           </div>   
+                           </div>     
+                      </div>
+
+                    <input type="hidden" name="rt_quesId" id="rt_quesId">
+                    <input type="hidden" id="rt_id" name="rt_id">
+                    <input type="hidden" name="rt_raiseBy" id="rt_raiseBy">
+
+                  </fieldset>
+              
+            </div>
+            <div class="modal-footer">  
+              
+              <div class="row">
+                <div class="col-md-6 ">
+                    <button type="button" onclick="saveTicketIssue()" id="saveIsIssue" class="btn btn-primary btnDisableHover pull-left">Save</button>
+                </div>
+                <div class="col-md-6 ">
+                    <button type="button" onclick="saveTicketReply()" id="saveRaiseTicket" class="btn btn-primary btnDisableHover">Resolve Ticket</button>
+                </div>
+              </div> 
+
+              
+            </div>
+
+          </div>
+        </form>
+        </div>
+      </div> 
+    <!-- modal Ticket Raise -->
+
+
+    <!-- modal Ticket Detail -->     
+    <div class="modal fade" id="mdlTicketDetail" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title" id="mySmallModalLabel">Ticket Description</h4>
+              <small class="questionLbl">(Question Id: <span id="mdlQuesLblTD"></span>)</small>
+            </div>
+            <div class="modal-body" id="ticketModalContent">
+                
+                  <fieldset>
+                      <div class="form-group">
+                         <div class="row">                                          
+                          <div class="col-sm-12">
+                                  <label>Issue Description</label>
+                                  <p id="td_description" style="margin-bottom: 0px;"></p>
+                          </div>   
+                          </div>     
+                      </div>
+
+
+                      <div class="form-group" id="authorResponse">
+                          <div class="row">                                          
+                           <div class="col-sm-12">
+                                   <label>Author Response</label>
+                                   <p id="tdr_description" style="margin-bottom: 0px;"></p>
+                           </div>   
+                           </div>     
+                       </div>
+
+                     
+
+                       <div class="form-group">
+                          <div class="row" id="resolvedRow">                                          
+                           <div class="col-sm-6">
+                             <div class="pull-left">
+                                <label>Raised At</label> <p id="tdRaiseAt" class="font14px"></p>
+                             </div>
+                              
+                           </div>
+                           <div class="col-sm-6">
+                              <div class="pull-right">
+                                  <label>Resolved At</label> <p id="tdResolveAt" class="font14px"></p> 
+                              </div>
+                              
+                            </div>   
+                           </div>
+                           
+                           <div class="row" id="notResolvedRow">                                          
+                              <div class="col-sm-12">
+                                <div class="pull-left">
+                                   <label>Raised At</label> <p id="tdNotRaiseAt" class="font14px"></p>
+                                </div>
+                                 
+                              </div>                                
+                            </div> 
+
+                        </div>     
+                      
+                  </fieldset>
+              
+            </div>
+           
+          </div>
+        
+        </div>
+    </div> 
+    <!-- modal Ticket Detail -->
+
+
+
+
+
+    <script type="text/javascript">
+        $(function () {
+            $('#bsModal3').on('hidden.bs.modal', function () { // do something� })
+                $("#viewModalContent").html(" <p></p>");
+            })
+        });
+    </script>
+    
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("body").on("click","#view_sample",function () {
+                var quesItm = $(this).attr("data-item");
+                $.ajax({
+                    type: 'get',
+                    url: '/author_getCommittedSampleQue?id='+quesItm,
+                    cache: false,
+                    success: function (returndata) {
+                        if (returndata) {
+                            // $('#bsModal3 .modal-body p').modal('show'); // Please right this in your Code
+                            // console.log(returndata);                            
+                            $('#bsModal3 .modal-body p').html(returndata);
+                            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+                            $('#bsModal3').modal('show');                           
+
+                        } else {
+                            // other code
+                        }
+                    },
+                    error: function () {
+                        console.error('Failed to process ajax !');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+<%- include('../parts/allJS'); %>
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>
+
+<script>
+  
+var $table1 = $('#commQue1');
+var $table2 = $('#commQue2');
+var $table3 = $('#commQue3');
+  $(document).ready(function(){
+      $('#commQue1').bootstrapTable({
+        toolbar: ".toolbar1",
+        clickToSelect: true,
+        showRefresh: false,
+        search: true,
+        showToggle: true,
+        showColumns: true,
+        pagination: true,
+        searchAlign: 'right',
+        strictSearch: false,
+        pageSize: 10,
+        clickToSelect: false,
+        pageList: [5, 10, 25, 50, 100],
+        sortName:"updatedat",
+        sortOrder :"desc",
+
+        formatShowingRows: function(pageFrom, pageTo, totalRows){
+            //do nothing here, we don't want to show the text "showing x of y from..."
+            return "showing "+pageFrom+" to "+pageTo+" of " + totalRows +" entries <br/>";
+        },
+        formatRecordsPerPage: function(pageNumber){
+            return "  "+pageNumber + " rows visible";
+        },
+        icons: {
+            refresh: 'fa fa-refresh',
+            toggle: 'fa fa-th-list',
+            columns: 'fa fa-columns',
+            detailOpen: 'fa fa-plus-circle',
+            detailClose: 'ti-close'
+        }
+    });
+    //activate the tooltips after the data table is initialized
+    
+    $('#commQue1').bootstrapTable('hideColumn','id');
+
+     $('#commQue2').bootstrapTable({
+        toolbar: ".toolbar",
+        clickToSelect: true,
+        showRefresh: false,
+        search: true,
+        showToggle: true,
+        showColumns: true,
+        pagination: true,
+        searchAlign: 'right',
+        strictSearch: false,
+        pageSize: 10,
+        clickToSelect: false,
+        pageList: [5, 10, 25, 50, 100],
+        sortName:"updatedat",
+        sortOrder :"desc",
+
+        formatShowingRows: function(pageFrom, pageTo, totalRows){
+            //do nothing here, we don't want to show the text "showing x of y from..."
+            return "showing "+pageFrom+" to "+pageTo+" of " + totalRows +" entries <br/>";
+        },
+        formatRecordsPerPage: function(pageNumber){
+            return "  "+pageNumber + " rows visible";
+        },
+        icons: {
+            refresh: 'fa fa-refresh',
+            toggle: 'fa fa-th-list',
+            columns: 'fa fa-columns',
+            detailOpen: 'fa fa-plus-circle',
+            detailClose: 'ti-close'
+        }
+    });
+    //activate the tooltips after the data table is initialized
+    
+    $('#commQue2').bootstrapTable('hideColumn','id');
+    
+   
+     $('#commQue3').bootstrapTable({
+        toolbar: ".toolbar3",
+        clickToSelect: true,
+        showRefresh: false,
+        search: true,
+        showToggle: true,
+        showColumns: true,
+        pagination: true,
+        searchAlign: 'right',
+        strictSearch: false,
+        pageSize: 10,
+        clickToSelect: false,
+        pageList: [5, 10, 25, 50, 100],
+        sortName:"updatedat",
+        sortOrder :"desc",
+
+        formatShowingRows: function(pageFrom, pageTo, totalRows){
+            //do nothing here, we don't want to show the text "showing x of y from..."
+            return "showing "+pageFrom+" to "+pageTo+" of " + totalRows +" entries <br/>";
+        },
+        formatRecordsPerPage: function(pageNumber){
+            return "  "+pageNumber + " rows visible";
+        },
+        icons: {
+            refresh: 'fa fa-refresh',
+            toggle: 'fa fa-th-list',
+            columns: 'fa fa-columns',
+            detailOpen: 'fa fa-plus-circle',
+            detailClose: 'ti-close'
+        }
+    });
+    //activate the tooltips after the data table is initialized
+    
+    $('#commQue3').bootstrapTable('hideColumn','id');
+    
+     $('[rel="tooltip"]').tooltip({trigger: "hover"});
+
+    $(".commQueTab input[data-field='id'][type='checkbox']").parents('li').css('display','none');
+
+  });
+
+
+
+$(function() {
+     $('#commQue1').on('post-body.bs.table', function () {       
+        $('[rel="tooltip"]').tooltip({trigger: "hover"});        
+     });
+
+     $('#commQue2').on('post-body.bs.table', function () {       
+        $('[rel="tooltip"]').tooltip({trigger: "hover"});        
+     });
+
+     $('#commQue3').on('post-body.bs.table', function () {       
+        $('[rel="tooltip"]').tooltip({trigger: "hover"});        
+     });
+
+     
+     $('#isIssue').bootstrapSwitch({
+        onColor:'primary',        
+        onText: 'Yes',
+        offText: 'No',
+        state:true,
+        onSwitchChange : function(event,state){
+          console.log(state);
+          if(state){
+            if($('#rt_message').val().trim() != '' && $('#rt_message').val().trim().length>=10 && $('[name="isResolved"]').is(':checked'))
+            {
+              $("#saveRaiseTicket").prop('disabled',false);
+              $("#saveIsIssue").prop('disabled',true);
+            }
+            
+          }else{
+            if($('#rt_message').val().trim() != '' && $('#rt_message').val().trim().length>=10 && !($('[name="isResolved"]').is(':checked')) )
+            {
+              $("#saveRaiseTicket").prop('disabled',false);
+              $("#saveIsIssue").prop('disabled',false);
+            }
+            
+          }
+        }
+    });
+
+    $('#isResolved').bootstrapSwitch({
+        onColor:'primary',        
+        onText: 'Yes',
+        offText: 'No',
+        onSwitchChange : function(event,state){
+          if(state){
+            if($('#rt_message').val().trim() != '' && $('#rt_message').val().trim().length>=10 && $('#isIssue').is(':checked') )
+            $("#saveRaiseTicket").prop('disabled',false);
+            $("#saveIsIssue").prop('disabled',true);
+          }else
+          {
+           
+            if($('#rt_message').val().trim() != '' && $('#rt_message').val().trim().length>=10 && !($('#isIssue').is(':checked')) )
+             { $("#saveRaiseTicket").prop('disabled',false);
+              $("#saveIsIssue").prop('disabled',false);
+             } 
+            else{
+              $("#saveRaiseTicket").prop('disabled',true);
+              $("#saveIsIssue").prop('disabled',false);
+              
+            }
+
+            
+          }
+        }     
+      
+    });
+  
+});
+
+
+  $(document).ready(function(){
+    saveTicketDataToLocaL('<%-JSON.stringify(openTickets)%>','<%-JSON.stringify(raiseByMe)%>');
+  })
+</script>
+</html>

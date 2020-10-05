@@ -1,0 +1,82 @@
+doctype html
+html
+  head
+    title
+    |         
+    |         
+    |     
+    style.
+      .main{width:100%;font-family:calibri;background-color: #f4f3ef;}
+      .header{
+      color:#FFF;
+      background:#484541;
+      text-align:center;
+      font-size:34px;
+      padding:10px;
+      border-radius:5px;
+      }
+      .content{padding:15px;}
+      .caption{
+      color:#484541;
+      font-size: 19px;
+      }
+      .captionUser{
+      color:#484541;
+      font-size: 22px;
+      }
+      #userImg{
+      border-radius: 50%;
+      border:solid 5px #fff;
+      }
+      .summary-table{
+      margin:0 auto;
+      border-left:solid 1px #484541;
+      border-top:solid 1px #484541;
+      }
+      .summary-table tr td{
+      border-right:solid 1px #484541;
+      border-bottom:solid 1px #484541;
+      }
+      .footer,.footer a{
+      color:#FFF;
+      }
+      .footer{
+      font-size:12px;
+      text-align:center;
+      background:#484541;
+      padding:5px;
+      border-radius:5px;
+      }
+  |     
+  |     
+  |   
+  body
+    .main
+      .header
+        b Exam
+        | ineer
+        b(style='font-size:smaller;font-weight:900')  . 
+        | in
+      |             
+      |             
+      |       
+      .content
+        div(align='center')
+          h2.captionUser Hello, #{reqAuthorName}
+          // <div><img id="userImg" src="https://robohash.org/AACN-ambarj@iiserb.ac.in.png?set=set3&&bgset=bg2&&size=90x90"/></div>
+          p
+            b.caption(style='font-weight:normal')
+              | Your workbook (title: #{wbTitle}, version #{betaVerNo}) has been rejected due to given reason.
+              br
+          br
+          |           
+          b.caption Reason to reject workbook
+          |           
+          p.caption #{rejectReason}
+      |             
+      |             
+      |       
+      .footer
+        div(style='width:318px; text-align: center; margin:0 auto')
+          | Do not reply to this email. For technical issues contact us at 
+          a(href='mailto:') 

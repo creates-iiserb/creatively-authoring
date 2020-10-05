@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <%- include('../parts/allCSS'); %>
+
+        <link rel="stylesheet" href="author_public/css/author_basket.css">
+        <link href="author_public/css/ng-tags-input.min.css" rel="stylesheet" />
+        <script src="author_public/PaperDashBoard/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+        <style>
+            tags-input .tags .tag-item.selected {
+                background: #68B3C8;
+            }
+
+            tags-input .tags .tag-item {
+                background: #68B3C8;
+                color: #fff;
+            }
+
+            tags-input .tags .input.invalid-tag,
+            tags-input .tags .tag-item .remove-button:active {
+                color: #fff;
+            }
+
+            tags-input .tags .tag-item .remove-button {
+                color: #fff;
+            }
+        </style>
+</head>
+<body ng-app="basketquestionApp" ng-controller="basketquestionController">
+    <div id="bqdata" style="display: none">
+        <%= JSON.stringify(data) %>
+    </div>
+    <div class="wrapper">
+        <%- include('../parts/leftNavBar'); %>
+            <div class="main-panel">
+                <%- include('../parts/topNavBarPart1'); %> Basket Questions
+                    <%- include('../parts/topNavBarPart2'); %>
+                        <div class="content">
+                            <!--error block for new question json.result.error !-->
+                            <div class="container-fluid">
+                                <!-- content goes here -->
+                                <!-- card  -->
+                                <div class="row">
+                                    <div class="col-md-10 col-md-offset-1">
+                                        <div class="card">
+                                            <div class="card-content">
+                                                <!-- end of card -->
+                                                <div class="row">
+                                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                                        <ul class="list-inline">
+                                                            <li>
+                                                                <button type="button" class="btn btn-danger btn-fill btn-wd" ng-click="clearall()" ng-disabled="basket.length==0">
+                                                                    <i class="fa fa-trash"></i> Clear All
+                                                                </button>
+                                                            </li>
+                                                             <li>
+                                                                 <div class="dropdown" >
+                                                                    <button type="button" ng-disabled="basket.length==0 || unauthData.length>0"  class="btn dropdown-toggle btn-primary btn-fill btn-wd btnmargin"  data-toggle="dropdown" aria-expanded="false">
+                                                                      More &nbsp;
+                                                                      <b class="caret"></b>
+                                                                    </button>
+                                                                    <ul class="dropdown-menu">
+                                                                      <!-- <li>                                                                        
+                                                                        <a id="addToPlay" ng-click="addtoplaylist()" >
+                                                                            <i class="ti-view-list-alt"></i> Add to Playlist
+                                                                        </a>
+                                                                      </li> -->
+                                                                      <!-- <%if(userMeta.access.indexOf('publicWrite')>-1){%>
+                                                                      <li>
+                                                                        <a id="addToPublic" ng-click="addtopubliclist()" >
+                                                                            <i class="ti-list"></i> Add to Public List
+                                                                        </a>
+                                                                      </li>
+                                                                      <%}%> -->
+                                                                      <li>
+                                                                        <a id="editMetaData" ng-click="editMetaData()" >
+                                                                            <i class="ti-pencil-alt"></i> Edit Metadata
+                                                                        </a>
+                                                                      </li>
+                                                                    </ul>
+                                                                  </div>
+                                                             </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-3 col-xs-12 pull-right">
+                                                        <div class="form-group">
+                                                            <input type="text" class="form-control" ng-model="search" placeholder="Search">
+                                                        </div>
+                                                    </div>
+                                                </div><hr>
+                                                <div class="row" ng-if="unauthData.length>0 " ng-cloak>
+                                                    <div class="col-md-12">
+                                                        <div class="error">
+                                                            <b>
+                                                                <i class="ti-alert"></i> &nbsp;Their are some unauthorized items in this basket.
+                                                                You are authorized to keep content that is authored by you
+                                                                or if it is a public content.</b>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="reminder">
+                                                                <i class="fa fa-bell"></i> &nbsp;You can fetch basket data directly inside playlist and public list page. 
+                                                        </div>
+                                                    </div>
+                                                </div><br><br>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <!-- basket uili questions -->
+                                                        <!-- -->
+                                                        <div class="row EH-row">
+                                                            <div class="col-md-4 col-sm-6 col-xs-12" ng-cloak ng-repeat="bquestion in basket| basketFilter:search  as filtered_result">
+                                                                <div class="card boxshadowEff  {{ (unauthData.indexOf(bquestion.id)>-1)?'unauthDiv':'' }}">
+                                                                    <div class="card-content">
+                                                                        <div class="row">
+                                                                            <div class="col-md-8 col-sm-8 col-xs-8 text-left">
+                                                                                <a class="btn btn-info btn-icon btn-simple btnsmall pd-l0px" id="{{ (author == bquestion.author || bquestion.public)?'sample':'' }}" data-item="{{bquestion.id}}" title="View Sample"
+                                                                                    rel="tooltip">
+                                                                                    <b id="ques" style="font-size:16px;">{{bquestion.id}}</b>
+                                                                                </a>
+                                                                                <span>
+                                                                                    <i class="text-default fa fa-globe" title="Public" rel="tooltip" ng-show="bquestion.public"></i>
+                                                                                </span>
+                                                                                <span class="label  lableTag {{ (bquestion.author !='unknown')?'label-primary':'label-danger' }}" >{{ (bquestion.author !='unknown')?bquestion.author:'Question Deleted' }}</span>
+                                                                                <span class="label  lableTag label-info" >{{bquestion.type}}</span>
+                                                                            </div>
+                                                                            <div class="col-md-4 col-sm-4 col-xs-4 text-right">
+                                                                                <a ng-click="removefrombasket(bquestion.id)" class="btn btn-danger btn-icon btn-simple btnsmall" id="delItem" title="Remove Item"
+                                                                                    rel="tooltip">
+                                                                                    <i class="ti-close"></i>
+                                                                                </a>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="text-left">
+                                                                            <span class="label label-success lableTag mr-2px" ng-show="(author == bquestion.author || bquestion.public)" ng-repeat="tag in bquestion.tags | limitTo:3">{{tag}}</span>
+                                                                        </div>
+                                                                        <div class="text-left mt-10px">
+                                                                            <p class="fs-12px basComment" ng-show="(author == bquestion.author || bquestion.public)">
+                                                                                {{ bquestion.comments | limitTo: 42 }} {{bquestion.comments.length > 42 ? '...' : ''}}
+                                                                            </p>
+                                                                        </div>
+                                                                        <span class="label lableTag label-danger" ng-show="(!bquestion.committed && bquestion.author !='unknown')" >Not Committed</span>
+                                                                        <span class="label lableTag label-danger" ng-show="!(author == bquestion.author || bquestion.public)" >Unauthorized Question</span>
+                                                                        <!-- <span class="label  lableTag {{ (author == bquestion.author || bquestion.public)?'label-primary':'label-danger' }}" >{{ (author == bquestion.author || bquestion.public)?bquestion.author:'Unauthorized Question' }}</span> -->
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row" ng-if="basket.length==0 || filtered_result.length==0"  ng-cloak>
+                                                            <div class="col-md-12 ">
+                                                                <!-- <div class="card boxshadowEff"> -->
+                                                                    <!-- <div class="card-content"> -->
+                                                                        <p class="text-center">Basket is empty !!!</p>
+                                                                    <!-- </div> -->
+                                                                <!-- </div> -->
+                                                            </div>
+                                                        </div>
+                                                        <!-- end of basket uili questions -->
+                                                    </div>
+                                                </div>
+                                                <!-- card -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end of card -->
+                                <!--  modal to add item to a playlist -->
+                                <div class="modal fade" id="addtoplaylist" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal">
+                                                    <span aria-hidden="true">&times;</span>
+                                                    <span class="sr-only">Close</span>
+                                                </button>
+                                                <h4 class="modal-title" id="myModalLabel">
+                                                    <b>Add to playlist</b>
+                                                </h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form role="form" name="add_ques_ids" id="add_ques_ids" method="post" action="/author_addbaskettoplaylist" enctype="multipart/form-data">
+                                                    <div class="form-group">
+                                                        <div class='row '>
+                                                            <div class="col-lg-12">
+                                                                <label for="playlist_name1">Playlist Name</label>
+                                                                <button type="button" rel="tooltip" title="" class="btn btn-info btn-simple btn-xs" data-original-title="<%-tooltip.tooltipPlaylist05%>">
+                                                                    <i class="ti-help-alt fa-lg"></i>
+                                                                </button>
+                                                            </div>
+                                                            <div class="col-lg-7">
+                                                                <select class="selectpicker"  data-style="btn-default" id="playlist_name1" name="playlist_name1" data-live-search="true" required>
+                                                                <option value="">--Select--</option>
+                                                                <optgroup label="Onwer List">
+                                                                    <%for(var i=0; i<playlistdata.length;i++){
+                                                                        var playlist1 = playlistdata[i];
+                                                                    %>
+                                                                        <option value="<%-playlist1[2]%>"><%-playlist1[1]%></option>
+                                                                    <%}%>
+                                                                </optgroup>
+                                                                <optgroup label="Collabrator Playlist">
+                                                                    <%for(var i=0; i<collb1.length;i++){
+                                                                        var strcollb1 = collb1[i];
+                                                                    %>
+                                                                        <option value="<%-strcollb1[2]%>"><%-strcollb1[1]%></option>
+                                                                    <%}%>
+                                            
+                                                                    <%for(var i=0; i<collb2.length;i++){
+                                                                        var strcollb2 = collb2[i];
+                                                                    %>
+                                                                        <option value="<%-strcollb2[2]%>"><%-strcollb2[1]%></option>
+                                                                    <%}%>
+                                                                </optgroup>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <input type="hidden" name="author" value="<%-short%>">
+                                                    <input type="hidden" name="ques_ids1" id="ques_ids1" value="<%-questionstrids%>">
+                                                    <input type="hidden" name="log_Id" id="log_Id" value="">
+                                                    <input type="hidden" name="log_Token" id="log_Token" value="">
+                                                    <input type="hidden" name="unauthData" id="unauthData" value="{{(unauthData.length==0)?'':unauthData}}">
+                                                    <div class="clearfix">
+                                                        <button type='submit' class="btn btn-primary btn-fill pull-right" id="add_playlist" disabled>Add To Playlist</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--  modal to add item to a playlist end-->
+                                <!--  modal to add item to a public list end-->
+                                <div class="modal fade" id="addtopublist" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal">
+                                                    <span aria-hidden="true">&times;</span>
+                                                    <span class="sr-only">Close</span>
+                                                </button>
+                                                <h4 class="modal-title" id="myModalLabel">
+                                                    <b>Add to Public List</b>
+                                                </h4>
+                                            </div>
+                                            <div class="modal-body" id="viewModalContent">
+                                                <!-- action="/author_addToPubList" -->
+                                                <form role="form" name="addQuePublic" id="addQuePublics" method="post" enctype="multipart/form-data">
+                                                    <div class="form-group">
+                                                        <div class='row '>
+                                                            <div class="col-lg-12">
+                                                                <div class="reminder reminderwidth">
+                                                                    <p>
+                                                                        <i class="fa fa-bell" style="font-size:1.5em;"></i> You can change Tags and Comments before adding
+                                                                        it to the public list.</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-15px">
+                                                            <div class="col-lg-12">
+
+                                                                <div class="row">
+
+                                                                    <div class="col-sm-12 col-md-offset-8  col-md-4">
+                                                                        <div class="form-horizontal">
+                                                                            <div class="form-group">
+                                                                                <!-- <label class="control-label col-sm-2 serchlabellineheight" for="searchpubliclist">Search:</label> -->
+                                                                                <div class="col-sm-12">
+                                                                                    <input type="text" class="form-control" ng-model="searchpubliclist" id="searchpubliclist" placeholder="Search..">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="table-responsive">
+
+                                                                    <table class="table table-hover bottom-tab-border">
+                                                                        <tr>
+                                                                            <th>QuestionID</th>
+                                                                            <th width="45%">Tags</th>
+                                                                            <th>Comments</th>
+                                                                            <th>Action</th>
+                                                                        </tr>
+                                                                        <tr dir-paginate="bquestion in basket  |  otherFilter:searchpubliclist   | filter:filterByUser | itemsPerPage:10 ">
+                                                                            
+
+                                                                            <td>
+                                                                                {{bquestion.id}}
+                                                                            </td>
+                                                                            <td>
+                                                                                <span ng-show="edit != true" class="label label-info lableTag mr-2px" ng-repeat="tag in bquestion.tags">{{tag}}</span>
+                                                                                <tags-input ng-show="edit" placeholder=" " add-on-blur="true" replace-spaces-with-dashes="false" ng-model="selected.tags" remove-selected="false" min-length="1"
+                                                                                    add-on-paste="true"></tags-input>
+                                                                            </td>
+                                                                            <td>
+                                                                                <span ng-show="edit != true">{{bquestion.comments}}</span>
+                                                                                <textarea style="resize: vertical;overflow: auto;" ng-show="edit" type="text" rows="4" cols="70" ng-model="selected.comments" class="form-control bg-white" placeholder="Comment"></textarea>
+                                                                            </td>
+                                                                            <td>
+                                                                                <button type="button" ng-show="edit != true" id="table-edit" ng-click="edit = true; editQuesMeta(bquestion, $event)" uib-tooltip="Edit"
+                                                                                    tooltip-trigger="mouseenter" tooltip-placement="top"
+                                                                                    class="btn btn-warning btn-icon btn-simple btnsmall controls-update mar-pad-zero">
+                                                                                    <i class="ti-pencil-alt"></i>
+                                                                                </button>
+                                                                                <button type="button" ng-show="edit" id="table-save" ng-click="edit = false; saveQuesMeta(bquestion.id)" uib-tooltip="Save" tooltip-trigger="mouseenter"
+                                                                                    tooltip-placement="top" class="btn btn-success btn-icon btn-simple btnsmall controls-update mar-pad-zero">
+                                                                                    <i class="ti-save"></i>
+                                                                                </button>
+                                                                                <button type="button" ng-show="edit" id="table-cancel" ng-click="edit = false; reset()" uib-tooltip="Cancel" tooltip-trigger="mouseenter"
+                                                                                    tooltip-placement="top" class="btn btn-danger btn-icon btn-simple btnsmall controls-update mar-pad-zero">
+                                                                                    <i class="ti-close"></i>
+                                                                                </button>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="pull-right">
+                                                                            <dir-pagination-controls max-size="5" direction-links="true" boundary-links="true">
+                                                                            </dir-pagination-controls>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="alert alert-warning" ng-show="NotAutorQids.length>0">
+                                                                    <i class="fa fa-bullhorn"></i>  {{ showNotAuthorQuestionsMsg() }}
+                                                                </div>
+                                                                <fieldset>
+                                                                    <div class="form-group">
+                                                                        <label class="col-lg-2 control-label lh-3em">Subject</label>
+                                                                        <div class="col-lg-10">
+                                                                            <select class="dropdown btn btn-default" data-style="btn-default" ng-model="subjectpublist1" hidden="true" ng-change="gettopics()">
+                                                                                <option value="">Select</option>
+                                                                                <option ng-repeat="subpub in subjectPubList" class='showTopics'>{{subpub}}</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </fieldset>
+                                                                <br/>
+                                                                <fieldset>
+                                                                    <div class="form-group">
+                                                                        <label class="col-lg-2 control-label lh-3em">Topics</label>
+                                                                        <div class="col-lg-10">
+                                                                            <select class="dropdown btn btn-default" data-style="btn-default" ng-model="topicpublist1" id="topicPubList" name="topicPubList"
+                                                                                hidden="true" style="display:none;" ng-change="topiclistchange()">
+                                                                                <option value="">Select</option>
+                                                                                <option class='showTopics' value="{{tp.id}}" ng-repeat="tp in topicPubList">
+                                                                                    {{tp.name}}
+                                                                                </option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </fieldset>
+                                                                <div class="col-md-12 col-sm-12 ">
+                                                                    <button type='button' ng-click="savetopubliclist()" class="btn btn-primary btn-fill pull-right" id="add_publist" disabled>Add To Public List
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--  modal to add item to a public list end-->
+
+                                <!--  modal to add item to a Edit Metha Data  end-->
+                                <div class="modal fade" id="editMetaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal">
+                                                    <span aria-hidden="true">&times;</span>
+                                                    <span class="sr-only">Close</span>
+                                                </button>
+                                                <h4 class="modal-title" id="myModalLabel">
+                                                    <b>Edit Meta Data</b>
+                                                </h4>
+                                            </div>
+                                            <div class="modal-body" id="viewModalContent">
+                                                <!-- action="/author_addToPubList" -->
+                                                <!-- <form role="form" name="addQuePublic" id="addQuePublics" method="post" enctype="multipart/form-data"> -->
+                                                    <div class="form-group">
+                                                        <div class='row '>
+                                                            <div class="col-lg-12">
+                                                                <div class="reminder reminderwidth">
+                                                                    <p>
+                                                                        <i class="fa fa-bell" style="font-size:1.5em;"></i> You can change Tags and Comments before adding
+                                                                        it to the public list.</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-15px">
+                                                            <div class="col-lg-12">
+
+                                                                <div class="row">
+
+                                                                    <div class="col-sm-12 col-md-offset-8  col-md-4">
+                                                                        <div class="form-horizontal">
+                                                                            <div class="form-group">
+                                                                                <!-- <label class="control-label col-sm-2 serchlabellineheight" for="searchmetalist">Search:</label> -->
+                                                                                <div class="col-sm-12">
+                                                                                    <input type="text" class="form-control" ng-model="searchmetalist" id="searchmetalist" placeholder="Search">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="table-responsive">
+                                                                    <table class="table table-hover bottom-tab-border">
+                                                                        <tr>
+                                                                            <th>QuestionID</th>
+                                                                            <th width="45%">Tags</th>
+                                                                            <th>Comments</th>
+                                                                            <th>Action</th>
+                                                                        </tr>
+                                                                        <tr dir-paginate="bquestion in basket  |otherFilter:searchmetalist  | filter:filterByUser | itemsPerPage:10 ">
+                                                                            
+
+                                                                            <td>
+                                                                                {{bquestion.id}}
+                                                                            </td>
+                                                                            <td>
+                                                                                <span ng-show="edit != true" class="label label-info lableTag mr-2px" ng-repeat="tag in bquestion.tags">{{tag}}</span>
+                                                                                <tags-input ng-show="edit" placeholder=" " add-on-blur="true" replace-spaces-with-dashes="false" ng-model="selected.tags" remove-selected="false" min-length="1"
+                                                                                    add-on-paste="true"></tags-input>
+                                                                            </td>
+                                                                            <td>
+                                                                                <span ng-show="edit != true">{{bquestion.comments}}</span>
+                                                                                <textarea style="resize: vertical;overflow: auto;" ng-show="edit" type="text" rows="4" cols="70" ng-model="selected.comments" class="form-control bg-white" placeholder="Comment"></textarea>
+                                                                            </td>
+                                                                            <td>
+                                                                                <button type="button" ng-show="edit != true" id="table-edit" ng-click="edit = true; editQuesMeta(bquestion, $event)" uib-tooltip="Edit"
+                                                                                    tooltip-trigger="mouseenter" tooltip-placement="top"
+                                                                                    class="btn btn-warning btn-icon btn-simple btnsmall controls-update mar-pad-zero">
+                                                                                    <i class="ti-pencil-alt"></i>
+                                                                                </button>
+
+                                                                                <button type="button" ng-show="edit" id="table-save" ng-click="edit = false; saveQuesMeta(bquestion.id)" uib-tooltip="Save" tooltip-trigger="mouseenter"
+                                                                                    tooltip-placement="top" class="btn btn-success btn-icon btn-simple btnsmall controls-update mar-pad-zero">
+                                                                                    <i class="ti-save"></i>
+                                                                                </button>
+
+                                                                                <button type="button" ng-show="edit" id="table-cancel" ng-click="edit = false; reset()" uib-tooltip="Cancel" tooltip-trigger="mouseenter"
+                                                                                    tooltip-placement="top" class="btn btn-danger btn-icon btn-simple btnsmall controls-update mar-pad-zero">
+                                                                                    <i class="ti-close"></i>
+                                                                                </button>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="pull-right">
+                                                                            <dir-pagination-controls max-size="5" direction-links="true" boundary-links="true">
+                                                                            </dir-pagination-controls>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="alert alert-warning" ng-show="NotAutorQids.length>0">
+                                                                    <i class="fa fa-bullhorn"></i>  {{ showNotAuthorQuestionsMsg() }}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                <!-- </form> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--  modal to edit meta data end-->
+
+                                <!-- modal view sample -->
+                                <div class="">
+                                    <div class="modal fade" id="bsModal3" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                    <h4 class="modal-title" id="mySmallModalLabel">View Sample
+                                                    </h4>
+                                                </div>
+                                                <div class="modal-body" id="viewModalContent">
+                                                    <p></p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- modal close-->
+
+                                <!-- end of content goes here -->
+                            </div>
+                        </div>
+                        <%- include('../parts/footer'); %>
+            </div>
+    </div>
+    </div>
+    </div>
+</body>
+<%- include('../parts/allJS'); %>
+
+    <script src="author_public/js/ng-tags-input.min.js" type="text/javascript"></script>
+    <script src="author_public/js/dirPagination.js" type="text/javascript"></script>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.1.3/ui-bootstrap-tpls.min.js"></script>
+
+    <script src="author_public/angularControllers/basketquestionsController.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("body").on("click", "#sample", function () {
+                var quesItm = $(this).attr("data-item");
+                $.ajax({
+                    type: 'get',
+                    url: '/author_getCommittedSampleQue?id=' + quesItm,
+                    cache: false,
+                    success: function (returndata) {
+                        if (returndata) {
+                            // $('#bsModal3 .modal-body p').modal('show'); // Please right this in your Code
+                            // console.log(returndata);
+
+                            $('#bsModal3 .modal-body p').html(returndata);
+                            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+                            $('#bsModal3').modal('show');
+                        } else {
+                            // other code
+                        }
+                    },
+                    error: function () {
+                        console.error('Failed to process ajax !');
+                    }
+                });
+            });
+        });
+
+
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#bsModal3').on('hidden.bs.modal', function () { // do something� })
+                $("#viewModalContent").html(" <p></p>");
+            })
+        });
+    </script>
+
+</html>

@@ -1,0 +1,108 @@
+<html>
+
+<head>
+  <?xml version="1.0" encoding="UTF-8"?>
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.5 -->
+  <link rel="stylesheet" href="../../author_public/bootstrap/css/bootstrap.min.css">
+
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script type="text/javascript" src="author_public/MathJax/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+  <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  showMathMenu: true,
+  menuSettings: { zoom: "Double-Click",zscale: "100%" },
+  CommonHTML: { linebreaks: { automatic: true } },
+  "HTML-CSS": { linebreaks: { automatic: true } },
+         SVG: { linebreaks: { automatic: true } }
+});
+</script>
+  
+  <%- include('../parts/allCSS'); %>
+    <!-- plot chart -->
+    <!-- <script type="text/javascript"  src="https://cdn.plot.ly/plotly-latest.min.js"></script> -->
+    <script type="text/javascript" src="author_public/plotchart/plotly-latest.min.js"></script>
+    <script type="text/javascript" src="author_public/plotchart/plotchart.js"></script>
+    <!-- <script type="text/javascript" src="plotchart/mediaupload.js"></script> -->
+    <script type="text/javascript">
+      function expand(obj) {
+        obj.style.width = ((obj.value.length + 8) * 8) + 'px';
+      }  
+    </script>
+
+    <style type="text/css">
+     
+      .hide-summary {
+        display: none;
+      }
+
+      .loader {
+        margin-top: 80px;
+        border: 8px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 8px solid #68B3C8;
+        width: 60px;
+        height: 60px;
+        -webkit-animation: spin 1.5s linear infinite;
+        animation: spin 1.5s linear infinite;
+      }
+
+      @-webkit-keyframes spin {
+        0% {
+          -webkit-transform: rotate(0deg);
+        }
+        100% {
+          -webkit-transform: rotate(360deg);
+        }
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+    </style>
+
+    <link rel="stylesheet" href="author_public/css/author.css">
+</head>
+
+<body>
+
+  <div class="container">
+    <% if(data){
+      if(data=="Timeout"){ %>
+        <div class="error">
+        <i class="fa fa-warning"></i> Maximum character limit exceeded in a textarea </div>
+      <%}else if(data=="Server Error"){%>
+        <div class="error">
+          <i class="fa fa-warning"></i> Server is not responding. Please try again after some time</div>
+      <% }else{ %>
+          <%-data%>
+      <% } %>
+    <%} else{ %>
+  </div>
+
+  <div id="loader">
+    <center>
+      <div class="loader"></div>
+      <h3 class="text-info">Please wait while loading....</h3>
+    </center>
+  </div>
+  <div id="message" class="hide-summary error">
+    <h1>Server is not responding. Please try again after some time</h1>
+  </div>
+  <script type="text/javascript">
+    setTimeout(function () {
+      location.reload();
+    }, 1000);
+  </script>
+  <% }%>
+</body>
+<%- include('../parts/allJS'); %>
+  <%- include('../parts/dynamicMedia'); %>
+
+</html>

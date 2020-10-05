@@ -1,0 +1,56 @@
+<!--Question block-->
+<div class="qblock" style="border-radius:8px;">
+        <div class="qus-type" tooltip="Question Type: Example"> {{lang.caption_eg}} </div>
+        <div style="padding:2%; font-size:15px;"> 
+            <span  math="{{filteredQuestions[0].object.question}}"></span>
+        </div>
+        <a>
+            <div style="margin-left: 92%" ng-show="getType(currentPage)!=0 && getType(currentPage)!=3"  ng-click="Lock()" >
+                <span style="font-size:30px ; color:white"  class="{{ lock[currentPage-1]==true ? 'icon icon-lock2' :'icon icon-lock1'}}"></span>
+            </div >
+        </a>  
+    
+    </div>
+    
+    <!--/Question Block-->
+    
+    <div class="exampleSolution">
+        <div class="solution"> 
+            <div align="center" style="margin-top:-2%;font-size:18px;"><b>:: {{lang.caption_sol}} ::</b></div>
+            <br>
+            <span  math="{{filteredQuestions[0].object.solution}}" > </span> 
+        </div>
+    
+        <div class="exampleAns">
+            <span>{{ lang.caption_eg1 }} : </span>
+            <span ng-repeat="option in filteredQuestions[0].object.rate">
+                <input  id="{{option.Id}}"  type="checkbox" ng-model="questions[currentPage-1].object.rate[$index].Selected" ng-change="onSelectExample(filteredQuestions[0], option,option.Id);"  />
+                <label class="label label-warning" for="{{option.Id}}"  ><span math="{{option.statement}}"></label>
+            </span>
+        </div>  
+    </div>
+    
+    <style type="text/css">
+        .exampleAns{
+            margin-top:2%;
+        }
+        .exampleAns input{
+            display: none;
+        }
+        .exampleAns label{
+            font-weight: normal;
+        }
+        .exampleAns label:hover{
+            background-color: #DEE8CF;
+            cursor: pointer;
+            color: #333;
+        }
+        .exampleAns input[type="checkbox"]:checked+label {
+            background-color: #DEE8CF;
+            color: #333; 
+        }
+    
+    </style>
+    
+    
+    

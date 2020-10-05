@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <%- include('../parts/allCSS'); %>
+  <script src="author_public/PaperDashBoard/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+    <link href="author_public/css/author_profile.css" rel="stylesheet" type="text/css">    
+</head>
+
+<body>
+    <div class="wrapper">
+        <%- include('../parts/leftNavBar'); %>
+            <div class="main-panel">
+                <%- include('../parts/topNavBarPart1'); %> Profile
+                    <%- include('../parts/topNavBarPart2'); %>
+                        <div class="content">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-sm-11 col-sm-offset-1 col-md-10 col-md-offset-1">
+                                        <div class="card card-user">
+                                            <div class="image">
+                                                <img src="author_public/images/bgimg.jpg" alt="..."/>
+                                            </div>
+                                           
+                                            <div class="card-content">
+                                            <div class="author">
+                                                <img class="avatar border-white" src="author_public/images/user2.png" alt="..."/>
+                                              <!-- <img class="avatar border-white" src="https://robohash.org/<%-user_data.fullName%>.png?set=set3&&bgset=bg2&&size=90x90" alt="..."/> -->
+                                              <h4 class="card-title"><%-user_data.fullName%><br />
+                                                 <a href="#"><small><b>Email:</b> <%-user_data.email%></small></a><br />
+                                                 <a href="#"><small><b>Author Id:</b> <%-user_data.shortName%></small></a>
+                                              </h4>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label><b class="card-title"  style="font-size:22px;">Edit Profile</b></label>
+                                                        <p class="category">Each field has a separate save button</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                                
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <label>Full name
+                                                            <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipProfile01%>" title="">
+                                                                <i class="ti-help-alt fa-lg"></i>
+                                                            </button>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-10">
+                                                        <div class="form-group">
+                                                               <input type="text" id="value_firstname" class="form-control border-input" placeholder="First name" value="<%-user_data.fullName%>">
+                                                        </div>
+                                                    </div>
+                                                   
+                                                    <div class="col-md-2">
+                                                        <div class="form-group">
+                                                                <button  type="button" id="full_name_save" class="btn btn-icon" onclick="save_full_name()"  rel="tooltip" data-original-title="Update full name"><span class="ti-save"></span></button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <form id="changeEmail">
+                                                    <div class="col-md-5">
+                                                        <div class="form-group">
+                                                            <label>Email for quiz administration
+                                                                <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipProfile03%>" title="">
+                                                                    <i class="ti-help-alt fa-lg"></i>
+                                                                </button>
+                                                            </label>
+                                                            <% if(user_data.alternate_email){%>
+                                                                <input type="email" class="form-control border-input" value="<%-user_data.alternate_email%>" id="altEmail">
+                                                                <%}else{%>
+                                                                    <input type="email" class="form-control border-input" value="<%-user_data.email%>" id="altEmail">
+                                                                    <%}%>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <div class="form-group" id="confirmEmail" style="display:none">
+                                                            <label>Confirm email</label>
+                                                            <input type="text" class="form-control border-input" id="confirmEmailinput" equalTo="#altEmail"> 
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <div class="form-group" style="display:none" id="emailSave">
+                                                            <label>&nbsp;</label> <br>
+                                                            <button id="alter_email" type="button" class="btn btn-icon" onclick="save_alteremail()" rel="tooltip" data-original-title="Update email"><span class="ti-save"></span></button>
+                                                            <!-- <button class="btn btn-icon"><span class="ti-save"></span></button> -->
+                                                        </div>
+                                                    </div>
+                                                    </form>
+                                                </div>
+                                                <div class="row">
+                                                    <form id="changePwdForm">
+                                                    <div class="col-md-5">
+                                                        <div class="form-group">
+                                                            <label>Change password
+                                                                <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipProfile04%>" title="">
+                                                                        <i class="ti-help-alt fa-lg"></i>
+                                                                </button>
+                                                                <p class="category">(Min 8 char with one special char)</p>
+                                                            </label>
+
+                                                            <input type="password" id="password" class="form-control border-input" minLength="8"  data-indicator="pwindicator"  onkeypress="validate3()" onkeyup="validate3()" >
+                                                            <div id="pwindicator">
+                                                                <div class="bar"></div>
+                                                                <div id="pass_strength" class="label"></div>
+                                                              </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <br>
+                                                        <div class="form-group" id="confirmPwd" style="display:none">
+                                                            <label>Confirm new password</label><br>
+                                                            <input type="password" id="password2" class="form-control border-input"   equalTo="#password" >
+                                                      
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="col-md-2">
+                                                        <br>
+                                                        <div id="pwdsavebtn" class="form-group" style="display:none">
+                                                            <label>&nbsp;</label> <br>
+                                                            <button id="submitbutton" type="button" onclick="save_password_fun()" class="btn btn-icon"  rel="tooltip" data-original-title="Change password"><span class="ti-save"></span></button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <label>Select Language
+                                                            <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipProfile08%>" title="">
+                                                                <i class="ti-help-alt fa-lg"></i>
+                                                            </button>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-8">
+                                                        <div class="form-group">
+                                                            <select id="language" class="selectpicker" data-live-search="true" data-style="btn-default">
+                                                                <%  var k;
+                                                                    for(var i=0; i<language.length;i++){ 
+                                                                    if(user_data.language){ 
+                                                                    k = user_data.language.indexOf(language[i]);
+                                                                    if(k>-1){
+                                                                %>
+                                                                    <option selected value="<%-language[i]%>" > <%-language[i]%> </option>
+                                                                <% }else{ %>
+                                                                    <option value="<%-language[i]%>" ><%-language[i]%></option>
+                                                                <% }}else{ %>
+                                                                    <option value="<%-language[i]%>" ><%-language[i]%></option>
+                                                                <% }} %>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <div class="form-group">
+                                                            <button  type="button" id="langSave" class="btn btn-icon" onclick="save_language()"  rel="tooltip" data-original-title="Update Language"><span class="ti-save"></span></button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-11 col-sm-offset-1 col-md-10 col-md-offset-1">
+                                        <div class="card ">
+                                            <div class="card-header clearfix">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <h4 class="card-title">Graders
+                                                    <label><button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipProfile08%>" title="">
+                                                            <i class="ti-help-alt fa-lg"></i>
+                                                    </button></label>
+                                                </h4>
+                                            </div>
+                                         </div> 
+                                         <div class="row">
+                                            <div class="col-md-5">
+                                                <label>Email</label><br>
+                                                <input type="email" id="gradeEmail" name="gradeEmail" class="form-control border-input">
+                                            </div>
+                                        
+                                            <div class="col-md-5">
+                                                <label>Nickname</label><br>
+                                                <input type="text" id="gradeNickname" name="gradeNickname" class="form-control border-input" >
+                                            </div>
+                                        <div class="col-md-2">
+                                            <label>&nbsp;</label> <br>
+                                            <input type="hidden" id="short" value="<%-short%>">
+                                            <input type="hidden" id="token" value="<%-token%>">
+                                            <button id="addGradesBtn" type="button" class="btn btn-icon"  rel="tooltip" data-original-title="Add Grader"><span class="ti-save"></span></button>
+                                        </div>
+                                    </div><br></br>
+                                    <%if(user_data.graders){
+                                        if(user_data.graders!=''){
+                                        %>
+                                         <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="" id="toolbar1">
+                                                    <!--Here you can write extra buttons/actions for the toolbar--><br>
+                                                    
+                                                </div>
+                                                <table class="table" id="grade-tbl">
+                                                    <thead>
+                                                        <th data-field="email" data-sortable="true">Email</th>
+                                                        <th data-field="name" data-sortable="true">Nickname</th>
+                                                        <th data-field="action" class="text-center"></th>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><%- user_data.graders[0].email %></td>
+                                                            <td><%- user_data.graders[0].nickname %></td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <% 
+                                                        var graders = user_data.graders;  
+                                                        for(var i=1; i<graders.length; i++) {%>
+                                                    <tr>
+                                                        <td>
+                                                            <%- graders[i].email %>
+                                                        </td>
+                                                        <td>
+                                                            <%- graders[i].nickname %>
+                                                        </td>
+                                                        <td class="td-actions text-right">
+                                                            <button class="btn btn-danger btn-simple btn-xs" id="delGraders" rel="tooltip" data-original-title="Remove" value="<%- i %>">
+                                                                    <i class="ti-close"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                    <% } %>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <%}}else{%>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="" id="toolbar1">
+                                                        <!--Here you can write extra buttons/actions for the toolbar--><br>
+                                                    </div>
+                                                    <table class="table" id="grade-tbl">
+                                                        <thead>
+                                                            <th data-field="email" data-sortable="true">Email</th>
+                                                            <th data-field="name" data-sortable="true">Nickname</th>
+                                                            <th data-field="action" class="text-center"></th>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td><%- authorEmail %></td>
+                                                                <td><%- short %></td>
+                                                                <td></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        <%}%>
+                                            </div>
+                                            </div>
+                                    </div>
+                                </div>
+                               
+                                <div class="row" style="display:none">
+                                    <div class="col-sm-6 col-sm-offset-1  col-md-5 col-md-offset-1">
+                                        <div class="card">
+                                            <div class="card-header clearfix">
+                                                <div class="pull-left">
+                                                    <h4 class="card-title">Concepts
+                                                        <label><button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipProfile06%>" title="">
+                                                                <i class="ti-help-alt fa-lg"></i>
+                                                        </button></label>
+                                                    </h4>
+                                                    <p class="category">Add concepts which you are using in your content.</p>
+                                                </div>
+                                                <div class="pull-right">
+                                                    <button class="btn btn-info btn-fill btn-icon btn-sm" id="addConcept" rel="tooltip" data-original-title="Add concept">
+                                                        <i class="ti-plus"></i>
+                                                    </button>
+                                                    <input type="hidden" id="short" value="<%-short%>">
+                                                    <input type="hidden" id="token" value="<%-token%>">
+                                                </div>
+                                            </div>
+                                            <div class="card-content ">
+                                                <div class="" id="toolbar1">
+                                                    <!--Here you can write extra buttons/actions for the toolbar-->
+                                                </div>
+                                                <table class="table" id="concepts-tbl">
+                                                    <thead>
+                                                        <th data-field="concepts" data-sortable="true">Concepts</th>
+                                                        <th data-field="action" class="text-center"></th>
+                                                    </thead>
+                                                    <tbody>
+                                                        <% 
+                                                    var concepts = user_data.concepts;  
+                                                    for(var i=0; i<concepts.length; i++) {%>
+                                                            <tr>
+                                                                <td id="concept-<%-i%>">
+                                                                    <%- concepts[i] %>
+                                                                </td>
+                                                                <td class="td-actions text-right">
+                                                                    <button class="btn btn-danger btn-simple btn-xs" id="delConcept" rel="tooltip" data-original-title="Remove" value="<%- concepts[i] %>">
+                                                                            <i class="ti-close"></i>
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                            <% } %>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6 col-md-5">
+                                        <div class="card">
+                                            <div class="card-header clearfix">
+                                                <div class="pull-left">
+                                                    <h4 class="card-title">Skills
+                                                        <label><button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipProfile07%>" title="">
+                                                                <i class="ti-help-alt fa-lg"></i>
+                                                        </button></label>
+                                                    </h4>
+                                                    <p class="category">Add skills which you are using in your content.</p>
+                                                </div>
+
+                                                <div class="pull-right">
+                                                    <button class="btn btn-info btn-fill btn-icon btn-sm" id="addSkills" rel="tooltip" data-original-title="Add skill">
+                                                            <i class="ti-plus"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="card-content">
+                                                <div class="toolbar">
+                                                    <!--Here you can write extra buttons/actions for the toolbar-->
+
+                                                </div>
+
+                                                <table class="table" id="skills-tbl">
+                                                    <thead>
+                                                        <th data-field="skills" data-sortable="true">Skills</th>
+                                                        <th data-field="action" class="text-center"></th>
+                                                    </thead>
+                                                    <tbody>
+                                                        <% 
+                                                                var skills = user_data.skills;  
+                                                                for(var i=0; i<skills.length; i++) {%>
+                                                            <tr>
+                                                                <td>
+                                                                    <%= skills[i] %>
+                                                                </td>
+                                                                <td class="td-actions text-right">
+                                                                    <button class="btn btn-danger btn-simple btn-xs" id="delSkills" rel="tooltip" data-original-title="Remove" value="<%- skills[i] %>">
+                                                                                        <i class="ti-close"></i>
+                                                                                </button>
+
+                                                                </td>
+                                                            </tr>
+                                                            <% } %>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+                        <%- include('../parts/footer'); %>
+            </div>
+    </div>
+    </div>
+    
+        </div>
+        </div>
+</body>
+
+    <%- include('../parts/allJS'); %>
+    <script src="author_public/js/author_profile.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/jquery.validate.min.js"></script>
+    
+<!--password strenght link-->
+<script src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/438937/strength.min.js'></script>
+<script src="author_public/dist/js/jquery.pwstrength.js" type="text/javascript" charset="utf-8"></script>
+<script>
+          
+</script>
+
+</html>

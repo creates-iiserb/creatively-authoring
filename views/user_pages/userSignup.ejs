@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <meta name="viewport" content="width=device-width" />
+    <title> Examineer | Author</title>
+    <!-- Bootstrap core CSS     -->
+     <link href="../../author_public/PaperDashBoard/css/bootstrap.min.css" rel="stylesheet" />
+     <!--  Paper Dashboard core CSS    -->
+     <link href="../../author_public/PaperDashBoard/css/paper-dashboard.css" rel="stylesheet"/>
+    <!--  Fonts and icons     -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
+     <link href='https://fonts.googleapis.com/css?family=Muli:400,300' rel='stylesheet' type='text/css'> 
+    <!-- <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'> -->
+    <link href="../../author_public/PaperDashBoard/css/themify-icons.css" rel="stylesheet">
+    <!-- <link rel = "stylesheet" href="css/author1.css"> -->
+    <link rel = "stylesheet" href="../../author_public/css/author.css">
+
+    <!-- <link rel="stylesheet" href="css/bootstrap-tagsinput.css" /> --> 
+
+    <!--  CSS for Demo Purpose, don't include it in your project     -->
+    <link href="../../author_public/PaperDashBoard/css/demo.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="../../author_public/plugins/daterangepicker/daterangepicker-bs3.css">
+    <link rel="stylesheet" href="../../author_public/dist/css/skins/_all-skins.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.12/clipboard.min.js"></script>
+    <link rel='stylesheet prefetch' href='https://s3-us-west-2.amazonaws.com/s.cdpn.io/438937/strength.css'>
+    <link rel="stylesheet" href="../../author_public/css/progress-tracker.css">
+    <link rel="stylesheet" href="../../author_public/css/author_signup.css">    
+  </head>
+  <body>
+    <div>
+      <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" onclick="navbarToggle();">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar bar1"></span>
+                    <span class="icon-bar bar2"></span>
+                    <span class="icon-bar bar3"></span>
+                </button>
+                <a class="navbar-brand" href="#">Examineer</a>
+            </div>
+        
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <ul class="nav navbar-nav navbar-right">
+                <li ><a href="https://quiz.examineer.in" target="_blank">Student</a></li>
+                <li><a href="https://author.examineer.in">Author</a></li>
+            </ul>
+        </div><!-- /.container-fluid -->
+      </nav>
+    </div>
+
+    <%
+     if(pageStatus){            
+    %>
+
+
+    <div class="row">
+      <div  class="col-md-6 col-md-offset-3">
+        <div class="formCont">
+          <ul class="progress-tracker progress-tracker--text progress-tracker--center">
+            <li class="progress-step">
+              <span class="progress-marker"></span>
+              <span class="progress-text">
+                <h4 class="progress-title">Step 1</h4>
+                <span class="progress-line"> Request for an account</span>  
+              </span>
+            </li>
+          
+            <li class="progress-step is-active">
+              <span class="progress-marker"></span>
+              <span class="progress-text">
+                <h4 class="progress-title">Step 2</h4>
+                <span class="progress-line"> Verify your email address and set password.</span>
+              </span>
+            </li>
+          
+            <li class="progress-step">
+              <span class="progress-marker"></span>
+              <span class="progress-text">
+                <h4 class="progress-title">Step 3</h4>
+                <span class="progress-line"> Account will be approved by admin </span>
+              </span>
+            </li>
+          </ul>
+      
+           
+            <div class="login-title" align="center">
+              <b>Verify email address and set password</b>
+              <hr>
+            </div>
+           
+            
+            <% if (status=='success') { %>
+              <div class="box-body" id="alert_box1">
+                <div class="alert alert-success alert-dismissable">                
+                  <i class="fa fa-thumbs-o-up"></i>
+                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">X</button>
+                  <b><%=msg%></b>
+                  </div>
+              </div>
+            <% } %>
+  
+            <% if (status=='error') { %>
+              <div class="box-body" id="alert_box2">
+                <div class="alert alert-danger alert-dismissable">
+                  <i class="fa fa-ban"></i>
+                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">X</button>
+                  <b><%=msg%></b>
+                  </div>
+              </div>
+            <% } %>
+            
+            <form role="form" id="regFrm" class="signClsFrm" name="regFrm" action="" method="post">
+              <div class="form-group">
+                <span class="textHeading text-primary">Name</span>
+                <span class="textValue"> <%-data.fullName%> </span>
+              </div>
+
+              <div class="form-group">
+                  <span class="textHeading text-primary">Email</span>
+                  <span class="textValue"> <%-data.email%> </span>
+              </div>
+              <div class="form-group">
+                <label class="fg_label">Password <strong class="text-danger">*</strong></label>
+                <input type="password" name="password" id="password" class="form-control" onKeyUp="checkPasswordStrength();" />
+                <div id="password-strength-status" style="display:inline-block;margin-right:10px;"></div>
+              </div>
+              
+  
+              <div class="form-group">
+                <label class="fg_label">Confirm Password<strong class="text-danger">*</strong></label>
+                <input type="password" id="cpassword" name="cpassword" class="form-control" />
+              </div>
+            
+              <br>
+              <div align="right" id="signInBtn">
+                <button type="submit" class="btn btn-wd btn-lg btn-fill btn-move-right signbtn" id="submitbutton">
+                  <b>Sign </b>Up
+                  <span class="btn-label">
+                    <i class="ti-angle-right"></i>
+                  </span> 
+                </button><br/>
+                <div class="forgot" style="font-size:16px;">
+                    <!-- <a href="/authorlogin"><b>Sign In</b></a> -->
+                    <a href="/authorlogin">I already have a membership</a>
+                </div>
+              </div>
+  
+              <input type="hidden" id="docid" name="docid" value="<%-data._id%>" />
+              <input type="hidden" id="token" name="token" value="<%-data.token%>"/>
+  
+            </form>
+
+        </div>
+      </div>
+    </div>
+   
+
+    <% }else{
+      %>
+       <div class="row">
+         <div class="col-md-offset-4 col-md-4 text-center">
+            <div style="margin-top:30%"> 
+              <div class="card card-lock">
+                  <h2 class="infoHead">Either this link has been used for signup or this is  an invalid link.</h2>
+
+                  <p><a href="/authorlogin">I already have a membership</a> </p>
+             </div>
+            </div>
+         </div>
+       </div>
+      <%
+      }
+      %>
+
+  
+  
+
+
+    <br>
+    <div class="footer">
+      <div class="text-center">
+        &copy; <span id="year"> </span>, All Rights Reserved. examineer.in, v1.0.0
+      </div>
+    </div>
+  </body>
+  
+  <%- include('../parts/allloginJS'); %>
+
+  <script src="../../author_public/js/author_signup.js"></script>
+</html>

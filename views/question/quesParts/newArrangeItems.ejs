@@ -1,0 +1,148 @@
+ <% if(pipe=="arrange"){ %>
+<div class="tab-pane" id="arrangeItems">
+    <div class="form-group row">
+        <div class="col-xs-10 col-xs-offset-1 col-md-10 col-md-offset-1 inMiddle">
+            <div class="row">
+            <label class="col-md-4 control-label  " style="padding-left:5px;">
+                Arrange order
+                <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipArrgItem01%>">
+                        <i class="ti-help-alt fa-lg"></i>
+                </button>
+            </label>
+            <div class="col-md-4">
+                    <%
+                    var order ='' ;
+                    if(typeof data.order == 'string' && data.order){ order = data.order;}
+                %>
+                <select class="selectpicker" data-size="7" tabindex="-98" name="arrange" id="arrange">
+                    <option class="bs-title-option" value="">Choose</option>
+                    <option value="increasing" <%if(order=="increasing" ){%> selected="selected"
+                    <%}%> >Increasing Order</option>
+                    <option value="decreasing" <%if(order=="decreasing" ){%> selected="selected"
+                    <%}%> >Decreasing Order</option>
+                </select> 
+            </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+            <div class="col-xs-10 col-xs-offset-1 col-md-10 col-md-offset-1 inMiddle"> 
+                <div class="row">
+                        <label class="col-md-4 control-label">
+                                Select
+                                <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipArrgItem02%>">
+                                        <i class="ti-help-alt fa-lg"></i>
+                                </button>
+                        </label>
+                            <div class="col-md-4">
+                               
+                
+                                <%
+                                    var select ='' ;
+                                    if(typeof data.select == 'string' && data.select){ select = data.select;}
+                                %>
+                                   
+                                <!-- <div class="col-sm-3"> -->
+                                        <select name="select_no" id="select_no" class="selectpicker">
+                                            <option value="">Choose </option>
+                                            <option value="2" <%if(select=="2" ){%> selected="selected"
+                                                <%}%> >2</option>
+                                            <option value="3" <%if(select=="3" ){%> selected="selected"
+                                                <%}%> >3</option>
+                                            <option value="4" <%if(select=="4" ){%> selected="selected"
+                                                <%}%> >4</option>
+                                            <option value="5" <%if(select=="5" ){%> selected="selected"
+                                                <%}%> >5</option>
+                                            <option value="6" <%if(select=="6" ){%> selected="selected"
+                                                <%}%> >6</option>
+                                            <option value="7" <%if(select=="7" ){%> selected="selected"
+                                                <%}%> >7</option>
+                                            <option value="8" <%if(select=="8" ){%> selected="selected"
+                                                <%}%> >8</option>
+                                            <option value="9" <%if(select=="9" ){%> selected="selected"
+                                                <%}%> >9</option>
+                                            <option value="10" <%if(select=="10" ){%> selected="selected"
+                                                <%}%> >10</option>
+                                        </select>
+                            </div>
+
+                </div>
+                    
+            </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-xs-10 col-xs-offset-1 col-md-10 col-md-offset-1 inMiddle"> 
+            <label class=" control-label text-right ">
+                List of items 
+            </label>
+            <div class=''>
+                    <div class='row' id='allItems'>
+                        <br> 
+                    <% 
+                        var itemdivs = 0 ;
+                        if(typeof data.items == 'object' && data.items){
+                            // itemdivs = data.items.length;
+                            if(data.items.length==0){
+                                itemdivs = 2;
+                            }else{
+                                itemdivs = data.items.length;
+                            }
+                        }else{
+                            itemdivs = 2;
+                        }
+                    %>
+    
+                        <%for(var i=0; i< itemdivs;i++){%>
+                            <div class='col-lg -12 ' id="itemdiv_old-<%-i%>">
+                                <div class='card inputcard'>
+                                    <div class='card-content'>
+                                        <h6>Statement
+                                            <label><button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipArrgItem03%>">
+                                                    <i class="ti-help-alt fa-lg"></i>
+                                            </button></label>
+                                        </h6>
+                                        <div>
+                                            <textarea name="item_stmt" class="form-control" id="item_stmt_old"><%if(typeof data.items == 'object' && data.items && !isNew){%><%- data.items[i].stmt %><%}else{%><%}%></textarea>
+                                        </div>
+                                        <br>
+                                        <h6>Value
+                                            <label><button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipArrgItem04%>">
+                                                    <i class="ti-help-alt fa-lg"></i>
+                                            </button></label>
+                                        </h6>
+                                        <textarea name="item_value" class="form-control" id="item_value_old"><%if(typeof data.items == 'object'   && data.items && !isNew){%><%- data.items[i].val %><%}else{%><%}%></textarea>
+                                    </div>
+                                    <div class='card-footer footer1'>
+                                        <hr>
+                                        <%if(i==0 ||i==1 )  {%>
+                                            <div class="footer-title"><span class="text-muted">&nbsp;</span></div>
+                                            <div class="pull-right">
+                                                <span class="text-muted"> &nbsp;</span>
+                                                <%} else {%>
+                                                    <div class="footer-title"><span class="text-muted">&nbsp;</span></div>
+                                                    <div class="pull-right">
+                                                        <button type="button" rel="tooltip" title="" class="btn btn-danger" data-original-title="Delete" id='deleteItem'>
+                                                            <i class="ti-trash"></i>
+                                                        </button>
+                                                        <%}%>
+                                                    </div>
+                                            </div>
+                                    </div>
+                                </div>
+                        <%}%>
+                    </div>  
+                            <div align="right">
+                                <input class='btn btn-default' id="addNewItem" type="button" value="Add item +" />
+                            </div>
+                    </div>
+            
+
+            
+        </div>
+    </div>
+ 
+   
+ 
+    </div>
+<%}%>
+

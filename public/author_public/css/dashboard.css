@@ -1,0 +1,25 @@
+.fresh-table.toolbar-color-azure .fixed-table-toolbar {
+  /* background: #36AFEC; */
+  background:#8a8a8a;
+  /* background: -moz-radial-gradient(center, ellipse cover, #2D7CE7 0%, #36AFEC 100%); */
+  /* background:radial-gradient(ellipse at center, #2D7CE7 0%, #36AFEC 100%) */
+  /* FF3.6+ */
+  background:radial-gradient(ellipse at center, #5d5d5d 0%, #888888 100%);
+  /* background: radial-gradient(ellipse at center, #8a8a8a 0%, #66615b 100%); */
+  /* background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #2D7CE7), color-stop(100%, #36AFEC));
+  /* Chrome,Safari4+ */
+  /* background: -webkit-radial-gradient(center, ellipse cover, #2D7CE7 0%, #36AFEC 100%); */
+  /* Chrome10+,Safari5.1+ */
+  /* background: -o-radial-gradient(center, ellipse cover, #2D7CE7 0%, #36AFEC 100%); */
+  /* Opera 12+ */
+  /* background: -ms-radial-gradient(center, ellipse cover, #2D7CE7 0%, #36AFEC 100%); */
+  /* IE10+ */
+  /* background: radial-gradient(ellipse at center, #2D7CE7 0%, #36AFEC 100%);  */
+  /* W3C */
+  background-size: 250% 250%;
+}
+.shadow{
+    -webkit-box-shadow: 10px 10px 23px -2px rgba(143,139,143,1);
+-moz-box-shadow: 10px 10px 23px -2px rgba(143,139,143,1);
+box-shadow: 10px 10px 23px -2px rgba(143,139,143,1);
+}

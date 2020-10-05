@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Plot chart</title>
+    <script src="./plotly-latest.min.js"></script>
+    <script src="./jquery-3.3.1.min.js"></script>
+</head>
+
+<body>
+    <div id="ploterror">
+    </div>
+    <div id="loaderdiv"></div>
+    <script>
+        function getUrlParam(name) {
+            var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(window.location.href);
+            return (results && results[1]) || undefined;
+        }
+        (function () {
+            $('#loaderdiv').addClass("loader");
+            // console.log('iniframe')
+            var d3 = Plotly.d3;
+            var gd3 = d3.select('body')
+                .append('div')
+                .style({
+                    width: '100vh',
+                    'margin-left': '0%',
+                    height: '96vh',
+                    'margin-top': '2vh'
+                });
+            var gd = gd3.node();
+            if (getUrlParam('source')) {
+                // "examineer.org/potato/charts/0002k/e28cef93-b32e-4cd9-b303-0dc715146007"
+                // console.log(getUrlParam('source'))
+                $.get("https://" + getUrlParam('source'), function (data) {
+                    $('#loaderdiv').removeClass("loader");
+                    if (data) {
+                        if (data.layout && data.plotdata) {
+                            var json = data;
+                            var plotdata = json.plotdata;
+                            var layout = json.layout;
+                            Plotly.plot(gd, plotdata, layout);
+                            window.onresize = function () {
+                                Plotly.Plots.resize(gd);
+                            };
+                        } else {
+                            $('#loaderdiv').removeClass("loader");
+
+                            $('#ploterror').html('Error on loading plot')
+                            // console.log("Plot does not exits")
+                        }
+                    } else {
+                        $('#loaderdiv').removeClass("loader");
+
+                        $('#ploterror').html('Plot does not exists')
+                        // console.log("Plot does not exits")
+                    }
+                }).fail(function () {
+                    $('#ploterror').html('There was some error connecting to the server')
+                });
+            } else {
+                $('#ploterror').html('Error on loading plot. No source provided')
+            }
+            $('#loaderdiv').removeClass("loader");
+        })();
+    </script>
+    <style>
+        .loader {
+            border: 16px solid #f3f3f3;
+            /* Light grey */
+            border-top: 16px solid #3498db;
+            /* Blue */
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</body>
+
+</html>

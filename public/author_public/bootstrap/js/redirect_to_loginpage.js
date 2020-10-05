@@ -1,0 +1,1 @@
+setTimeout(function(){location.href = "https://examineer.in/author_author";},5000);

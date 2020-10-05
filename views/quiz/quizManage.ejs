@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="author_public/PaperDashBoard/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+    <script src="author_public/js/author_edit_quiz.js"></script>
+<!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/> -->
+  <%- include('../parts/allCSS'); %>
+  <% 
+    var takers = new Array();
+    takers = Object.keys(data.credentials); 
+    for(var a=1; a<= takers.length; a++){
+  %>
+
+  <style>
+    #EditPwd<%-a%>,#showPwd<%-a%>,#randomPwd<%-a%> {
+      background-color: rgba(240, 173, 78, 0);
+      color:#eea236;
+      /*-webkit-box-shadow: none;*/
+      /*box-shadow: none;*/
+      border: 1px solid transparent;
+      padding: 6px 12px;
+      /*margin-bottom: 0;*/
+      font-size: 1.5em;
+      /*font-weight: 400;*/
+      /*line-height: 1.42857143;*/
+      /*text-align: center;*/
+      /*white-space: nowrap;*/
+      vertical-align: middle;
+    }
+  </style> 
+  <% } %>
+  <style type="text/css">
+    #chkbox_ids:before, #chkall:before {
+      display: inline-block;
+      font: normal normal normal 15px/1 FontAwesome;
+      font-size: 1.3em;
+      text-rendering: auto;
+      -webkit-font-smoothing: antialiased;
+      content:"\f096";/*f1ce*/
+      opacity:1 !important;
+      margin-top:-25px;
+      appearance:none;
+      background:#fff;
+      color:rgb(86, 189, 132);
+    }
+    #chkbox_ids:checked:before, #chkall:checked:before{
+          content:"\f046";/*f011*/
+    }
+    #chkbox_ids,#chkall{
+      font-size:22px;appearance:none; -webkit-appearance:none; -moz-appearance:none;
+    }
+
+  </style>
+  <link rel="stylesheet" href="author_public/css/author_quiz.css">
+ 
+  <script type="text/javascript">
+// disable/enable the save button on form edit
+    $(document).ready(function(){
+      // $('input[name="security_level"], input[name="review_selector"],input[name=score_avalb__selector1],input[name=chkbox_ids],input[id=chkall]').change(function(){
+      $("#example1").on('change','input[name=chkbox_ids],input[id=chkall]',function(){
+        if ($(this).val())
+        {
+         $('#btnUpdate').attr('disabled', false);
+        }
+      });
+    });
+
+    $(document).ready(function(){
+      $('input[name="security_level"], input[name="review_selector"],input[name=score_avalb__selector1]').change(function(){
+        if ($(this).val())
+        {
+         $('#btnUpdate').attr('disabled', false);
+        }
+      });
+    });
+  </script>
+</head>
+<body>
+    <div class="wrapper "><div class="ld ld-ring ld-spin"></div>
+        <%- include ../parts/leftNavBar %>
+        <div class="main-panel">
+        <%- include('../parts/topNavBarPart1'); %>Quiz Management (Quiz Id: <%-data._id%>)
+        <%- include('../parts/topNavBarPart2'); %>
+        <div class="content ">
+            
+            <div class="container-fluid">
+                <div class='row'>
+                    <div class='col-md-10 col-md-offset-1'>
+                        <div class="card card-big">
+                            <div class="card-header clearfix">
+                                <div class="pull-left">
+                                    <form role="form" name="frmback" id="frmback" method="post" action="/author_getQuizControlData" enctype="multipart/form-data">
+                                        <input type="hidden" name="quizid" id="quizid" value="<%-data._id%>">
+                                        <button class="btn btn-wd btn-default btn-move-left" id="back"><span class="btn-label"><i class="ti-angle-left"></i></span>Back</button>
+                                    </form>
+                                </div>
+                                <div class="pull-right">
+
+                                   
+                                  
+                                    <input type="hidden" name="author" id="author" value="<%-short%>">
+                                    <input type="hidden" id="type" name="type" value="manage_examineer_quizzes">
+                                    <input type="hidden" name="takers_data" id="takers_data" value="">
+                                    <input type="hidden" name="arr" id="arr" value="">
+                                    <input type="hidden" name="arr_length" id="arr_length" value="">
+                                    <input type="hidden" name="quiz_reset_ids" id="quiz_reset_ids" value="">
+                                    <input type="hidden" name="quiz_id" id="quiz_id" value="<%-data._id%>"> 
+                                    <input type="hidden" name="log_Id" id="log_Id" value="">
+                                    <input type="hidden" name="log_Token" id="log_Token" value="">
+
+                                   
+                                    <button type='button' class="btn  btn-success btn-fill" id='btnUpdate' name="btnUpdate" disabled> <i class="ti-save"></i> Save/Reset Quiz</button>
+
+
+
+
+                                  
+                                </div>
+                            </div>
+                           
+                            <div class="card-content table-responsive" style="padding-right:2px;">
+                                <div class="nav-tabs-navigation">
+                                    <div class="nav-tabs-wrapper">
+                                        <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+                                            <li class="active"><a href="#takers1" data-toggle="tab">Participants</a></li>
+                                            <li><a href="#advance" data-toggle="tab">Advance</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div id="edit-quiz-content" class="tab-content">
+                                    <div class="tab-pane active" id="takers1">
+                                        <!-- <form  class="form-horizontal"> -->
+                                            <fieldset>
+                                                <div class="form-group">
+                                                  <h4>Quiz Participants <lable><button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipQuiz17%>"><i class="ti-help-alt fa-lg" style="font-size:1.5em;"></i></button></lable></h4><br/>
+                                                  
+                                                  <!-- <div class="card"> -->
+                                                    <!-- <div class=" card-content"> -->
+                                                      <div class="toolbar" >
+                                                        <input type="checkbox"  onchange="checkAll(this)" id="chkall" name="chk[]" style="font-size:16px;"/> 
+                                                        <label for="chkall">
+                                                            <b style="font-size:16px;">&nbsp;Mark all on this page</b>
+                                                          <lable><button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipQuiz18%>"><i class="ti-help-alt fa-lg" style="font-size:1.5em;"></i></button></lable>
+                                                        </label><br/><br/>
+                                                      </div>
+                                                      <div class="col-md-12 table-responsive">
+                                                        <table id="example1" class="table table-no-bordered table-responsive table-hover text-left">
+                                                          <thead>
+                                                            <tr>
+                                                              <%
+                                                              if(data.users){
+                                                              var aa = data.users.userData; 
+                                                                 var takId = data.users.userCol;  
+                                                                  var dt =[];
+                                                                  dt = Object.keys(aa);
+                                                              %>
+                                                             
+                                                              <%if(aa[dt[0]]["A"]){%><th <%if(takId=='A'){%> style="font-weight:bold;" <%}%> >A <%if(takId=='A'){%><small>(UserName)</small><%}%></th><%}%>
+                                                              <%if(aa[dt[0]]["B"]){%><th  <%if(takId=='B'){%> style="font-weight:bold;" <%}%> >B <%if(takId=='B'){%><small>(UserName)</small><%}%></th><%}%>
+                                                              <%if(aa[dt[0]]["C"]){%><th  <%if(takId=='C'){%> style="font-weight:bold;" <%}%> >C <%if(takId=='C'){%><small>(UserName)</small><%}%></th><%}%>
+                                                              <%}else{%>
+                                                                <th id="takers" >Participants</th>
+                                                              <%}%>
+                                                              <th id="pwd">Password</th>
+                                                              <th id="resetquiz">
+                                                                
+                                                                <!-- <button type="button" rel="tooltip" title="" class="btn btn-info btn-simple btn-xs" data-original-title="<%-tooltip.tooltipD18%>"><i class="ti-help-alt fa-lg" style="font-size:1.5em;"></i></button> -->
+                                                                <!-- <input type="checkbox" onchange="checkAll(this)" id="chkall" name="chk[]" /> -->
+                                                                <!--<div  data-toggle="buttons">
+                                                                  <label class="btn btn-icon btn-info btnresetall" title="Mark all to reset" rel="tooltip">
+                                                                     <input type="checkbox" onchange="checkAll(this)" id="chkall" name="chk[]" class="chkbox" autocomplete="off"><i class="fa fa-power-off" ></i>  
+                                                                  </label>
+                                                                </div>-->
+                                                               Select
+                                                              </th>
+                                                              <th id="status">Status</th>
+                                                            <!--   <th id="action" style="text-align:center;"></th> -->
+                                                            </tr>
+                                                          </thead>
+                                                          <tbody>
+                                                            <%
+                                                              var takers = new Array();
+                                                              var pwd = new Array();
+                                                              takers = Object.keys(data.credentials);
+                                                
+                                                              pwd = Object.keys(data.credentials).map(function(key) {
+                                                                return data.credentials[key];
+                                                              });
+                                                              
+                                                              if(data.users){
+                                                                var aa = data.users.userData;
+                                                              }
+                                                              
+
+                                                
+                                                              for(var i=0,j=1,k=0,q=0; i< takers.length,k< pwd.length,q< result_json.length; i++,j++,k++,q++){
+                                                              var playlist1 = result_json[q];
+
+                                                              
+
+                                                             %>
+                                                            <script type="text/javascript">
+                                                              $(document).ready(function() {
+                                                                // $("#showPwd<%-j%>").click(function() {
+                                                                $("#example1").on('click','#showPwd<%-j%>',function(){
+                                                                    if ($("#password<%-j%>").attr("type") == "password") {
+                                                                      $("#password<%-j%>").attr("type", "text");
+                                                                      document.getElementById('EditPwd<%-j%>').hidden = false;
+                                                                      // document.getElementById('showPwd').innerHTML = "Hide Password";
+                                                                      document.getElementById('showPwd<%-j%>').hidden = true;
+                                                                    } else {
+                                                                      $("#password<%-j%>").attr("type", "password");
+                                                                      document.getElementById('EditPwd<%-j%>').hidden = true;
+                                                                      // document.getElementById('showPwd').innerHTML = "Show Password";
+                                                                      document.getElementById('showPwd<%-j%>').hidden = false;
+                                                                    }
+                                                                  });
+                                                                });
+
+                                                                $(document).ready(function() {
+                                                                  // $("#EditPwd<%-j%>").click(function() {
+                                                                  $("#example1").on('click','#EditPwd<%-j%>',function(){
+                                                                    document.getElementById('password<%-j%>').disabled = false;
+                                                                    // document.getElementById('EditPwd<%-j%>').innerHTML = "Click for random Password";
+                                                                    document.getElementById('EditPwd<%-j%>').hidden = true;
+                                                                    document.getElementById('randomPwd<%-j%>').hidden = false;
+                                                                  });
+                                                                });
+
+                                                                $(document).ready(function() {
+                                                                  // $("#randomPwd<%-j%>").click(function() {
+                                                                  $("#example1").on('click','#randomPwd<%-j%>',function(){
+                                                                    var text1 = "";
+                                                                    var text2 = "";
+                                                                    var text3 = "";
+                                                                    var text4 = "";
+                                                                    var length1 = 3;
+                                                                    var length2 = 3;
+                                                                    var length3 = 2;
+                                                                    var length4 = 1;
+                                                                    var possible1 = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+                                                                    var possible2 = "abcdefghijkmnpqrstuvwxyz";
+                                                                    var possible3 = "23456789";
+                                                                    var possible4 = "!@#$%&";
+                                                                    for(var i = 0; i < length1; i++) {
+                                                                         text1 += possible1.charAt(Math.floor(Math.random() * possible1.length));
+                                                                    }
+                                                                    for(var j = 0; j < length2; j++) {
+                                                                         text2 += possible2.charAt(Math.floor(Math.random() * possible2.length));
+                                                                    }
+                                                                    for(var k = 0; k < length3; k++) {
+                                                                         text3 += possible3.charAt(Math.floor(Math.random() * possible3.length));
+                                                                    }
+                                                                    for(var l = 0; l < length4; l++) {
+                                                                         text4 += possible4.charAt(Math.floor(Math.random() * possible4.length));
+                                                                    }
+                                                                    var randompwd = "";
+                                                                    var randomId = text1+text2+text3+text4;
+                                                                    var shuffledWord = '';
+                                                                    var charIndex = 0;
+                                                                    word = randomId.split('');
+                                                                    while (word.length > 0) {
+                                                                      charIndex = word.length * Math.random() << 0;
+                                                                      shuffledWord += word[charIndex];
+                                                                      word.splice(charIndex, 1);
+                                                                    }
+                                                                    var finalstr = shuffledWord.substring(0, 3)+"-"+shuffledWord.substring(3, 6)+"-"+shuffledWord.substring(6, 9);
+                                                                    document.getElementById('password<%-j%>').value = finalstr;
+                                                                  });
+                                                                });
+
+                                                                var aa = new Array();
+                                                                var counter = "";
+                                                                $( document ).ready(function() {
+                                                                  // $('.sal<%-j%>').each(function(elem) {
+                                                                    // $('.sal<%-j%>').click(function(e) {
+                                                                    $("#example1").on('click','.sal<%-j%>',function(){
+                                                                      counter= '<%-j%>';
+                                                                      aa.push(counter);
+                                                                      // console.log(aa);
+                                                                      document.getElementById('arr_length').value = aa.length;
+                                                                      document.getElementById('arr').value = aa;
+                                                                    }); 
+                                                                  // });
+                                                                });
+
+                                                                $( document ).ready(function() {
+                                                                  // $("#password<%-j%>").change(function(){
+                                                                  $("#example1").on('change','#password<%-j%>',function(){
+                                                                      var inputStr = $("#password<%-j%>").val();
+                                                                      if(inputStr.length<6){
+                                                                          $("#error_msg<%-j%>").html("minimum 6 chars required");
+                                                                          $("#success_msg<%-j%>").hide();
+                                                                      }
+                                                                      else {
+                                                                        $("#success_msg<%-j%>").html("ok");
+                                                                        $("#success_msg<%-j%>").show();
+                                                                        $("#error_msg<%-j%>").hide();
+                                                                      }
+                                                                  })
+                                                                });
+
+                                                              $(document).ready(function(){
+                                                                // $('input[name="password<%-j%>"]').click(function(){
+                                                                $("#example1").on('click','input[name="password<%-j%>"]',function(){
+                                                                  if ($(this).val())
+                                                                  {
+                                                                   $('#btnUpdate').attr('disabled', false);
+                                                                  }
+                                                                });
+                                                                // $('#randomPwd<%-j%>').click(function(){
+                                                                $("#example1").on('click','#randomPwd<%-j%>',function(){
+                                                                   $('#btnUpdate').attr('disabled', false);
+                                                                });
+                                                              });
+                                                            </script>
+                                                            <tr>
+                                                              <%if(data.users){%>
+                                                              <%if(aa[playlist1[0]]){%>
+
+                                                              <%if(aa[playlist1[0]]["A"]){%>
+                                                              <td id="<%if(takId=='A'){%>taker<%-j%><%}%>" <%if(takId=='A'){%> style="font-weight:bold;" <%}%> class="a" ><%-aa[playlist1[0]]["A"]%></td>
+                                                              <%}%>
+
+                                                              <%if(aa[playlist1[0]]["B"]){%>
+                                                              <td id="<%if(takId=='B'){%>taker<%-j%><%}%>" <%if(takId=='B'){%> style="font-weight:bold;" <%}%> class="a"><%-aa[playlist1[0]]["B"]%></td>
+                                                              <%}%>
+
+                                                              <%if(aa[playlist1[0]]["C"]){%>
+                                                              <td id="<%if(takId=='C'){%>taker<%-j%><%}%>" <%if(takId=='C'){%> style="font-weight:bold;" <%}%> class="a"><%-aa[playlist1[0]]["C"]%></td>
+                                                              <%}%>
+                                                              
+
+                                                              <%}else{%>
+                                                                <%if(aa[dt[0]]["A"]){%>
+                                                                  <%if(takId=='A'){%><td id="taker<%-j%>" class="a" style="font-weight:bold;"><%-playlist1[0]%></td><%}else{%>
+                                                                    <td></td>
+                                                                  <%}%>
+                                                                  <%}%>
+    
+                                                                  <%if(aa[dt[0]]["B"]){%>
+                                                                    <%if(takId=='B'){%><td id="taker<%-j%>" class="a" style="font-weight:bold;"><%-playlist1[0]%></td><%}else{%>
+                                                                      <td></td>
+                                                                    <%}%>
+                                                                  <%}%>
+    
+                                                                  <%if(aa[dt[0]]["C"]){%>
+                                                                    <%if(takId=='C'){%><td id="taker<%-j%>" class="a" style="font-weight:bold;"><%-playlist1[0]%></td><%}else{%>
+                                                                      <td></td>
+                                                                    <%}%>
+                                                                  <%}%>
+                                                              <%}%>
+                                                              <%}else{%>
+                                                                <td id="taker<%-j%>" class="a"><%-playlist1[0]%></td>
+                                                              <%}%>
+
+
+                                                              <td>
+                                                                <input type="password" name="password<%-j%>" class="password" id="password<%-j%>" value="<%-playlist1[1]%>" disabled><span id="success_msg<%-j%>" style="color:green"></span>
+                                                                <button type="button" id="showPwd<%-j%>" title="Show Password" rel="tooltip"><i class="ti-eye"></i></button>
+                                                                <button type="button" id="EditPwd<%-j%>" hidden="true" class="sal<%-j%>" title="Edit Password" rel="tooltip"><i class="ti-pencil-alt"></i></button>
+                                                                <button type="button" id="randomPwd<%-j%>" name="" hidden="true" title="Generate random Password" rel="tooltip"><i class="ti-control-shuffle"></i></button>
+                                                                <br/><span id="error_msg<%-j%>" style="color:red"></span>
+                                                              </td>
+                                                              <td>
+                                                                <!-- <input type="checkbox" id="chkbox_ids" name="chkbox_ids" class="chkbox" value="<%-playlist1[0]%>" /> -->
+                                                                <!-- <div class="" data-toggle="buttons"> -->
+                                                                
+                                                                  <label  title="Select to reset" rel="tooltip" >
+                                                                    <input type="checkbox" id="chkbox_ids" name="chkbox_ids" class="chkbox" value="<%-playlist1[0]%>" ><!-- <i class="fa fa-power-off" id="togglebtn"></i> --><!-- fa fa-undo -->
+                                                                  </label>
+                                                                  
+                                                                <!-- </div> -->
+                                                              </td>
+
+                                                              <% if(playlist1[2] == "not started"){ %>
+                                                                <td style="text-align:left"><%-playlist1[2]%></td>
+                                                              <% } else if(playlist1[2] == "not submitted"){ %>
+                                                                <script type="text/javascript">
+                                                                    $(document).ready(function() {
+                                                                      var startedOn_utc = document.getElementById('startedOn_utc<%-j%>').value;
+                                                                      var d1 = new Date(startedOn_utc);
+                                                                      var startedOn = d1.toString().split(" ")[1] +" "+ d1.toString().split(" ")[2] +" "+ d1.toString().split(" ")[3] +" "+ d1.toString().split(" ")[4] +" "+ d1.toString().split(" ")[5];
+
+                                                                      document.getElementById('notSubmitted<%-j%>').innerHTML = startedOn;
+                                                                    });
+                                                                </script>
+                                                                <td style="text-align:left">
+                                                                    <input type="hidden" id="startedOn_utc<%-j%>" name="startedOn_utc<%-j%>" value="<%-playlist1[3]%>">
+                                                                    <!-- <b style="color:#e6840a;font-size:17px;"><%-playlist1[2]%></b> <br/> -->
+                                                                    <b style="color:#e6840a;">Started On:</b> <b id="notSubmitted<%-j%>" style="font-weight:normal;color:#e6840a;"></b> 
+                                                                </td>
+
+                                                              <% } else if(playlist1[2] == "submitted"){ %>
+                                                                <script type="text/javascript">
+                                                                    $(document).ready(function() {
+                                                                      var submitted_utc = document.getElementById('submitted_utc<%-j%>').value;
+                                                                      var d2 = new Date(submitted_utc);
+                                                                      // console.log(begindate1);
+                                                                      // var d2 = new Date(playlist1[4]);
+                                                                      var submittedOn = d2.toString().split(" ")[1] +" "+ d2.toString().split(" ")[2] +" "+ d2.toString().split(" ")[3] +" "+ d2.toString().split(" ")[4] +" "+ d2.toString().split(" ")[5];
+                                                                      document.getElementById('submitted<%-j%>').innerHTML = submittedOn;
+                                                                    
+
+                                                                      var startedOn_utc1 = document.getElementById('startedOn_utc1<%-j%>').value;
+                                                                      var d2 = new Date(startedOn_utc1);
+                                                                      // console.log(begindate1);
+                                                                      // var d2 = new Date(playlist1[4]);
+                                                                      var submittedOn1 = d2.toString().split(" ")[1] +" "+ d2.toString().split(" ")[2] +" "+ d2.toString().split(" ")[3] +" "+ d2.toString().split(" ")[4] +" "+ d2.toString().split(" ")[5];
+                                                                      document.getElementById('notSubmitted1<%-j%>').innerHTML = submittedOn1;
+                                                                    });
+
+                                                                     $(document).ready(function() {
+                                                                        var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
+                                                                        var dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
+
+                                                                        width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+                                                                        height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+
+                                                                        var left = ((width / 2) - (900 / 2)) + dualScreenLeft;
+                                                                        var top = ((height / 2) - (900 / 2)) + dualScreenTop; 
+
+                                                                        // $('#authfrm<%-j%>').submit(function() {
+                                                                        $("#example1").on('submit','#frm<%-j%>',function(){
+                                                                            window.open('', 'formpopup', 'scrollbars=yes, width=900, height=900, top=' + top + ', left=' + left);
+                                                                            this.target = 'formpopup';
+                                                                        });    
+                                                                    });
+                                                                </script>
+                                                                
+                                                                <td id="subTd" style="text-align:left;">
+                                                                    <input type="hidden" id="submitted_utc<%-j%>" name="submitted_utc<%-j%>" value="<%-playlist1[4]%>">
+                                                                    <input type="hidden" id="startedOn_utc1<%-j%>" name="startedOn_utc1<%-j%>" value="<%-playlist1[3]%>">
+                                                                    <!-- <b style="color:#158808;font-size:17px;"><%-playlist1[2]%></b><br/> -->
+                                                                     <span>
+                                                                       <b style="color:#158808;">Submitted On:</b><b id="submitted<%-j%>" style="font-weight:normal;color:#158808;"></b><br/>
+                                                                       <b style="color:#158808;">Started On:</b><b id="notSubmitted1<%-j%>" style="font-weight:normal;color:#158808;"></b>
+                                                                        <br/>
+                                                                      <b style="color:#158808;">Time Taken:</b> <b style="font-weight:normal;color:#158808;"><%-playlist1[5]%> </b><br/>
+                                                                        <div class="pull-left">
+                                                                          <b style="color:#158808;">Score:</b> <b style="font-weight:normal;color:#158808;"><%-playlist1[6]%></b> 
+                                                                        </div>
+                                                                        <div class="pull-left" style="padding-left:20px;">
+                                                                          <form role="form" name="frm<%-j%>" id="frm<%-j%>" method="post" action="/author_quizResponse">
+                                                                            <input type="hidden" name="quiz_id" id="quiz_id" value="<%-data._id%>">
+                                                                            <input type="hidden" name="uname" id="uname" value="<%-playlist1[0]%>">
+                                                                            <input type="hidden" name="quizPwd" id="quizPwd" value="<%-playlist1[1]%>">
+                                                                            <button type="submit" class="" id="quizreview" title="Review" rel="tooltip"><i class="fa fa-external-link"></i></button> <!--   fa fa-share-square-o-->
+                                                                          </form>
+                                                                        </div>
+                                                                    </span>
+                                                                </td>
+                                                              <% } else{ %>
+                                                              <td></td>
+                                                              <% } %>
+                                                            </tr>
+                                                          <% } %>
+                                                          </tbody>
+                                                        </table>
+                                                      </div>
+                                                    <!-- </div>
+                                                  </div> -->
+                                                </div>
+                                            </fieldset>
+                                        <!-- </form>                                       -->
+                                    </div>
+                                    <div class="tab-pane" id="advance">
+                                        <div class="row">
+                                            <form  class="form-horizontal">
+                                                <fieldset  class="col-sm-10 col-sm-offset-1">
+                                                    <div class="form-group">
+                                                        <label class="col-lg-3 control-label">
+                                                        Security Level  <star><b>*</b></star>
+                                                        <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipD13%>">
+                                                         <i class="ti-help-alt fa-lg"></i>
+                                                        </button>
+                                                        </label>
+                                                        <div class="col-lg-8">
+                                                            <div class="radio">
+                                                                <input type="radio" name="security_level" id="security1"  value="regular" <% if(data.security == "regular"){%> checked <%}%>>
+                                                                <label for="security1">
+                                                                  Regular : Warning is presented if a non-recommended browser is used when the student lands on the quiz login page 
+                                                                </label>
+                                                            </div>
+                                                            <div class="radio">
+                                                                <input type="radio" name="security_level" id="security2" value="high" <% if(data.security == "high"){%> checked <%}%>>
+                                                                <label for="security2">
+                                                                  High: In high security mode student is not allowed to login on a non-recommended browser - a check done by the quizapp back-end
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                                <fieldset  class="col-sm-10 col-sm-offset-1">
+                                                    <div class="form-group">
+                                                        <label class="col-lg-3 control-label">
+                                                        Scores and Reviews  <star><b>*</b></star>
+                                                        <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipD15%>">
+                                                         <i class="ti-help-alt fa-lg"></i>
+                                                        </button>
+                                                        </label>
+                                                        <div class="col-lg-8">
+                                                          <div class="radio">
+                                                              <input type="radio" name="score_avalb__selector1" id="score1" value="submission,allowed" <% if(data.score == "submission" && data.review == "allowed"){%> checked <%}%>>
+                                                              <label for="score1">
+                                                                Allow scores immediately after submission and allow review after quiz deadline
+                                                              </label>
+                                                          </div>
+                                                          <div class="radio">
+                                                              <input type="radio" name="score_avalb__selector1" id="score2" value="submission,unallowed" <% if(data.score == "submission" && data.review == "unallowed"){%> checked <%}%>>
+                                                              <label for="score2">
+                                                                Allow scores immediately after submission but do not allow review 
+                                                              </label>
+                                                          </div>
+                                                          <div class="radio">
+                                                              <input type="radio" name="score_avalb__selector1" id="score3" value="deadline,allowed" <% if(data.score == "deadline" && data.review == "allowed"){%> checked <%}%>>
+                                                              <label for="score3">
+                                                                Allow scores and review after deadline
+                                                              </label>
+                                                          </div>
+                                                          <div class="radio">
+                                                              <input type="radio" name="score_avalb__selector1" id="score4" value="deadline,unallowed" <% if(data.score == "deadline" && data.review == "unallowed"){%> checked <%}%>>
+                                                              <label for="score4">
+                                                                Allow scores after deadline but do not allow review
+                                                              </label>
+                                                          </div>
+                                                          <div class="radio">
+                                                              <input type="radio" name="score_avalb__selector1" id="score5" value="unallowed,unallowed" <% if(data.score == "unallowed" && data.review == "unallowed"){%> checked <%}%>>
+                                                              <label for="score5">
+                                                                Do not allow scores or review
+                                                              </label>
+                                                          </div>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                            </form>
+                                        </div>                                 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+         <!-- modal view sample -->
+         <div class="">
+            <div class="modal fade" id="bsModal3" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="mySmallModalLabel"></h4>
+                        </div>
+                        <div class="modal-body" id="viewModalContent">
+                            <p></p>
+                            <br/><br/>
+                        </div>
+                        <!-- <div class="modal-footer">
+                            <form role="form" name="add_form1" id="add_form1" method="post" action="/author_getQuizControlData" enctype="multipart/form-data"
+                            class='inline'>
+                            <input type="hidden" name="author" value="<%-short%>">
+                            <input type="hidden" name="quizid" id="quizid" value="<%-data._id%>">
+                            <button type='submit' class="btn btn-primary btn-fill btn-wd btnmargin" id="colseMdl">Close</button>
+                          </form>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+         </div>
+        <!-- modal end -->
+        <%- include ../parts/footer %>
+    </div>
+</div>
+</body>
+<%- include ../parts/allJS %>
+
+<script type="text/javascript">
+$(document).ready(function() {
+          $('#example1').DataTable({
+              "pagingType": "full_numbers",
+              "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+              responsive: false,
+              language: {
+              search: "_INPUT_",
+              searchPlaceholder: "Search records",
+            }
+          });
+      });
+</script>
+
+</html>  

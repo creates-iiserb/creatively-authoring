@@ -1,0 +1,223 @@
+.sub_footer{
+	margin-top: 15px;
+	font-weight: bold;
+	/*margin-left: 50px;
+	margin-right: 50px;
+	margin-top: 0px;*/
+}
+.pubListHr{
+	width:60%;
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+
+
+ h4{
+ 	margin-bottom: 20px;
+	margin-top: 10px;
+ }
+
+ .sub_card{
+ 	/*min-width: 380px;*/
+ 	min-height: 250px;
+ 	max-height: 250px;
+ 	/*overflow: auto;*/
+ }
+
+
+
+@media screen and (max-width:  1830px) {
+  .sub_card{
+ 	min-height: 300px;
+ 	max-height: 300px;
+ }
+}
+
+
+ .sticky {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+           
+          }
+
+
+/*------- css for card border--------------------*/
+.bor-danger{
+	border-left:5px solid #c84513;
+}
+.bor-success{
+	border-left:5px solid #54b07d;
+}
+.bor-warning{
+	border-left:5px solid #f0a810;
+}
+.bor-info{
+	border-left:5px solid #429cb6;
+}
+
+.bor-primary{
+	border-left:5px solid #5e8283;
+}
+
+.bor-danger:hover{
+	box-shadow: 0px 3px 29px -4px rgba(166, 159, 166, 1);
+}
+.bor-success:hover{
+	box-shadow: 0px 3px 29px -4px rgba(166, 159, 166, 1);
+}
+.bor-warning:hover{
+	box-shadow: 0px 3px 29px -4px rgba(166, 159, 166, 1);
+}
+.bor-info:hover{
+	box-shadow: 0px 3px 29px -4px rgba(166, 159, 166, 1);
+}
+
+.bor-primary:hover{
+	box-shadow: 0px 3px 29px -4px rgba(166, 159, 166, 1);
+}
+/*------- css for card border-- end ------------------*/
+
+
+/*overlay content*/
+.overlay {
+    height: 100%;
+    width: 100%;
+    display: none;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    /*background-color: rgb(0,0,0);*/
+     background-color: #f4f4ef;
+     overflow: scroll;
+}
+
+.overlay-content {
+    position: relative;
+    top: 5%;
+    width: 100%;
+    text-align: center;
+    margin-top: 30px;
+}
+
+.overlay a {
+    padding: 5px;
+    text-decoration: none;
+    font-size: 36px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
+
+.overlay a.btninfo {
+    padding: 5px;
+    text-decoration: none;
+    font-size: 36px;
+    color: #7AC29A;
+    display: block;
+    transition: 0.3s;
+}
+
+
+.overlay a.btnbasket {
+    padding: 5px;
+    text-decoration: none;
+    font-size: 36px;
+    color: #68B3C8;
+    display: block;
+    transition: 0.3s;
+}
+
+
+
+.overlay h3{
+	margin-bottom: 30px;
+}
+
+/*.overlay a:hover, .overlay a:focus {
+    color: #f1f1f1;
+}*/
+
+.overlay .closebtn {
+    position: absolute;
+    /*top: 20px;*/
+    right: 45px;
+    font-size: 50px;
+    color:#c84513;
+    /*margin: 0px;*/
+}
+
+@media screen and (max-height: 450px) {
+  .overlay a {font-size: 20px}
+  .overlay .closebtn {
+    font-size: 40px;
+    top: 15px;
+    right: 35px;
+  }
+}
+
+
+
+.topicGrid {
+    -webkit-column-count: 3; /* Chrome, Safari, Opera */
+    -moz-column-count: 3; /* Firefox */
+    column-count: 3;
+    column-gap: 40px;
+    column-rule: 1px solid #eee;
+}
+
+.topicGrid h5{
+	/*border-bottom:1px solid #eee;*/
+	margin-bottom: 25px;
+}
+
+#tblquesHead button{
+  padding:5px 5px 0px 6px;
+}
+
+
+
+.fixed-table-toolbar .columns .btn{
+    border-radius: 30px !important;
+  }
+
+  .btngrplastbtn {
+    border-top-right-radius: 26px !important;
+    border-bottom-right-radius: 26px !important;
+  }
+
+  .btngrplastbtn:hover {
+    border-top-right-radius: 26px !important;
+    border-bottom-right-radius: 26px !important;
+  }
+
+  .ticketRaise{
+    color:#F3BB45 !important;
+  }
+  .ticketIssue{
+    color : #EB5E28 !important;
+  }
+
+  .blockquteCust{
+    border-left: none !important;
+    padding: 0px !important;
+  }
+
+  .mrBtm-5px{
+    margin-bottom: 5px;
+  }
+  .contentBNone::before{
+    content: '' !important;
+  }
+
+  
+
+
+  @media screen and (max-width: 768px) {
+    .txtResLeft{
+      text-align: left !important;
+    }
+  }
+
+

@@ -1,0 +1,4 @@
+node_modules
+/configEnv.json 
+.DS_Store
+.vscode/settings.json

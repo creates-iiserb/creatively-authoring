@@ -1,0 +1,97 @@
+    .fixed-table-toolbar .columns .btn{
+    border-radius: 30px !important;
+    }
+
+
+    /* dashboard */
+
+    .danger-box {
+    border-left: 5px solid #c84513;
+    }
+
+    .success-box {
+    border-left: 5px solid #7AC29A;
+    }
+
+    .warning-box {
+    border-left: 5px solid #f0a810;
+    }
+
+    .quizbox {
+    border-radius: 3px;
+    /* font-size: 14px; */
+    /* border-left: 5px solid #00c0ef; */
+    margin: 10px;
+
+    -webkit-box-shadow: 0px 3px 19px -4px rgba(166, 159, 166, 1);
+    -moz-box-shadow: 0px 3px 19px -4px rgba(166, 159, 166, 1);
+    box-shadow: 0px 3px 19px -4px rgba(166, 159, 166, 1);
+    padding: 10px;
+    border-radius: 6px;
+
+    }
+
+    .quizbox h3, h4 {
+    padding: 2px;
+    margin: 2px;
+    }
+
+    .small {
+    margin: 10px;
+    }
+
+    .ticketHeading{
+    font-size: 15px;
+    font-weight: bold;
+    }
+
+    .ticektIcon{
+    font-size:25px;
+    }
+
+    .tickNumbers{
+    color:#66615b;
+    }
+
+    .font14px{
+    font-size: 14px;
+    }
+
+
+
+    .nav-tabs .ticketCounters{
+    /* position: absolute;
+    top: 2%;
+    right: -1%; */
+
+    position: absolute;
+    top: 5%;
+    right: 1%;
+    border-radius: 2px;
+    padding: 3px;
+    }
+
+    .nav-tabs .ticketCounters::before{
+    border-bottom: 11px solid transparent !important;  
+    z-index: 999;
+    }
+
+    .nav-tabs .ticketCounters::after{
+    border-bottom: 11px solid transparent !important;  
+    z-index: 999;
+    }
+
+
+    .mt-14px {
+    margin-top: 14px;
+    }
+
+    .btngrplastbtn {
+    border-top-right-radius: 26px !important;
+    border-bottom-right-radius: 26px !important;
+    }
+
+    .btngrplastbtn:hover {
+    border-top-right-radius: 26px !important;
+    border-bottom-right-radius: 26px !important;
+    }

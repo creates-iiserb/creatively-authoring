@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <%- include('../parts/allCSS'); %>
+    <link rel="stylesheet" href="author_public/css/author_quiz.css">
+    <script src="author_public/PaperDashBoard/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js" defer></script>
+</head>
+<body>
+    <div class="wrapper"><div class="ld ld-ring ld-spin"></div>
+        <%- include('../parts/leftNavBar'); %>
+            <div class="main-panel">
+                <%- include('../parts/topNavBarPart1'); %>Create New Quiz
+                    <br/>
+                    <%- include('../parts/topNavBarPart2'); %>
+                        <div class="content">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-10 col-md-offset-1">
+                                        <div class="card card-wizard" id="wizardCard">
+                                            <form id="wizardForm" method="post" action="">
+                                                <div class="card-header text-center">
+                                                    <h4 class="card-title">Create New Quiz</h4>
+                                                    <!-- <p class="category">Split a complicated flow in multiple steps</p> -->
+                                                </div>
+                                                <div class="card-content">
+                                                    <ul class="nav">
+                                                        <li>
+                                                            <a href="#MetaData" data-toggle="tab">MetaData</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#content" data-toggle="tab">Content</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#takers" data-toggle="tab">Takers</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#tab3" data-toggle="tab">Time</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#advance" data-toggle="tab">Advanced</a>
+                                                        </li>
+                                                    </ul>
+                                                    <div class="tab-content">
+                                                        <div class="tab-pane" id="MetaData">
+                                                            <h5 class="text-center">Enter quiz identifiers here.</h5>
+                                                            <fieldset>
+                                                                <div class="col-md-10 col-md-offset-1">
+                                                                    <div class="form-group">
+                                                                        <!-- <label class="control-label" style="font-size:15px;">Author</label> -->
+                                                                        <input type="hidden" class="form-control" id="author" value="<%-user%>" readonly="true">
+                                                                    </div>
+                                                                </div>
+                                                            </fieldset>
+                                                            <fieldset>
+                                                                <div class="col-md-10 col-md-offset-1">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label" style="font-size:15px;">Tags
+                                                                        <star>
+                                                                            <b>*</b>
+                                                                        </star>
+                                                                        <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipQuiz01%>"><i class="ti-help-alt fa-lg"></i></button></label>
+                                                                        <input type="text" class="form-control input-lg" data-role="tagsinput" id="tags" name="tags" required>
+                                                                    </div>
+                                                                </div>
+                                                            </fieldset>
+                                                            <fieldset>
+                                                                <div class="col-md-10 col-md-offset-1">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label" style="font-size:15px;">Quiz Title
+                                                                        <star>
+                                                                            <b>*</b>
+                                                                        </star>
+                                                                        <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipQuiz02%>"><i class="ti-help-alt fa-lg"></i></button></label>
+                                                                        <input type="text" class="form-control " id="title" name="title" required>
+                                                                    </div>
+                                                                </div>
+                                                            </fieldset>
+                                                            <fieldset>
+                                                                <div class="col-md-10 col-md-offset-1">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label" style="font-size:15px;">Description
+                                                                        <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipQuiz03%>"><i class="ti-help-alt fa-lg"></i></button></label>
+                                                                        <textarea class="form-control" rows="3" id="desc"></textarea>
+                                                                    </div>
+                                                                </div>
+                                                            </fieldset>
+                                                        </div>
+                                                        <div class="tab-pane" id="content">
+                                                            <h5 class="text-center">Quiz content and it's settings go here.</h5>
+                                                            <fieldset>
+                                                                <div class="col-md-10 col-md-offset-1">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label" style="font-size:15px;">Instruction
+                                                                        <star>
+                                                                            <b>*</b>
+                                                                        </star>
+                                                                        <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipQuiz04%>"><i class="ti-help-alt fa-lg"></i></button></label>
+                                                                        <textarea class="form-control" rows="3" id="id_instruction" required></textarea>
+                                                                    </div>
+                                                                </div>
+                                                            </fieldset>
+                                                            <fieldset>
+                                                                <div class="col-md-5 col-md-offset-1">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label" style="font-size:15px;">Playlist Name
+                                                                        <star>
+                                                                            <b>*</b>
+                                                                        </star>
+                                                                        <!--     IMPORTANT! - the "bootstrap select picker" is not compatible with jquery.validation.js, that's why we use the "default select" inside this wizard. We will try to contact the guys who are responsibble for the "bootstrap select picker" to find a solution. Thank you for your patience.
+                                                                 -->
+                                                                        <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipQuiz05%>"><i class="ti-help-alt fa-lg"></i></button></label>
+                                                                        <select class="form-control valid" data-style="btn-default" id="playlist_name" name="playlist_name"  data-live-search="true" required>
+                                                                            <option value="">--select--</option>
+                                                                            <%for(var i=0; i<playlistdata.length;i++){
+                                                                        var playlist1 = playlistdata[i];
+                                                                        var content = playlist1[0];
+                                                                        var ques = new Array();
+                                                                        for(var k=0; k<content.length;k++){
+                                                                          ques.push(content[k].item);
+                                                                        }
+                                                                    %>
+                                                                                <option value="<%-ques%> - <%-playlist1[1]%> - <%-playlist1[2]%>">
+                                                                                    <%-playlist1[1]%>
+                                                                                </option>
+                                                                                <%}%>
+
+                                                                    <%for(var i=0; i<collb1.length;i++){
+                                                                        var strcollb1 = collb1[i];
+
+                                                                        var content1 = strcollb1[0];
+                                                                        var ques1 = new Array();
+                                                                        for(var k=0; k<content1.length;k++){
+                                                                        ques1.push(content1[k].item);
+                                                                        }
+
+                                                                        %>
+                                                                        <option value="<%-ques1%> - <%-strcollb1[1]%> - <%-strcollb1[2]%>"><%-strcollb1[1]%></option>
+                                                                        <%}%>
+                                                
+                                                                        <%for(var i=0; i<collb2.length;i++){
+                                                                        var strcollb2 = collb2[i];
+
+                                                                        var content2 = strcollb2[0];
+                                                                        var ques2 = new Array();
+                                                                        for(var k=0; k<content2.length;k++){
+                                                                        ques2.push(content2[k].item);
+                                                                        }
+                                                                        %>
+                                                                        <option value="<%-ques2%> - <%-strcollb2[1]%> - <%-strcollb2[2]%>"><%-strcollb2[1]%></option>
+                                                                        <%}%>
+
+
+                                                                        </select>
+                                                                        <span id="authError" class="text-danger"></span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label" style="font-size:15px;">Section Name
+                                                                        <star>
+                                                                            <b>*</b>
+                                                                        </star>
+                                                                        <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content=""><i class="ti-help-alt fa-lg"></i></button></label>
+                                                                        <select class="form-control valid" data-style="btn-default" id="section_name" name="section_name" style="display:none;" required>
+                                                                            <!-- <option value="">Select</option> -->
+                                                                        </select>
+                                                                        <input type="hidden" id="sectionCon" name="sectionCon" value=""/>
+                                                                    </div>
+                                                                </div>
+                                                            </fieldset>
+                                                            <fieldset>
+                                                                <div class="col-md-10 col-md-offset-1">
+                                                                    <div class="form-group">
+                                                                        <!-- <label class="control-label" style="font-size:15px;">Question Ids </label> -->
+                                                                        <!-- <span class="ti-help-alt fa-lg" data-toggle="tooltip" data-placement="right"  title="<%-tooltip.tooltipQuiz06%>" style="color:#218FC6;font-size:1.3em;"></span> -->
+                                                                        <input type="hidden" class="form-control" id="id_question" value="" disabled>
+                                                                    </div>
+                                                                </div>
+                                                            </fieldset>
+                                                            <fieldset>
+                                                                <div class="col-md-5 col-md-offset-1">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label" style="font-size:15px;">Items in Quiz
+                                                                        <star>
+                                                                            <b>*</b>
+                                                                        </star>
+                                                                        <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipQuiz07%>"><i class="ti-help-alt fa-lg"></i></button></label>
+                                                                        <input type="number" class="form-control" id="number" min="1" max="50" value="" required>
+                                                                        <span id="maxquesId" class="text-danger"></span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label" style="font-size:15px;">Arrangement
+                                                                        <star>
+                                                                            <b>*</b>
+                                                                        </star>
+                                                                        <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipQuiz08%>"><i class="ti-help-alt fa-lg"></i></button></label>
+                                                                        <select name="order" id="order" class="form-control valid" data-style="btn-default" required>
+                                                                            <option value="ordered">Ordered</option>
+                                                                            <option value="random">Random</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </fieldset>
+                                                            <fieldset>
+                                                                <div class="col-md-5 col-md-offset-1">
+                                                                    <div class="form-group">
+                                                                        <label style="font-size:15px;">Help Level Selector
+                                                                        <star>
+                                                                            <b>*</b>
+                                                                        </star>
+                                                                        <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipQuiz16%>"><i class="ti-help-alt fa-lg"></i></button></label>
+                                                                        <select name="help_level_selector" id="help_level_selector" class="form-control valid" data-style="btn-default" required>
+                                                                            <option value="2">Hint and Explanation Allowed</option>
+                                                                            <option value="1">Hint Allowed</option>
+                                                                            <option value="0">No Help Allowed</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </fieldset>
+                                                            <fieldset>
+                                                                <div class="col-md-10 col-md-offset-1">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label" style="font-size:16px;">Grading Matrix
+                                                                        <star>
+                                                                            <b>*</b>
+                                                                        </star>
+                                                                        <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipQuiz09%>"><i class="ti-help-alt fa-lg"></i></button></label>
+                                                                        <br>
+                                                                        <br>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-10 col-md-offset-1">
+                                                                    <div class="form-group">
+                                                                        <div class="">
+                                                                            <div class="">
+                                                                                <div class="table-responsive">
+                                                                                    <table class="table table-center table-responsive" style="border:#ededed  1px solid;border-radius:5px;">
+                                                                                        <thead>
+                                                                                            <tr>
+                                                                                                <th></th>
+                                                                                                <th>No help used</th>
+                                                                                                <th class="hintCol">Hint used</th>
+                                                                                                <th class="expCol">Explanation used</th>
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                        <tbody>
+                                                                                            <tr>
+                                                                                                <td>
+                                                                                                    <b>Correct Score</b>
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    <input id="correctsc" type="number" value="4" class="form-control" min="-1000" max="1000" style="background-color:rgba(161, 234, 194, 0.4);">
+                                                                                                </td>
+                                                                                                <td class="hintCol">
+                                                                                                    <input type="number" id="correctsc" value="4" class="form-control" min="-1000" max="1000" style="background-color:rgba(241, 209, 142, 0.4);">
+                                                                                                </td>
+                                                                                                <td class="expCol">
+                                                                                                    <input type="number" id="correctsc" value="4" class="form-control" min="-1000" max="1000" style="background-color:rgba(170, 216, 228, 0.4);">
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td>
+                                                                                                    <b>Skip Score</b>
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    <input type="number" id="skipsc" value="0" min="-1000" max="1000" class="form-control" style="background-color:rgba(161, 234, 194, 0.4);">
+                                                                                                </td>
+                                                                                                <td class="hintCol">
+                                                                                                    <input type="number" id="skipsc" value="0" min="-1000" max="1000" class="form-control" style="background-color:rgba(241, 209, 142, 0.4);">
+                                                                                                </td>
+                                                                                                <td class="expCol">
+                                                                                                    <input type="number" id="skipsc" value="0" min="-1000" max="1000" class="form-control" style="background-color:rgba(170, 216, 228, 0.4);">
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td>
+                                                                                                    <b>Incorrect Score</b>
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    <input type="number" id="incorrectsc" value="-1" min="-1000" max="1000" class="form-control" style="background-color:rgba(161, 234, 194, 0.4);">
+                                                                                                </td>
+                                                                                                <td class="hintCol">
+                                                                                                    <input type="number" id="incorrectsc" value="-1" min="-1000" max="1000" class="form-control" style="background-color:rgba(241, 209, 142, 0.4);">
+                                                                                                </td>
+                                                                                                <td class="expCol">
+                                                                                                    <!-- <input type="number" id="incorrectsc"  onkeypress='return isNumberKeys(event)' value="-1"> -->
+                                                                                                    <input type="number" id="incorrectsc" value="-1" min="-1000" max="1000" class="form-control" style="background-color:rgba(170, 216, 228, 0.4);">
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </fieldset>
+                                                        </div>
+                                                        <div class="tab-pane" id="takers">
+                                                            <h5 class="text-center">Quiz takers go here.</h5>
+                                                            <div class="row">
+                                                                <!-- modal to Load Takers -->
+                                                                <div class="modal fade" id="addTakerMdl" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                                                        <div class="modal-dialog modal-lg" role="document">
+                                                                            <div class="modal-content">
+                                                                                <div class="modal-header">
+                                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                                    <h4 class="modal-title" id="myModalLabel">Add Takers</h4>
+                                                                                </div>
+                                                                                <div class="modal-body">
+                                                                                    <div class="box">
+                                                                                        <div class="box-body">
+                                                                                            <div class="form-group">
+                                                                                                <label class="control-label" style="font-size:15px;">Quiz Takers</label>
+                                                                                                <div>
+                                                                                                    <input type="text" class="form-control pull-right takersArry" id="id_students" data-role="tagsinput" required>
+                                                                                                </div>
+                                                                                                <p id="takerReq" class="text-danger" style=" display:none;">Field cannot be empty</p>
+                                                                                            </div>
+                                                                                        </div><!-- /.box-body -->
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="modal-footer">
+                                                                                    <button class='btn btn-success btn-wd btn-fill' type='button' id="addTakersArryBtn" >Done</button>
+                                                                                    <!-- <button type="button" class="btn btn-default btn-wd" data-dismiss="modal">Close</button> -->
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- modal to Load Takers ends-->
+                                                                <div class="col-md-10 col-md-offset-1">
+                                                                    <label class="control-label" style="font-size:15px;">Quiz Takers
+                                                                        <star><b>*</b></star>
+                                                                        <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipQuiz10%>"><i class="ti-help-alt fa-lg"></i></button></label>
+                                                                    <div id="fileUploadDiv" >
+                                                                        <div class="form-group">
+                                                                            <div class="row">
+                                                                                <div class="col-md-12 pull-center"><br>
+                                                                                    <div id="fileUploadDiv">
+                                                                                        <button class='btn btn-default btn-wd' type='button' id='loadTakers' data-toggle="modal" data-target="#addTakerMdl" >Add Takers</button>
+                                                                                        &nbsp;&nbsp;<b class="control-label text-center pull-center" id="or" style="font-size:15px;">OR</b>&nbsp;&nbsp;
+                                                                                        <div class="file btn btn-default btn-wd" id="aa">
+                                                                                            Upload CSV File  
+                                                                                            <input type="file" name="txtFileUpload" id="txtFileUpload" accept=".csv" onchange="checkExtension(this.value);" rel="tooltip" style="display:none;"/>
+
+                                                                                        </div>
+
+                                                                                        
+
+                                                                                        <!-- <input type="text" class="form-control pull-right takersArry" id="id_students" data-role="tagsinput" required> -->
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <div class="row">
+                                                                                <div class="col-md-12 text-right">
+                                                                                        <!-- <button type="button" id="export-btn" class="btn btn-primary" style="display:none">Export Data</button> -->
+                                                                                        <!-- <p id="export"></p> -->
+                                                                                    <button type="button" id="btnClrTblArry" class="btn btn-danger btn-fill btn-icon btn-sm" rel="tooltip" data-original-title="Remove" style="display:none;"><i class="ti-close"></i></button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <table id="tblArry" class="table table-no-bordered table-responsive table-hover" style="display:none;">
+                                                                                <thead scope="row" class="">
+                                                                                <th scope="col">A</th>
+                                                                                <th scope="col"></th>
+                                                                                </thead>
+                                                                            </table>
+                                                                            <div id='table-container'></div>
+                                                                        </div>
+                                                                        <div class="form-group" id="arryEmailDiv"  style="display:none;">
+                                                                            <div class="row">
+                                                                                <div class="col-md-3">
+                                                                                    <label class="control-label" style="font-size:15px;"> Do you want to send email:
+                                                                                        <star>
+                                                                                            <b>*</b>
+                                                                                        </star>
+                                                                                    </label>
+                                                                                </div>
+                                                                                <div class="col-md-4">
+                                                                                    <div class="radio-inline">
+                                                                                        <input type="radio" name="sndEmailAllowArry" id="arrYes" value="yes" required>
+                                                                                        <label for="arrYes">Yes</label>
+                                                                                    </div>
+                                                                                    <div class="radio-inline">
+                                                                                        <input type="radio" name="sndEmailAllowArry" id="arrNo" value="no">
+                                                                                        <label for="arrNo">No</label>
+                                                                                    </div> 
+                                                                                    <span class="logErr"></span>
+                                                                                </div>
+                                                                                <div class="col-md-5">
+                                                                                    <div  id="invalid_emails_arry"> </div>
+                                                                                    <textarea id="arryJson" name="arryJson" style="display:none;"></textarea>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <!-- <b class="control-label text-center" id="or" style="font-size:15px;">OR</b><br/><br/> -->
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-10 col-md-offset-1">
+                                                                    <div class="form-group">
+                                                                        <div class="row">
+                                                                            <div class="col-md-6">
+                                                                                    
+                                                                                        <span id="uploadName" class="text-default"></span> 
+                                                                                <!-- <input type="file" name="txtFileUpload" id="txtFileUpload" class="btn btn-primary" accept=".csv" onchange="checkExtension(this.value);" /> -->
+                                                                            </div>
+                                                                            <div class="col-md-6 text-right">
+                                                                                    
+                                                                                    <input type="hidden" id="loadTblData" value=""/>
+                                                                                <button type="button" id="btnClrTbl" class="btn btn-danger btn-fill btn-icon btn-sm" rel="tooltip" data-original-title="Remove CSV file" style="display:none;"><i class="ti-close"></i></button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group row">
+                                                                        <div class="col-md-12">
+                                                                            <table id="tbl" class="table table-no-bordered table-responsive table-hover" style="display:none;">
+                                                                               
+                                                                            </table>
+                                                                            <div id='table-container'></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row" id="hide_email_row" style="display:none;">
+                                                                <div class="col-md-10 col-md-offset-1">
+                                                                    <textarea id="csvJson" name="csvJson" style="display:none;"></textarea>
+                                                                    <div class="form-group">
+                                                                        <!--to send email-->
+                                                                        <label class="control-label" style="font-size:15px;"> Do you want to send email:
+                                                                            <star>
+                                                                                <b>*</b>
+                                                                            </star>
+                                                                        </label>
+                                                                        <div class="radio-inline">
+                                                                            <input type="radio" name="sndEmailAllow" id="myRadioyes" value="yes" onclick="myRadioyes1()" required>
+                                                                            <label for="myRadioyes">Yes</label>
+                                                                        </div>
+                                                                        <div class="radio-inline">
+                                                                            <input type="radio" name="sndEmailAllow" id="myRadiono" value="no" onclick="myRadiono1()">
+                                                                            <label for="myRadiono">No</label>
+                                                                        </div>  
+                                                                        <span class="logErr"></span>                                                                 
+                                                                    </div>
+                                                                  <!--email select option-->
+                                                                    <div class="form-group deposit" id="myselect" style="display:none;">
+                                                                      <div class="row">
+                                                                            <div class="col-md-2">
+                                                                                <label class="control-label" style="font-size:15px;">Select column which contain email id:
+                                                                                    <star>
+                                                                                        <b>*</b>
+                                                                                    </star>
+                                                                                </label>
+                                                                            </div>
+                                                                            <div class="col-md-4">
+                                                                                <select class="form-control valid" data-style="btn-default" id="selectEmailCol" name="selectEmailCol" required>
+                                                                                <!-- <select id="selectEmailCol" class="selectpicker"> -->
+                                                                                    <option value=''  data-col="">Select</option>
+                                                                                    <option value='0' data-col="A">A</option>
+                                                                                    <option value='1' data-col="B">B</option>
+                                                                                    <option value='2' data-col="C">C</option>
+                                                                                </select>
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                                <div  id="invalid_emails"> </div>
+                                                                                <div id="invalid_e" class="" style="display:none;">
+                                                                                    <h4 class="text-danger">No data Found!</h4>
+                                                                                </div>
+                                                                            </div>
+                                                                      </div>
+                                                                    </div>
+                                                                 
+                                                                </div>
+                                                            </div>
+                                                            <div class="row" id="hide_user_row" style="display:none;">
+                                                                <div class="col-md-10 col-md-offset-1" >
+                                                                    <div class="form-group">
+                                                                        <div class="row">
+                                                                            <div class="col-md-2">
+                                                                                <label class="control-label" style="font-size:15px;">Select Username for login:
+                                                                                    <star>
+                                                                                        <b>*</b>
+                                                                                    </star>
+                                                                                </label>
+                                                                            </div>
+                                                                            <div class="col-md-4">
+                                                                                <!-- <select id="selectuserIdCol" class="selectpicker"> -->
+                                                                                <select class="form-control valid" data-style="btn-default" id="selectuserIdCol" name="selectuserIdCol" required>
+                                                                                    <option value=''   data-col="">Select</option>
+                                                                                    <option value='0'  data-col="A">A</option>
+                                                                                    <option value='1' data-col="B">B</option>
+                                                                                    <option value='2' data-col="C">C</option>
+                                                                                </select>
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                                <div id="username1" class="" ></div>
+                                                                                <div id="u_validate" class=""></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="tab-pane" id="tab3">
+                                                            <h5 class="text-center">Quiz timings go here.</h5>
+                                                            <div class="row">
+                                                                <div class="col-md-10 col-md-offset-1">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label" style="font-size:15px;">Quiz Validity Period
+                                                                        <star>
+                                                                            <b>*</b>
+                                                                        </star>
+                                                                        <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipQuiz11%>"><i class="ti-help-alt fa-lg"></i></button></label>
+                                                                        <div class="input-group">
+                                                                            <div class="input-group-addon">
+                                                                                <i class="fa fa-clock-o"></i>
+                                                                            </div>
+                                                                            <input type="text" class="form-control pull-right  readOnlyCal" id="start_date" name="start_date" required readonly>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-10 col-md-offset-1">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label" style="font-size:15px;">Duration
+                                                                        <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipQuiz12%>"><i class="ti-help-alt fa-lg"></i></button></label>
+                                                                        <input type="number" class="form-control" id="duration" min="5" onkeypress='return isNumberKey(event)'>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="tab-pane" id="advance">
+                                                            <h5 class="text-center">Settings for quiz interaction.</h5>
+                                                            <div class="row">
+                                                                <div class="col-md-10 col-md-offset-1">
+                                                                    <div class="form-group">
+                                                                        <label style="font-size:15px;">Security Level
+                                                                        <star>
+                                                                            <b>*</b>
+                                                                        </star>
+                                                                        <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipQuiz13%>"><i class="ti-help-alt fa-lg"></i></button></label>
+                                                                        <div class="radio">
+                                                                            <input type="radio" name="security_level" id="security1" value="regular" checked>
+                                                                            <label for="security1">
+                                                                                Regular : Warning is presented if a non-recommended browser is used when the student lands on the quiz login page
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="radio">
+                                                                            <input type="radio" name="security_level" id="security2" value="high">
+                                                                            <label for="security2">
+                                                                                High: In high security mode student is not allowed to login on a non-recommended browser - a check done by the quizapp back-end
+                                                                            </label>
+                                                                        </div>
+                                                                        
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-10 col-md-offset-1">
+                                                                    <div class="form-group">
+                                                                        <label style="font-size:15px;">Duration Interpretation
+                                                                        <star>
+                                                                            <b>*</b>
+                                                                        </star>
+                                                                        <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipQuiz14%>"><i class="ti-help-alt fa-lg"></i></button></label>
+                                                                        <div class="radio">
+                                                                            <input type="radio" name="duration_interpretation" id="duration1" value="actual" checked>
+                                                                            <label for="duration1">
+                                                                                Actual Login Time: Total time is used to calculate by adding time taken per question. Recommoded mode for a regular homework.
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="radio">
+                                                                            <input type="radio" name="duration_interpretation" id="duration2" value="absolute">
+                                                                            <label for="duration2">
+                                                                                Absolute: Time used is calculated since the first login. Total duration is considered to be difference between absolute first
+                                                                                login and absolute submission time.
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-10 col-md-offset-1">
+                                                                    <div class="form-group">
+                                                                        <label style="font-size:15px;">Scores and Reviews
+                                                                        <star>
+                                                                            <b>*</b>
+                                                                        </star>
+                                                                        <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipQuiz15%>"><i class="ti-help-alt fa-lg"></i></button></label>
+                                                                        <div class="radio">
+                                                                            <input type="radio" name="score_avalb__selector1" id="score1" value="submission,allowed" checked>
+                                                                            <label for="score1">
+                                                                                Allow scores immediately after submission and allow review after quiz deadline
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="radio">
+                                                                            <input type="radio" name="score_avalb__selector1" id="score2" value="submission,unallowed">
+                                                                            <label for="score2">
+                                                                                Allow scores immediately after submission but do not allow review
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="radio">
+                                                                            <input type="radio" name="score_avalb__selector1" id="score3" value="deadline,allowed">
+                                                                            <label for="score3">
+                                                                                Allow scores and review after deadline
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="radio">
+                                                                            <input type="radio" name="score_avalb__selector1" id="score4" value="deadline,unallowed">
+                                                                            <label for="score4">
+                                                                                Allow scores after deadline but do not allow review
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="radio">
+                                                                            <input type="radio" name="score_avalb__selector1" id="score5" value="unallowed,unallowed">
+                                                                            <label for="score5">
+                                                                                Do not allow scores or review
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-10 col-md-offset-1">
+                                                                    <div class="form-group">
+                                                                        <label style="font-size:15px;">Calculator
+                                                                        <star>
+                                                                            <b>*</b>
+                                                                        </star>
+                                                                        <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipQuiz16%>"><i class="ti-help-alt fa-lg"></i></button></label>
+                                                                        <div class="radio">
+                                                                            <input type="radio" name="calculator" id="cal1" value="none" checked>
+                                                                            <label for="cal1">None</label>
+                                                                        </div>
+                                                                        <div class="radio">
+                                                                            <input type="radio" name="calculator" id="cal2" value="basic">
+                                                                            <label for="cal2">Basic</label>
+                                                                        </div>
+                                                                        <div class="radio">
+                                                                            <input type="radio" name="calculator" id="cal3" value="scientific">
+                                                                            <label for="cal3">Scientific</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-footer">
+                                                    <button type="button" id="backBtn" class="btn btn-default btn-fill btn-wd btn-back pull-left">
+                                                        <i class="ti-angle-double-left"></i> Back</button>
+                                                    <button type="button" id="nextBtn" class="btn btn-info btn-fill btn-wd btn-next pull-right">Next
+                                                        <i class="ti-angle-double-right"></i>
+                                                    </button>
+                                                    <!-- <form name="authfrm2" id="authfrm2" method="post" action="/author_postquestion"> -->
+                                                    <input type="hidden" id="data" name="data" value="">
+                                                    <input type="hidden" id="type" name="type" value="verify_quiz">
+
+                                                    <input type="hidden" id="authorname" name="authorname" value="<%-user%>">
+                                                    <input type="hidden" id="playlist_name_hidden" name="playlist_name_hidden" value="">
+                                                    <input type="hidden" id="section_name_hidden" name="section_name_hidden" value="">
+                                                    <input type="hidden" name="log_Id" id="log_Id" value="">
+                                                    <input type="hidden" name="log_Token" id="log_Token" value="">
+                                                    <button class='btn btn-success btn-fill btn-wd btn-finish pull-right' type='button' id='btnGetEval'>Verify</button>
+                                                    <!-- </form> -->
+                                                    <div class="clearfix"></div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- modal view sample -->
+                        <div class="">
+                            <div class="modal fade" id="bsModal3" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title" id="mySmallModalLabel">Verify Quiz</h4>
+                                        </div>
+                                        <div class="modal-body" id="viewModalContent">
+                                            <p></p>
+                                        </div>
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- modal end -->
+                        <%- include('../parts/footer'); %>
+            </div>
+    </div>
+</body>
+<%- include('../parts/allJS'); %>
+<%- include('../parts/codemirrorJS'); %>
+<script src="author_public/js/author_quiz.js"></script>
+
+ <script type="text/javascript">
+    $(function () {
+        $('#bsModal3').on('hidden.bs.modal', function () { // do something� })
+            $("#viewModalContent").html(" <p></p>");
+        })
+    });
+</script>
+</html>

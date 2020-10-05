@@ -1,0 +1,176 @@
+<!-- <div class="tab-pane quesYScroll" id="content"> -->
+
+<div class="tab-pane" id="content">
+    <form class="form-horizontal">
+        <div class="form-group row ">
+            <!-- <div class="col-xs-10 col-xs-offset-1 col-md-10 col-md-offset-1 inMiddle"> -->
+            <label class="col-lg-3 control-label text-right ">
+                Content Style
+                <button type="button" data-toggle="popover" class="btn btn-info btn-simple btn-xs" data-content="">
+                    <i class="ti-help-alt fa-lg"></i>
+                </button>
+            </label>
+            <div class="col-lg-4">
+                <%
+                    var styledt ='' ;
+                    if(typeof data.style == 'string' && data.style){ styledt = data.style;}
+                %>
+                <select class="selectpicker" data-size="7" tabindex="-98" name="conStyle" id="conStyle" >
+                        <option value="Information" <%if(styledt=="Information" ){%> selected="selected"
+                                <%}%> >Information</option>
+                    <option value="Lesson" <%if(styledt=="Lesson" ){%> selected="selected"
+                        <%}%> >Lesson</option>
+                    <option value="Question Answer Pair" <%if(styledt=="Question Answer Pair" ){%> selected="selected"
+                        <%}%> >Question-Answer Pair</option>
+                    <option value="Flash Card" <%if(styledt=="Flash Card" ){%> selected="selected"
+                        <%}%> >Flash Card</option>
+                    <option value="Example" <%if(styledt=="Example" ){%> selected="selected"
+                        <%}%> >Example</option>
+                        
+                </select>
+            </div>
+            <!-- </div> -->
+        </div>
+        <div class="form-group row">
+            <div class="col-xs-10 col-xs-offset-1 col-md-10 col-md-offset-1 inMiddle">
+                <label class="control-label text-right">
+                    Introduction / Question
+                    <button type="button" data-toggle="popover" class="btn btn-info btn-simple btn-xs" data-content="">
+                        <i class="ti-help-alt fa-lg"></i>
+                    </button>
+                </label>
+                <textarea class="form-control" rows="5" id="conInst"><%-data.header%></textarea>
+            </div>
+        </div>
+        <div class="form-group row">
+                <div class="row">
+                        <div class="col-xs-10 col-xs-offset-1 col-md-10 col-md-offset-1 inMiddle">
+                            <label class='control-label'>Sections
+                                    <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                    <i class="ti-help-alt fa-lg"></i>
+                                    </button>
+                            </label>
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <!-- <div class="col-md-2">
+                            
+                        </div> -->
+                        <div class='col-xs-10 col-xs-offset-1 col-md-10 col-md-offset-1 inMiddle'>
+                            <!-- <br> <br> -->
+
+                            <div id='allSections'>
+                    <% 
+                        var secdivs = 0 ;
+                        if(typeof data.sections == 'object' && data.sections){
+                                secdivs = data.sections.length;
+                        }else{
+                            secdivs = 0;
+                        }
+                    %>
+                        <% if(data.style != "Flash Card"){
+                            for(var i = 0 ; i < secdivs; i++){
+                            %>
+                            <div class='col-lg-12' id='sectiondiv_old-<%-i%>'>
+                                    <div class='card inputcard2'>
+                                    <div class='card-content'>
+                                        <input type="hidden" value="<%-data.style%>" id="currStyle" name="currStyle"/>
+                                        <div class="row">
+                                            <%if(i !=0){%>
+                                            <div class="col-sm-12 text-right">
+                                                <button type="button" rel="tooltip" title="" class="btn btn-danger" data-original-title="Delete" 
+                                                         id='deleteSection'>
+                                                        <i class="ti-trash"></i>
+                                                        </button> 
+                                            </div>     
+                                            <%}%>
+                                        </div>
+                                        <%if(i !=0){%>
+                                        <hr style="padding:0px;margin-top:5px;">
+                                        <%}%><br/>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <textarea  rows=6 class='form-control' id='sec_value_old'><%if(typeof data.sections == 'object' && data.sections && !isNew){%><%- data.sections[i]%><%}else{%><%}%></textarea>
+                                            </div>
+                                            </div>
+                                          
+                                        </div>
+                                </div>
+                            </div>
+                            <%}}else{
+                                for(var i = 0, j=0 ; i < secdivs; i=i+2, j++){
+                                %>
+                                <div class='col-lg-12' id='sectiondiv_old-<%-j%>'>
+                                    <div class='card inputcard2'>
+                                    <div class='card-content'>
+                                        <input type="hidden" value="<%-data.style%>" id="currStyle" name="currStyle"/>
+                                        <div class="row">
+                                            <%if(i !=0){%>
+                                            <div class="col-sm-12 text-right">
+                                                <button type="button" rel="tooltip" title="" class="btn btn-danger" data-original-title="Delete" 
+                                                            id='deleteSection'>
+                                                        <i class="ti-trash"></i>
+                                                        </button> 
+                                            </div>     
+                                            <%}%>
+                                        </div>
+                                        <%if(i !=0){%>
+                                        <hr style="padding:0px;margin-top:5px;">
+                                        <%}%><br/>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                    <h6>Front</h6>
+                                                <textarea  rows=6 class='form-control' id='sec_value_old_front'><%if(typeof data.sections == 'object' && data.sections && !isNew){%><%- data.sections[i]%><%}else{%><%}%></textarea>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                    <h6>back</h6>
+                                                    <textarea  rows=6 class='form-control' id='sec_value_old_back'><%if(typeof data.sections == 'object' && data.sections && !isNew){%><%- data.sections[i+1]%><%}else{%><%}%></textarea>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                </div>
+                            </div>
+                        <% }}%>        
+                    </div>
+                    <div align="right">
+                        <input class='btn btn-default' id="addNewSec" type="button" value="Section +" />
+                    </div>
+                </div>
+        </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    $(function () {
+        var style11;
+        $("select[id=conStyle]").each(function () {
+            var value = $(this).val();
+            style11 = value;
+         });
+        $("body").on("change", "#conStyle", function () {
+            var sdata = getSections(style11);
+            console.log(sdata);
+
+            $("select[id=conStyle]").each(function () {
+                var value = $(this).val();
+                style11 = value;
+            });
+            $("#allSections").html('');
+            // sdata.forEach(element => {
+            //     $("#allSections").append(newSections(counter,style11));
+            //     counter++;
+            // });
+            for(var j=0;j<sdata.length;j++){
+                let dta = {data:sdata[j]}
+                if(style11=='Flash Card'){
+                    j++
+                    dta.back=sdata[j];
+                }
+                $("#allSections").append(newSections(counter,style11,dta));
+                    counter++;
+            }
+        });
+    })
+</script>

@@ -1,0 +1,690 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <%- include('../parts/allCSS'); %>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      showMathMenu: false,
+      CommonHTML: { linebreaks: { automatic: true } },
+      "HTML-CSS": { linebreaks: { automatic: true } },
+             SVG: { linebreaks: { automatic: true } }
+    });
+  </script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script type="text/javascript" src="author_public/plotchart/plotly-latest.min.js"></script>
+    <script type="text/javascript" src="author_public/plotchart/plotchart.js"></script>
+    <style type="text/css">
+      form .bootstrap-tagsinput {
+        /* updated to make it look similar like an input box */
+        background-color: #F3F2EE;
+        border: 1px solid #e8e7e3;
+        border-radius: 4px;
+        color: #66615b;
+      }
+    </style>
+
+    <script type="text/javascript">
+
+     $(document).ready(function () {
+        if (window.location.search.indexOf('msg=unauthorize') > -1) {
+          $.notify({
+            icon: "",
+            message: "<b> Error - </b>You are authorized to add given question in public list !!!"
+          }, {
+              type: "danger",
+              timer: 4000,
+              placement: {
+                from: 'top',
+                align: 'center'
+              }
+            });
+        } else {
+          // alert('track not here');
+        }
+      });
+
+
+      $(document).ready(function () {
+        if (window.location.search.indexOf('msg=dberror') > -1) {
+          $.notify({
+            icon: "",
+            message: "<b> Error - </b> Error occurs during fetching your data, Please Contact Administrator !!!"
+          }, {
+              type: "danger",
+              timer: 4000,
+              placement: {
+                from: 'top',
+                align: 'center'
+              }
+            });
+        } else {
+          // alert('track not here');
+        }
+      });
+
+      $(document).ready(function () {
+        if (window.location.search.indexOf('msg=tagErr') > -1) {
+          $.notify({
+            icon: "",
+            message: "<b> Error - </b> Minimum 3 tags required !!!"
+          }, {
+              type: "danger",
+              timer: 4000,
+              placement: {
+                from: 'top',
+                align: 'center'
+              }
+            });
+        } else {
+          // alert('track not here');
+        }
+      });
+
+
+      $(document).ready(function () {
+        if (window.location.search.indexOf('msg=success') > -1) {
+          $.notify({
+            icon: "",
+            message: "<b> Success - </b> Question added to public list !!!"
+          }, {
+              type: "success",
+              timer: 4000,
+              placement: {
+                from: 'top',
+                align: 'center'
+              }
+            });
+        } else {
+          // alert('track not here');
+        }
+      });
+    </script>
+</head>
+
+<body>
+  <div class="wrapper">
+    <%- include('../parts/leftNavBar'); %>
+      <div class="main-panel">
+        <%- include('../parts/topNavBarPart1'); %> View committed question (ID :
+          <%-token%>)
+            <%- include('../parts/topNavBarPart2'); %>
+              <div class="content">
+                <div class="container-fluid">
+                  <div class="row">
+                    <div class="col-md-10 col-md-offset-1">
+                      <div class="card">
+                        <div class="card-header clearfix">
+                          <!-- <h4 class="card-title">Collapsible Accordion</h4>
+                          <p class="category">Bootstrap default style</p> -->
+                          <div class="pull-left">
+                            <button type="button" class="btn btn-wd btn-default btn-move-left" onclick="window.location.href='/author_dashboard_comm'">
+                              <span class="btn-label">
+                                <i class="ti-angle-left"></i>
+                              </span>
+                              Back
+                            </button>
+                          </div>
+                          <div class="pull-right">
+                            <div class="col-sm-6">
+                              <form name="gettoken" method="post" action="/author_editCommitted">
+                                <input type="hidden" name="token" value="<%-token%>">
+                                <input type="hidden" name="short" value="<%-author%>">
+                                <input type="hidden" name="pipe" value="<%-pipe%>">
+                                <input type="hidden" name="log_Id" id="log_Id" value="">
+                                <input type="hidden" name="log_Token" id="log_Token" value="">
+                                <button class="btn btn-success btn-fill btn-wd" id="editbtn" type='submit'>
+                                  <i class="ti-pencil-alt"></i> Edit
+                                </button>
+                              </form>
+                            </div>
+                            <div class="col-sm-6">
+                              <!-- <button class="btn btn-warning btn-wd btn-fill" id="clonebtn">
+                              <i class="ti-files"></i> Clone
+                            </button> -->
+                              <div class="dropdown">
+                                <a href="#" class="btn dropdown-toggle btn-primary btn-fill btn-wd btnmargin" data-toggle="dropdown" aria-expanded="false">
+                                  More &nbsp;
+                                  <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                  <li>
+                                    <!-- <button class="btn btn-success btn-fill btn-wd btnmargin" id="clonebtn">
+                                          <i class="ti-files"></i> Clone
+                                        </button> -->
+                                    <a id="clonebtn">
+                                      <i class="ti-files"></i> Clone
+                                    </a>
+                                  </li>
+                                  <li>
+                                    <a id="addToPlaylist" data-toggle="modal" data-target="#addtoplaylist">
+                                      <i class="ti-view-list-alt"></i> Add To Playlist
+                                    </a>
+                                  </li>
+                                  <%if(userMeta.access.indexOf('publicWrite')>-1){%>
+                                  <li>
+                                    <a id="addToPublist" data-toggle="modal" data-target="#addtopublist" href="">
+                                      <i class="ti-list"></i> Add To Public List
+                                    </a>
+                                  </li>
+                                  <%}%>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+                        <hr>
+                        <div class="card-content">
+                          <% if(alldoc[0].pubList && alldoc[0].pubList.length>0 ){ %>
+                          <div class="arrangeData row">
+                            <div class="col-md-6">
+                              <h3 class="head">Public list</h3>
+                              <p>This question is in one or more public list. To view <a id="showPubList" data-toggle="modal" data-target="#showPubListMdl">Click Here</a></p>
+                            </div>
+                          </div>
+                          <%}%>
+                          <div class="arrangeData row">
+                            <div class="col-md-4">
+                              <h3 class="head">Tags </h3>
+                              <input type="text" class="form-control" id="id_commentsTg" data-role="tagsinput"
+                                value="<%-alldoc[0].tags%>" disabled readonly>
+                            </div>
+                            <div class="col-md-8">
+                              <h3 class="head">Comment </h3>
+                              <%-alldoc[0].comments%>
+                            </div>
+                          </div>
+                          <!-- <%-JSON.stringify(alldoc)%> -->
+                          <%-alldoc[0].sample%>
+                        </div>
+                        <!--  modal to add item to a playlist -->
+                        <div class="modal fade" id="addtoplaylist" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">
+                                  <span aria-hidden="true">&times;</span>
+                                  <span class="sr-only">Close</span>
+                                </button>
+                                <h4 class="modal-title" id="myModalLabel">
+                                  <b>Add to playlist</b>
+                                </h4>
+                              </div>
+                              <div class="modal-body">
+                                <form role="form" name="add_ques_ids" id="add_ques_ids" method="post" action="/author_addToPlaylist" enctype="multipart/form-data">
+                                  <div class="form-group">
+                                    <div class='row '>
+                                      <div class="col-lg-12">
+                                        <label for="playlist_name1">Playlist Name</label>
+                                        <button type="button" rel="tooltip" title="" class="btn btn-info btn-simple btn-xs" data-original-title="<%-tooltip.tooltipPlaylist05%>">
+                                          <i class="ti-help-alt fa-lg"></i>
+                                        </button>
+                                      </div>
+                                      <div class="col-lg-7">
+                                          <select class="selectpicker" data-style="btn-default" id="playlist_name1" name="playlist_name1" data-live-search="true" required>
+                                              <option value="">Select</option>
+                                              <optgroup label="Onwer List">
+                                                <%for(var i=0; i<playlistdata.length;i++){
+                                                  var playlist1 = playlistdata[i];
+                                                %>
+                                                <option value="<%-playlist1[2]%>">
+                                                  <%-playlist1[1]%>
+                                                </option>
+                                                <%}%>
+                                              </optgroup>
+                                              <optgroup label="Collabrator Playlist">
+                                                 <%for(var i=0; i<collb1.length;i++){
+                                                  var strcollb1 = collb1[i];
+                                                %>
+                                                  <option value="<%-strcollb1[2]%>"><%-strcollb1[1]%></option>
+                                                <%}%>
+                        
+                                                <%for(var i=0; i<collb2.length;i++){
+                                                  var strcollb2 = collb2[i];
+                                                %>
+                                                  <option value="<%-strcollb2[2]%>"><%-strcollb2[1]%></option>
+                                                <%}%>
+                                              </optgroup>
+                                            </select>
+                                            <div id="div11"></div>
+                                      </div>
+                                    </div>
+                                    <div class='row '>
+                                      <div class="col-lg-12">
+                                        <label for="playlist_name1">Section Name</label>
+                                        <button type="button" rel="tooltip" title="" class="btn btn-info btn-simple btn-xs" data-original-title="<%-tooltip.tooltipPlaylist05%>">
+                                          <i class="ti-help-alt fa-lg"></i>
+                                        </button>
+                                      </div>
+                                      <div class="col-lg-7">
+                                          <select class="form-control valid newDropCss" data-style="btn-default" id="section_name1" name="section_name1" required>
+                                            <!-- <option value=''>Select</option> -->
+                                          </select>
+                                    </div>
+                                    </div>
+                                  </div>
+                                  <input type="hidden" name="author" value="<%-short%>">
+                                  <input type="hidden" name="ques_ids1" id="ques_ids1" value='<%-token%>'>
+                                  <input type="hidden" name="log_Id" id="log_Id" value="">
+                                  <input type="hidden" name="log_Token" id="log_Token" value="">
+                                  <div class="clearfix">
+                                    <button type='submit' class="btn btn-primary btn-fill pull-right" id="add_playlist" disabled>Add To Playlist</button>
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <!--  modal to add item to a playlist end-->
+
+                        <!--  modal to add item to a public list end-->
+                        <div class="modal fade" id="addtopublist" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">
+                                  <span aria-hidden="true">&times;</span>
+                                  <span class="sr-only">Close</span>
+                                </button>
+                                <h4 class="modal-title" id="myModalLabel">
+                                  <b>Add to Public List</b>
+                                </h4>
+                              </div>
+                              <div class="modal-body" id="viewModalContent">
+                                <form role="form" name="addQuePublic" id="addQuePublics" method="post" action="/author_addToPubList" enctype="multipart/form-data">
+                                  <div class="form-group">
+                                    <div class='row '>
+                                      <div class="col-lg-12">
+                                        <div class="reminder">
+                                          <p>
+                                            <i class="fa fa-bell" style="font-size:1.5em;"></i> You can change Tags and Comments before adding it to the public list.</p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <br>
+                                    <fieldset>
+                                      <div class="form-group">
+                                        <label class="col-lg-2 control-label">Tags</label>
+                                        <div class="col-lg-10">
+                                          <input type="text" class="form-control" id="tag" name="tag" data-role="tagsinput" value="<%-alldoc[0].tags%>">
+                                        </div>
+                                      </div>
+                                    </fieldset>
+                                    <br/>
+                                    <fieldset>
+                                      <div class="form-group">
+                                        <label class="col-lg-2 control-label">Comment</label>
+                                        <div class="col-lg-10">
+                                          <textarea id="comment" name="comment" rows="4" class="form-control"><%-alldoc[0].comments%></textarea>
+                                        </div>
+                                      </div>
+                                    </fieldset>
+                                    <br/>
+                                    <fieldset>
+                                      <div class="form-group">
+                                        <label class="col-lg-2 control-label">Subject</label>
+                                        <div class="col-lg-10">
+                                          <select class="dropdown btn btn-default" data-style="btn-default" id="subjectPubList" name="subjectPubList" hidden="true">
+                                            <option value="">Select</option>
+                                          </select>
+                                        </div>
+                                      </div>
+                                    </fieldset>
+                                    <br/>
+                                    <fieldset>
+                                      <div class="form-group">
+                                        <label class="col-lg-2 control-label">Topics</label>
+                                        <div class="col-lg-10">
+                                          <select class="dropdown btn btn-default" data-style="btn-default" id="topicPubList" name="topicPubList" hidden="true" style="display:none;">
+
+                                          </select>
+                                        </div>
+                                      </div>
+                                    </fieldset>
+                                  </div>
+                                  <div class="clearfix">
+                                    <input type="hidden" name="author" id="author" value="<%-short%>">
+                                    <input type="hidden" name="pipe" id="pipe" value="<%-pipe%>">
+                                    <input type="hidden" name="quesId" id="quesId" value="<%-token%>">
+                                    <input type="hidden" name="pubListTopic" id="pubListTopic" value="">
+                                    <button type='submit' class="btn btn-primary btn-fill pull-right" id="add_publist" disabled>Add To Public List</button>
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <!--  modal to add item to a public list end-->
+
+                        <!--  modal to show public list names -->
+                        <div class="modal fade" id="showPubListMdl" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <button type="button" class="close" data-dismiss="modal">
+                                    <span aria-hidden="true">&times;</span>
+                                    <span class="sr-only">Close</span>
+                                  </button>
+                                  <h4 class="modal-title" id="myModalLabel">
+                                    <b>Public List</b>
+                                  </h4>
+                                </div>
+                                <div class="modal-body">
+                                  <!-- <form role="form" name="showList" id="showList" method="post" action="" enctype="multipart/form-data"> -->
+                                    <div class="form-group">
+                                      <div class='row '>
+                                        <div class="col-lg-10 col-lg-offset-1">
+                                          <input type="hidden" id="author" value="<%-author%>">
+                                          <input type="hidden" id="token" value="<%-token%>">
+                                          <table class="table" id="pubList-tbl">
+                                            <thead>
+                                                <th data-field="pubList" data-sortable="true">Public List</th>
+                                                <th data-field="action" class="text-center"></th>
+                                            </thead>
+                                            <tbody>
+                                              <% 
+                                                for(var i=0; i<publistdata.length; i++) {%>
+                                                  <tr>
+                                                    <td id="pubList-<%-i%>">
+                                                      <%- publistdata[i].name %>
+                                                    </td>
+                                                    <td class="td-actions text-right">
+                                                      <button class="btn btn-danger btn-simple btn-xs" id="delpubList" name="delpubList" rel="tooltip" data-original-title="Remove" value="<%- publistdata[i].id %>">
+                                                              <i class="ti-close"></i>
+                                                      </button>
+                                                    </td>
+                                                  </tr>
+                                              <% } %>
+                                            </tbody>
+                                          </table>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  <!-- </form> -->
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!--  modal to show public list names end-->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <%- include('../parts/footer'); %>
+      </div>
+
+  </div>
+  </div>
+</body>
+<%- include('../parts/allJS'); %>
+  <%- include('../parts/dynamicMedia'); %>
+    <script>
+       $(document).ready(function () {
+          $("#playlist_name1").change(function () {
+            var playlistId = document.getElementById('playlist_name1').value;
+            var playlistName = $("#playlist_name1 option:selected").text().trim();
+           
+            var user_data2 = new Object;
+            user_data2.name = playlistName;
+            user_data2.playlistId = playlistId;
+            // console.log(playlistName)
+
+            $.post("/author_getSectionsList", user_data2, function (data) {
+              if (data.status == 'success') {
+                  $("#section_name1").html("<option value=''>Select</option>");
+                  
+                  console.log(data.sectionName);
+                  // console.log(data.sectionCon);
+                 let htm = '';
+                  for(var i=0;i<data.sectionName.length;i++){
+                      $('#section_name1').append('<option value="'+i+'">'+data.sectionName[i]+'</option>');
+                  }
+                  
+              }
+              else if (data.status == 'error') {
+                  // $('#section_name1').hide();
+                  swal({
+                      type: 'error',
+                      title: 'Error',
+                      html: data.msg
+                  });
+              }
+            });
+          });
+      });
+
+
+      $("#clonebtn").click(function (event) {
+        event.preventDefault();
+        swal({
+          title: 'Are you sure?',
+          text: "It will create a duplicate copy of the same question",
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonClass: 'btn btn-success btn-fill',
+          cancelButtonClass: 'btn btn-danger btn-fill',
+          confirmButtonText: 'Yes, clone it!',
+          buttonsStyling: false
+        }).then(function () {
+          // console.log('orgid='+orgid+' and pie = '+pipe);
+          window.location.href = '/author_getTokenCopy?orgid=<%-token%>&mode=comm&pipe=<%-pipe%>';
+        }).catch(function () {
+          console.log("Aborted clone req");
+        });
+      });
+    </script>
+    <script type="text/javascript">
+
+      // -------- TO SHOW SUBJECTS IN DROPDOWN----------------------------------
+      $(document).ready(function () {
+        $("#addToPublist").click(function (event) {
+          $.post("/author_getPubListSub", function (result) {
+            if (result.status == 'success') {
+              var subject = result.subject;
+              // console.log(subject[0]);
+              subject.forEach(function (element) {
+                //console.log(element);
+                $("#subjectPubList").append("<option class='showTopics' value='" + element + "'>" + element + "</option>");
+              });
+            } else {
+              swal({
+                type: 'error',
+                title: 'Error',
+                html: result.msg
+              });
+            }
+
+          });
+        });
+      });
+
+      // ------------------- TO SHOW SUBJECTS CATEGORY IN DROPDOWN AFTER SELECTING SUBJECT----------------------------------
+      $(document).ready(function () {
+        $("#subjectPubList").change(function () {
+          let sub = $("#subjectPubList option:selected").attr("value");
+          if (sub != "") {
+            hideTopic();
+            $.post("/author_getSubCategory", { subject: sub }, function (result) {
+              if (result.status == 'success') {
+                // console.log(JSON.stringify(result));
+                showTopic(result.data);
+              } else {
+                swal({
+                  type: 'error',
+                  title: 'Error',
+                  html: result.msg
+                });
+              }
+
+            });
+          } else {
+            hideTopic();
+          }
+        })
+      });
+
+      $(document).ready(function () {
+        $("#topicPubList").change(function () {
+          $("#add_publist").removeAttr("disabled");
+          let toplist = $("#topicPubList option:selected").attr("value");
+          if (toplist == "") {
+            $("#add_publist").attr("disabled", "true");
+          }
+        })
+      });
+
+
+      function hideTopic() {
+        // $("#topicPubList").attr("hidden", "true");
+        $("#topicPubList").css("display", "none");
+        $("#add_publist").attr("disabled", "true");
+      }
+
+      function showTopic(result) {
+        $("#topicPubList").html("<option value=''> Select </option>");
+        // console.log(result);
+        var cat = JSON.parse(result);
+        // console.log(cat[0]);
+        cat.forEach(function (element) {
+          $("#topicPubList").append("<option value='" + element.id + "'>" + element.name + "</option>");
+        });
+        // $("#topicPubList").removeAttr("hidden");
+        $("#topicPubList").css("display", "block");
+      }
+
+
+
+      $(document).ready(function () {
+        $("#add_publist").click(function () {
+          var comment = document.getElementById("comment").value;
+          var tag = document.getElementById("tag").value;
+          var topic = $("#topicPubList option:selected").attr("value");
+          var tags_ary = new Array();
+          tags_ary = tag.split(",");
+          if (comment == "" || tag == "" || topic == "") {
+            swal({
+              type: 'error',
+              title: 'Error',
+              html: 'All fields are mandatory'
+            });
+            return false;
+          } else {
+            if (tags_ary.length < 3) {
+              swal({
+                type: 'error',
+                title: 'Error',
+                html: 'Minimum 3 tags required'
+              });
+              return false;
+            } else {
+              document.getElementById("pubListTopic").value = topic;
+            }
+          }
+        })
+      });
+
+
+     
+
+
+    </script>
+<script>
+  // init bootsrap tables
+var $table2 = $('#pubList-tbl');
+$().ready(function () {
+    $table2.bootstrapTable({
+        toolbar: ".toolbar1",
+        clickToSelect: true,
+        showRefresh: false,
+        search: true,
+        showToggle: false,
+        showColumns: false,
+        pagination: true,
+        searchAlign: 'right',
+        strictSearch: false,
+        pageSize: 5,
+        //   clickToSelect: false,
+        pageList: [5, 10, 25, 50, 100],
+        sortName: "concepts",
+        sortOrder: "asc",
+
+        formatShowingRows: function (pageFrom, pageTo, totalRows) {
+            //do nothing here, we don't want to show the text "showing x of y from..."
+            //return "showing "+pageFrom+" to "+pageTo+" of " + totalRows +" entries <br/>";
+        },
+        formatRecordsPerPage: function (pageNumber) {
+            return "  " + pageNumber + " rows visible";
+        },
+        icons: {
+            refresh: 'fa fa-refresh',
+            toggle: 'fa fa-th-list',
+            columns: 'fa fa-columns',
+            detailOpen: 'fa fa-plus-circle',
+            detailClose: 'ti-close'
+        }
+    });
+    //activate the tooltips after the data table is initialized
+    $('[rel="tooltip"]').tooltip();
+});
+
+$(function() {
+    $('#pubList-tbl').on('post-body.bs.table', function () {
+        $('[rel="tooltip"]').tooltip();
+    });
+});
+$(function() {
+   // to delete ques from public list
+   $("body").on("click", "#delpubList", function () {
+        var author = document.getElementById('author').value;
+        var quesId = document.getElementById('token').value;
+        var val = $(this).val();
+        swal({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonClass: 'btn btn-success btn-fill',
+            cancelButtonClass: 'btn btn-danger btn-fill',
+            confirmButtonText: 'Yes, delete it!',
+            buttonsStyling: false,
+            allowOutsideClick: false
+        }).then(function () {
+            $.ajax({
+                type: "POST",
+                data: {
+                    'quesId': quesId,
+                    'author': author,
+                    'pubList': val
+                },
+                url: '/author_delete_pubList',
+                success: function (data) {
+                    if (data.status == "success") {
+                        swal({
+                            type: 'success',
+                            title: 'Question deleted from public list!'
+                        }).then(function () {
+                            location.reload();
+                        });
+                    } else {
+                        // swal("Cancelled", "Error:"+data.msg, " error ");
+                        swal({
+                            type: 'error',
+                            title: 'Error',
+                            html: data.msg
+                        });
+                    }
+                },
+                error: function (data) {
+                    swal("Cancelled", "Error: Please Contact Administrator ", " error ");
+                }
+            });
+
+        }).catch(function () {
+            console.log("Aborted delete req");
+        });
+    });
+  });
+</script>
+</html>

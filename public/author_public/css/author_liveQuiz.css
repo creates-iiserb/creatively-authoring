@@ -1,0 +1,175 @@
+/* live quiz css */
+
+.disNone{
+    display: none;
+    margin: 0px;
+    padding: 0px;
+  }
+  
+.liveDiv{
+    border-top: 4px solid #5e8283;
+    box-shadow: 0px 3px 10px -4px rgba(166, 159, 166, 1);
+}
+
+.quizManageBtn{
+    font-size: 2em;
+}
+
+#instPreview {
+    /* display:none; */
+    /* border-radius: 3px; */
+    /* border-left: 5px solid #00c0ef; */
+    font-size: 18px;
+    /* margin: 10px; */
+    /* -webkit-box-shadow: 0px 3px 19px -4px rgba(166, 159, 166, 1); */
+    /* -moz-box-shadow: 0px 3px 19px -4px rgba(166, 159, 166, 1); */
+    /* box-shadow: 0px 3px 19px -4px rgba(166, 159, 166, 1); */
+    padding: 20px;
+    line-height: 175%;
+    /* overflow: auto; */
+    /* border-left: 5px solid #F3C272; */
+}
+
+#instPreviewDiv b{
+    margin: 20px;
+    margin-bottom: 10px;
+    text-align: left;
+    font-size: 22px;
+    font-weight: bold;
+    color: #7A9E9F;
+    padding-bottom: 5px;
+}
+
+/* template css */
+.mtResp{
+    margin-top: 35px;
+}
+
+/* Questions */
+.quesMcq {
+    font-size: 117%;
+    line-height: 175%;
+    margin-bottom: 30px;
+}
+
+.typo-line p,.typo-line {
+    line-height: 172%;
+}
+    div.quiz-inst li p {
+    font-size:  95%;
+}
+
+/* MCQ */
+.options1 > div > div > label {
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    padding: 8px;
+    font-size: 122%;
+    vertical-align: middle;
+    border: solid 1px #DDD;
+    margin-bottom: 12px;
+    } 
+    
+.options1 > div > div > label:hover {
+    background: #7AC29A;
+}
+
+.qusOptions label {
+    font-weight: normal !important;
+}
+
+.options1 input[type=checkbox] {
+    display: none;    
+    height:22px;
+    width:97%;
+}
+
+.options1 input:checked + label, .arrSelectedItem{
+    background: #7AC29A;
+    color: #fff;
+}
+
+.qusOptions label {
+        font-weight: normal !important;
+}
+
+/* ARRANGE */
+.arrangeOption{
+    cursor: pointer;
+    display: block;
+    width:100%;
+    height:auto;
+    padding: 8px;
+    font-size: 122%;
+    vertical-align: middle;
+    border: solid 1px #DDD;
+    margin-bottom: 12px;
+    background: #FFF;
+    cursor: move;
+    }
+    .arrangeContent {
+    width:97%; 
+    float: left;
+    }
+    .arrangeIcon {
+    width:3%; 
+    float: left;     
+    vertical-align: middle;
+    }
+    .arrangeIcon span {
+    color: #ddd;
+    }
+
+    /* FILLIN */
+.fillInOption input{
+    border-top:none;
+    border-left:none;
+    border-right:none;
+    font-weight: bold;
+    color:#7AC29A;
+    }
+    .fillin-suggestion {
+    color: #66615a !important;
+    font-size: 117%;
+    opacity: .8;
+    margin-top: 30px;
+    }
+    .fillin-statement {
+    font-size: 135%;
+    }
+
+    
+/* Instruction */
+
+.instruction-wrapper{
+    border:solid 1px #DDDDDD;
+    padding:15px;
+    margin-top:5%;
+    padding-bottom: 50px;
+    }
+
+.hintMcq b{
+    margin-top: 20px;
+    margin-bottom: 15px;
+    text-align: left;
+    font-size: 20px;
+    /* font-weight: bold; */
+    color: #7A9E9F;
+    padding-bottom: 15px;
+}
+.QuesPrecard{
+    margin: 20px;
+}
+
+
+#sv{
+    font-size: 15px;
+    line-height: 3;
+    font-weight: 500;    
+}
+
+
+.noLimit{
+    line-height: 3;
+}

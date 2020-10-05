@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+  <head>
+      <!-- <script src="PaperDashBoard/js/jquery-3.1.1.min.js" type="text/javascript"></script> -->
+      <script type="text/javascript" src="author_public/plotchart/plotly-latest.min.js"></script>
+      <script type="text/javascript" src="author_public/plotchart/plotchart.js"></script>
+      <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+          showMathMenu: false,
+          CommonHTML: { linebreaks: { automatic: true } },
+          "HTML-CSS": { linebreaks: { automatic: true } },
+                SVG: { linebreaks: { automatic: true } }
+        });
+      </script>
+      <script type="text/javascript">
+        $(function () {
+          MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        });
+      </script>
+      <!-- <script src="PaperDashBoard/js/jquery-3.1.1.min.js" type="text/javascript"></script> -->
+  </head>
+  <body>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <%if(success==true){%>
+            <%var results = JSON.parse(result)
+              var quizSummary = results.quizObject;
+              var SecSummary = results.quizObject.sections;
+            %>
+            <%if(results.errors==false){%>
+              <div class="card-header clearfix">
+                <div class="pull-right">
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class='col-sm-6'>
+                        <form name="authfrm4" id="authfrm4" method="post" action="/author_createSectionquiz">
+                          <input type="hidden" id="type" name="type" value="create_sectioned_quiz">
+                          <input type="hidden" id="username" name="username" value="<%-short%>">
+                          <input type="hidden" id="commdata" name="commdata" value=" <%=JSON.stringify(results.quizObject)%>">
+                          <button class="btn btn-success btn-wd btn-fill" type='submit'>
+                            <i class="fa fa-clipboard"></i>&nbsp;Create</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <hr>
+            <%}%>
+              <div class="card-content">
+                <%-results.messages%>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="success">
+                          <i class="fa fa-thumbs-o-up"></i>
+                          <p>
+                            <div id='summary'>
+                              <h3>Summary</h3>
+                              <table class="table table-responsive">
+                                  <tr>
+                                      <td><b>Author Name: </b></td>
+                                      <td><%-quizSummary.authorName%></td>
+                                  </tr>
+                                  <tr>
+                                      <td><b>Correspondence Email: </b></td>
+                                      <td><%-quizSummary.authorEmail%></td>
+                                  </tr>
+                                  <tr>
+                                      <td><b>Number of quiz Participants: </b></td>
+                                      <td><%-quizSummary.takers.length%></td>
+                                  </tr>
+                                  <tr>
+                                      <td><b>Send examineer credentials to quiz Participants via email: </b></td>
+                                      <td><%-quizSummary.sendMail%></td>
+                                  </tr>
+                                  <tr>
+                                      <td><b>validity period of the quiz (UTC format):</b></td>
+                                      <td><%-quizSummary.beginTime%> to <%-quizSummary.endTime%></td>
+                                  </tr>
+                              </table>
+                            </div>
+                            <div id='detail'>
+                                <h3>Quiz Details</h3>
+                                <table class="table table-responsive">
+                                    <tr>
+                                        <td><b>Tags</b></td>
+                                        <td><%-quizSummary.tags%></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Title</b></td>
+                                        <td><%-quizSummary.title%></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Description</b></td>
+                                        <td><%-quizSummary.description%></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Instruction</b></td>
+                                        <td><%-quizSummary.instruction%></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Calculator</b></td>
+                                        <td><%-quizSummary.calculator%></td>
+                                    </tr>
+                                </table>
+                                <h3>Timing Details</h3>
+                                <table class="table table-responsive">
+                                    <tr>
+                                        <td><b>Opens At</b></td>
+                                        <td><%-quizSummary.beginTime%></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Deadline</b></td>
+                                        <td><%-quizSummary.endTime%></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Time Zone</b></td>
+                                        <td>GMT +<%-quizSummary.timeZone%>Hr</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Duration</b></td>
+                                        <td><%-quizSummary.duration%> minutes</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Security</b></td>
+                                        <td><%-quizSummary.security%></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Score Available At</b></td>
+                                        <td><%-quizSummary.score%></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Review</b></td>
+                                        <td><%-quizSummary.review%></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Login Time Interpretation</b></td>
+                                        <td><%-quizSummary.loginTime%></td>
+                                    </tr>
+                              </table>
+                              <h3>Content Details</h3>
+                              <% for(var i =0;i<SecSummary.length;i++){ %>
+                              <div class="row">
+                                <div id="acordeon" class="col-md-12">
+                                  <div class="panel-group" id="accordion">
+                                    <div class="panel panel-border panel-default white">
+                                      <a data-toggle="collapse" href="#collapse<%-i%>" class="" aria-expanded="true">
+                                        <div class="panel-heading white">
+                                          <h4 class="panel-title">
+                                            Section <%-i+1%>
+                                            <i class="ti-angle-down" style="font-size:1em"></i>
+                                          </h4>
+                                        </div>
+                                      </a>
+                                      <div id="collapse<%-i%>" class="panel-collapse collapse " aria-expanded="false">
+                                        <div class="panel-body">
+                                          <table class="table table-responsive">
+                                              <tr>
+                                                  <td><b>Title: </b></td>
+                                                  <td><%-SecSummary[i].title%></td>
+                                              </tr>
+                                              <tr>
+                                                  <td><b>Instruction: </b></td>
+                                                  <td><%-SecSummary[i].displayInstruction%></td>
+                                              </tr>
+                                              <tr>
+                                                  <td><b>Playlist / Section Name: </b></td>
+                                                  <td><%-SecSummary[i].playlist%> / <%-SecSummary[i].sectionName%></td>
+                                              </tr>
+                                              <tr>
+                                                  <td><b>Items in the playlist: </b></td>
+                                                  <td><%-SecSummary[i].pool.length%></td>
+                                              </tr>
+                                              <tr>
+                                                  <td><b>Questions to go in the quiz: </b></td>
+                                                  <td><%-SecSummary[i].choose%></td>
+                                              </tr>
+                                              <tr>
+                                                  <td><b>Arrangement</b></td>
+                                                  <td><%-SecSummary[i].arrangement%></td>
+                                              </tr>
+                                              <tr>
+                                                  <td><b>Help Allowed</b></td>
+                                                  <% if(SecSummary[i].helpAllowed == "0"){  %>
+                                                    <td>No Help Allowed</td>
+                                                  <% }else if(SecSummary[i].helpAllowed == "1"){  %>
+                                                    <td>Hint Allowed</td>
+                                                  <% }else if(SecSummary[i].helpAllowed == "2"){  %>
+                                                    <td>Hint and Explanation Allowed</td>
+                                                  <% } else{ %>
+                                                    <td></td>
+                                                  <% } %>
+                                              </tr>
+                                              <tr>
+                                                <td><b>Grading Matrix</b></td>
+                                                <td>
+                                                    <div class="">
+                                                        <div class="">
+                                                            <div class=" table-responsive">
+                                                                <table class="table table-center table-responsive" style="border:#ccc5b8 1px solid;border-radius:5px;">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th></th>
+                                                                            <th>No help used</th>
+                                                                            <th <% if(SecSummary[i].helpAllowed == "0" ){%> style="display:none;" <%}%> >Hint used</th>
+                                                                            <th <% if(SecSummary[i].helpAllowed == "0" || SecSummary[i].helpAllowed == "1"){%> style="display:none;" <%}%> >Explanation used</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <th>Correct Score</th>
+                                                                            <td style="background-color:rgba(161, 234, 194, 0.4);">
+                                                                                    <%-SecSummary[i].gradingMatrix[0][0]%>
+                                                                            </td>
+                                                                            <td  style="background-color:rgba(241, 209, 142, 0.4); <% if(SecSummary[i].helpAllowed == "0" ){%> display:none; <%}%>" >
+                                                                                    <%-SecSummary[i].gradingMatrix[0][1]%>
+                                                                            </td>
+                                                                            <td style="background-color:rgba(170, 216, 228, 0.4);<% if(SecSummary[i].helpAllowed == "0" || SecSummary[i].helpAllowed == "1"){%> display:none;<%}%>">
+                                                                                    <%-SecSummary[i].gradingMatrix[0][2]%>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>Skip Score</th>
+                                                                            <td style="background-color:rgba(161, 234, 194, 0.4);">
+                                                                                    <%-SecSummary[i].gradingMatrix[1][0]%>
+                                                                            </td>
+                                                                            <td style="background-color:rgba(241, 209, 142, 0.4); <% if(SecSummary[i].helpAllowed == "0" ){%> display:none; <%}%>">
+                                                                                    <%-SecSummary[i].gradingMatrix[1][1]%>
+                                                                            </td>
+                                                                            <td style="background-color:rgba(170, 216, 228, 0.4); <% if(SecSummary[i].helpAllowed == "0" || SecSummary[i].helpAllowed == "1"){%> display:none;<%}%>">
+                                                                                    <%-SecSummary[i].gradingMatrix[1][2]%>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>Incorrect Score</th>
+                                                                            <td style="background-color:rgba(161, 234, 194, 0.4);">
+                                                                                    <%-SecSummary[i].gradingMatrix[2][0]%>
+                                                                            </td>
+                                                                            <td style="background-color:rgba(241, 209, 142, 0.4); <% if(SecSummary[i].helpAllowed == "0" ){%> display:none; <%}%>">
+                                                                                    <%-SecSummary[i].gradingMatrix[2][1]%>
+                                                                            </td>
+                                                                            <td style="background-color:rgba(170, 216, 228, 0.4); <% if(SecSummary[i].helpAllowed == "0" || SecSummary[i].helpAllowed == "1"){%> display:none; <%}%>">
+                                                                                    <%-SecSummary[i].gradingMatrix[2][2]%>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <!-- <tr>
+                                                                            <td><b>Correct Score</b></td>
+                                                                            <td>
+                                                                                <input id="correctsc" min="-1000" max="1000" class="form-control" type="number" value="<%-SecSummary[i].gradingMatrix[0][0]%>" style="background-color:rgba(161, 234, 194, 0.4);" readonly>
+                                                                            </td>
+                                                                            <td <% if(SecSummary[i].helpAllowed == "0" ){%> style="display:none;" <%}%> >
+                                                                                <input type="number"  min="-1000" max="1000" class="form-control" id="correctsc" value="<%-SecSummary[i].gradingMatrix[0][1]%>" style="background-color:rgba(241, 209, 142, 0.4);" readonly>
+                                                                            </td>
+                                                                            <td <% if(SecSummary[i].helpAllowed == "0" || SecSummary[i].helpAllowed == "1"){%> style="display:none;" <%}%> >
+                                                                            <input type="number" min="-1000" max="1000" class="form-control" id="correctsc" value="<%-SecSummary[i].gradingMatrix[0][2]%>" style="background-color:rgba(170, 216, 228, 0.4);"  readonly>
+                                                                            </td>
+                                                                        </tr> 
+                                                                        <tr>
+                                                                            <td><b>Skip Score</b></td>
+                                                                            <td>
+                                                                                <input type="number" min="-1000" max="1000" class="form-control" id="skipsc" value="<%-SecSummary[i].gradingMatrix[1][0]%>" style="background-color:rgba(161, 234, 194, 0.4);" readonly>
+                                                                            </td>
+                                                                            <td <% if(SecSummary[i].helpAllowed == "0" ){%> style="display:none;" <%}%> >
+                                                                                <input type="number" min="-1000" max="1000" class="form-control" id="skipsc" value="<%-SecSummary[i].gradingMatrix[1][1]%>" style="background-color:rgba(241, 209, 142, 0.4);" readonly>
+                                                                            </td>
+                                                                            <td <% if(SecSummary[i].helpAllowed == "0" || SecSummary[i].helpAllowed == "1"){%> style="display:none;" <%}%> >
+                                                                                <input type="number"  min="-1000" max="1000" class="form-control" id="skipsc" value="<%-SecSummary[i].gradingMatrix[1][2]%>" style="background-color:rgba(170, 216, 228, 0.4);" readonly >
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td ><b>Incorrect Score</b></td>
+                                                                            <td>
+                                                                                <input type="number" min="-1000" max="1000" class="form-control" id="incorrectsc" value="<%-SecSummary[i].gradingMatrix[2][0]%>" style="background-color:rgba(161, 234, 194, 0.4);" readonly>
+                                                                            </td>
+                                                                            <td <% if(SecSummary[i].helpAllowed == "0" ){%> style="display:none;" <%}%> >
+                                                                                <input type="number" min="-1000" max="1000"  class="form-control" id="incorrectsc" value="<%-SecSummary[i].gradingMatrix[2][1]%>" style="background-color:rgba(241, 209, 142, 0.4);" readonly>
+                                                                            </td>
+                                                                            <td <% if(SecSummary[i].helpAllowed == "0" || SecSummary[i].helpAllowed == "1"){%> style="display:none;" <%}%> >
+                                                                                <input type="number" min="-1000" max="1000" class="form-control" id="incorrectsc" value="<%-SecSummary[i].gradingMatrix[2][2]%>" style="background-color:rgba(170, 216, 228, 0.4);" readonly >
+                                                                            </td>
+                                                                        </tr>-->
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                              <td><b>Help Allowed At Review</b></td>
+                                              <% if(SecSummary[i].helpAtReview == "0"){  %>
+                                                <td>No Help Allowed</td>
+                                              <% }else if(SecSummary[i].helpAtReview == "1"){  %>
+                                                <td>Hint Allowed</td>
+                                              <% }else if(SecSummary[i].helpAtReview == "2"){  %>
+                                                <td>Hint and Explanation Allowed</td>
+                                              <% } else{ %>
+                                                <td></td>
+                                              <% } %>
+                                          </tr>
+                                          <tr>
+                                                  <td><b>Partial Grading</b></td>
+                                                  <td><%-SecSummary[i].partialGrading%></td>
+                                              </tr>
+                                          </table>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <% } %>
+                            </div>
+                          </p>
+                        </div>
+                    </div>
+                </div>
+              </div>
+          <%}else{%>
+            <div class="error">
+              <%-result%>
+            </div>
+          <%}%>
+        </div>
+      </div>
+    </div>
+</body>
+<%- include('../../parts/dynamicMedia'); %>
+
+</html>

@@ -1,0 +1,181 @@
+/* css for quiz control board */
+.quizbox {
+	border-radius: 3px;
+	/*border-left:5px solid #00c0ef;*/
+	margin: 10px;
+	margin-left:25px;
+	-webkit-box-shadow: 0px 3px 19px -4px rgba(166, 159, 166, 1);
+	-moz-box-shadow: 0px 3px 19px -4px rgba(166, 159, 166, 1);
+	box-shadow: 0px 3px 19px -4px rgba(166, 159, 166, 1);
+	padding: 10px;
+	border-radius: 6px;
+	min-height: 200px;
+  }
+  .info-box{
+	  border-left:5px solid #429cb6;
+	}
+	.warning-box{
+	  border-left:5px solid #f0a810;
+	}
+	.success-box{
+	  border-left:5px solid #7AC29A;
+	}
+	.danger-box{
+	  border-left:5px solid #c84513;
+	}
+	.primary-box{
+	  border-left:5px solid #5e8283;
+	}
+  .quizbox h3,
+  h4 {
+	padding: 2px;
+	margin: 2px;
+  }
+  .details{
+	font-size: 16px;
+  }
+  thead {
+  	font-weight: bold;
+  	font-size: 15px;
+  }
+  .small{
+	  margin: 10px;
+  }
+
+
+.selected {
+    border-left:5px solid #5e8283;
+    border-radius: 3px;
+	/*border-left:5px solid #00c0ef;*/
+	margin: 10px;
+	margin-left:25px;
+	-webkit-box-shadow: 0px 3px 19px -4px rgba(166, 159, 166, 1);
+	-moz-box-shadow: 0px 3px 19px -4px rgba(166, 159, 166, 1);
+	box-shadow: 0px 3px 19px -4px rgba(166, 159, 166, 1);
+	padding: 10px;
+	border-radius: 6px;
+	/*min-height: 160px;*/
+	background-color: #e1edef;
+}
+
+
+/*----------------------------------------css for sections----------------------------------------*/
+.quizboxSec {
+	border-radius: 3px;
+	/*border-left:5px solid #00c0ef;*/
+	margin: 10px;
+	margin-left:25px;
+	-webkit-box-shadow: 0px 3px 19px -4px rgba(166, 159, 166, 1);
+	-moz-box-shadow: 0px 3px 19px -4px rgba(166, 159, 166, 1);
+	box-shadow: 0px 3px 19px -4px rgba(166, 159, 166, 1);
+	padding: 10px;
+	border-radius: 6px;
+	min-height: 290px; /*//320px*/
+  }
+  .quizboxSec h3,
+  h4 {
+	padding: 2px;
+	margin: 2px;
+  }
+
+
+/*----------------------------------------css for section list----------------------------------------*/
+
+ #Section0, #Section1, #Section2, #Section3, #Section4, #Section5{
+	/*border: 1px solid #f0f0f0;*/
+	min-height: 20px;
+	list-style-type: none;
+	margin: 0;
+	padding: 5px 0 0 0;
+	/*float: left;*/
+	/*margin-right: 10px;*/
+}
+#Section0 li, #Section1 li, #Section2 li, #Section3 li, #Section4 li, #Section5 li {
+	border: 1px solid #f0f0f0;
+	margin: 0px 5px 5px 5px;
+	padding: 15px;
+	font-size: 1.2em;
+}
+#tblSection th{
+	font-weight:bold;
+	text-align: center;
+}
+#tblSection tr:hover{
+	background-color: #ffffff;
+}
+#tblSection td li:hover{
+	background-color: #F3F2EE;
+}
+
+.bootstrap-table .table{
+	    border-bottom: 1px solid #fff;
+}
+
+.sticky {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            padding: 5px;
+        
+					}
+					
+.lableTag{
+	font-size:9px;
+	/* font-weight:bold; */
+	padding:2px 3px 2px 3px;
+	/* padding-right: 2px;
+	padding-left: 2px; */
+	border-radius:4px !important;
+	text-transform: capitalize
+}
+
+/* .lableTag{
+	font-size: 8px;
+
+	padding: 2px 3px 2px 3px;
+
+	background-color: #66615b00;
+
+	border: 1px solid #7ac29a;
+	color: #7ac29a;
+	font-weight: bold;
+} */
+
+.btnsmall{
+	padding: 0px 2px !important;
+}
+
+.table > tbody > tr > td {
+	vertical-align: top;
+}
+
+
+.connectedSortable li p{
+	font-size:11px;
+	line-height:1.2;
+	margin: 3px;
+	text-align: justify;
+}
+
+.bdgTag{
+	background-color:#ffff;
+	font-size:10px;
+	color:#7a9e9e;
+	border: 1px solid #7a9e9e;
+}
+
+
+/*  */
+
+.connectedSortable{
+	border:1px solid #f0f1f1;
+}
+
+.orderNumber{
+	font-size: 16px;
+	font-weight: bold;
+	color: #eb5e28;
+	vertical-align: top;
+}
+
+/* end  */

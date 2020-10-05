@@ -1,0 +1,8 @@
+/*
+ *  jQuery FadeInAmate - v0.0.1
+ *  A jQuery plugin that animates fading in page elements.
+ *  https://github.com/jforaker/jQuery-FadeInAmate
+ *
+ *  Made by Jake Foraker
+ */
+!function(a,b,c){function d(b,c){this.element=b,this.settings=a.extend({},f,c),this._defaults=f,this._name=e,this.init()}var e="fadeInAmate",f={initialDelay:250,fadeInSpeed:900,animationDelay:300,bounce:!0};d.prototype={init:function(){var b=c.getElementsByClassName(this.element.className),d=b.length;a(b).hide(),this.showUs(b,this.settings,d)},showUs:function(b,c,d){var e=this,f={initialDelay:c.initialDelay,fadeInSpeed:c.fadeInSpeed,animationDelay:c.animationDelay,bounceTrue:c.bounce===!0},g=d,h=f.bounceTrue;a.each(b,function(b,c){var d=a(c),e=0===b?f.initialDelay:f.initialDelay+(f.animationDelay*b+g),h=f.fadeInSpeed;d.css({position:"relative",top:f.bounceTrue?-(d.height()/b/5)+"px":"0px",transition:"top 2s ease"}),d.fadeIn(h).delay(e)}),h&&e.bouncer(b,f)},bouncer:function(b,c){function d(){setTimeout(function(){a(b[f]).css({top:"0px"}),f++,f===g?f=0:d()},e/f)}var e=c.fadeInSpeed+c.initialDelay,f=0,g=a(b).length;d()}},a.fn[e]=function(b){return this.each(function(){a.data(this,"plugin_"+e)||a.data(this,"plugin_"+e,new d(this,b))}),this}}(jQuery,window,document);

@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <%- include('../parts/allCSS'); %>
+        <script src="author_public/PaperDashBoard/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+        <script src="author_public/js/author_dashboard.js"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                if (window.location.search.indexOf('msg') > -1) {
+                    $('#error_db').slideDown();
+                    function success_1() {
+                        $('#error_db').slideUp();
+                    }
+                    setTimeout(success_1, 5000);
+                } else {
+                    // alert('track not here');
+                }
+            });
+        </script>
+</head>
+
+<body>
+    <div class="wrapper">
+        <%- include('../parts/leftNavBar'); %>
+            <div class="main-panel">
+                <%- include('../parts/topNavBarPart1'); %> Dashboard
+                    <%- include('../parts/topNavBarPart2'); %>
+                        <div class="content">
+                            <!--error block for new question json.result.error !-->
+                            <div class="alert alert-danger" id="error_db" style="display:none;">
+                                <button type="button" aria-hidden="true" class="close">�</button>
+                                <span>
+                                    <%-msg%>
+                                </span>
+                            </div>
+                            <div class="container-fluid">
+                                <style>
+                                    .chead {
+                                        font-size: 18px;
+                                    }
+
+                                    .cnumber {
+                                        padding: 1px;
+                                        margin: 2px 0px 0px;
+                                    }
+                                </style>
+                                <div class="row">
+                                    <div class="col-md-10 col-md-offset-1">
+                                        <p>
+                                            <small><b>Hi <%-userMeta.fullName%>,</b> Welcome Back <br><b>Last Login:</b><%-userMeta.lastLogin%></small></p>
+                                        <br>
+                                    </div>
+                                    
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-10 col-md-offset-1">
+                                        <div class="row">
+                                            <div class="col-lg-3 col-sm-6">
+                                                <div class="card">
+                                                    <div class="card-content">
+                                                        <div class="row">
+                                                            <div class="col-xs-4">
+                                                                <div class="icon-big icon-warning text-center">
+                                                                    <i class="ti-pencil"></i>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-8">
+                                                                <div class="numbers">
+                                                                    <p>Content under dev</p>
+                                                                    <%-userdata_prog%>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-footer">
+                                                        <hr>
+                                                        <div class="footer-title">View questions</div>
+                                                        <div class="pull-right">
+                                                            <a class="btn btn-warning  btn-icon btn-sm" href="/author_dashboard_prog">
+                                                                <i class="ti-angle-right"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3 col-sm-6">
+                                                <div class="card">
+                                                    <div class="card-content">
+                                                        <div class="row">
+                                                            <div class="col-xs-5">
+                                                                <div class="icon-big icon-success text-center">
+                                                                    <i class="ti-lock"></i>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-7">
+                                                                <div class="numbers">
+                                                                    <p>Committed Content</p>
+                                                                    <%-userdata_comm%>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-footer">
+                                                        <hr>
+                                                        <div class="footer-title">View questions</div>
+                                                        <div class="pull-right">
+                                                            <a class="btn btn-success  btn-icon btn-sm" href="/author_dashboard_comm">
+                                                                <i class="ti-angle-right"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3 col-sm-6">
+                                                <div class="card">
+                                                    <div class="card-content">
+                                                        <div class="row">
+                                                            <div class="col-xs-5">
+                                                                <div class="icon-big icon-danger text-center">
+                                                                    <i class="ti-view-list-alt"></i>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-7">
+                                                                <div class="numbers">
+                                                                    <p>Created Playlists</p>
+                                                                    <%-playlistdata%>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-footer">
+                                                        <hr>
+                                                        <div class="footer-title">View playlists</div>
+                                                        <div class="pull-right">
+                                                            <a class="btn btn-danger  btn-icon btn-sm" href="/author_playlist_dash">
+                                                                <i class="ti-angle-right"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <%if(userMeta.access.indexOf('quiz')>-1){%>
+                                            <div class="col-lg-3 col-sm-6">
+                                                <div class="card">
+                                                    <div class="card-content">
+                                                        <div class="row">
+                                                            <div class="col-xs-5">
+                                                                <div class="icon-big icon-info text-center">
+                                                                    <i class="ti ti-write"></i>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-7">
+                                                                <div class="numbers">
+                                                                    <p>Quizzes Created</p>
+                                                                    <%-quizdata%>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-footer">
+                                                        <hr>
+                                                        <div class="footer-title">View quizzes</div>
+                                                        <div class="pull-right">
+                                                            <a class="btn btn-info  btn-icon btn-sm" href="/author_create_quiz">
+                                                                <i class="ti-angle-right"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <%}%>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3 col-sm-6">
+                                                <div class="card">
+                                                    <div class="card-content">
+                                                        <div class="row">
+                                                            <div class="col-xs-5">
+                                                                <div class="icon-big icon-primary text-center">
+                                                                    <i class="ti-image"></i>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-7">
+                                                                <div class="numbers">
+                                                                    <p>Media files</p>
+                                                                    <%-mediaData%>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-footer">
+                                                        <hr>
+                                                        <div class="footer-title">View files</div>
+                                                        <div class="pull-right">
+                                                            <a class="btn btn-primary  btn-icon btn-sm" href="/author_mediaGallery">
+                                                                <i class="ti-angle-right"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <%if(userMeta.access.indexOf('publicRead')>-1){%>
+                                            <div class="col-lg-3 col-sm-6">
+                                                <div class="card">
+                                                    <div class="card-content">
+                                                        <div class="row">
+                                                            <div class="col-xs-5">
+                                                                <div class="icon-big icon-default text-center">
+                                                                    <i class="fa fa-globe"></i>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-7">
+                                                                <div class="numbers">
+                                                                    <p>Public List</p>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-footer">
+                                                        <hr>
+                                                        <div class="footer-title">View Lists</div>
+                                                        <div class="pull-right">
+                                                            <a class="btn btn-default  btn-icon btn-sm" href="/author_pubList_dash">
+                                                                <i class="ti-angle-right"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <%}%>
+                                            <%if(userMeta.access.indexOf('workbook')>-1){%>
+                                            <div class="col-lg-3 col-sm-6">
+                                                <div class="card">
+                                                    <div class="card-content">
+                                                        <div class="row">
+                                                            <div class="col-xs-5">
+                                                                <div class="icon-big icon-warning text-center">
+                                                                    <i class="ti-book"></i>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-7">
+                                                                <div class="numbers">
+                                                                    <p>Workbook</p>
+                                                                    <%-workbookData%>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-footer">
+                                                        <hr>
+                                                        <div class="footer-title">View Lists</div>
+                                                        <div class="pull-right">
+                                                            <a class="btn btn-warning  btn-icon btn-sm" href="/author_workbook_dash">
+                                                                <i class="ti-angle-right"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <%}%>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <%- include('../parts/footer'); %>
+            </div>
+    </div>
+    </div>
+    </div>
+</body>
+<%- include('../parts/allJS'); %>
+
+</html>

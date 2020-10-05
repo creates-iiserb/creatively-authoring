@@ -1,0 +1,172 @@
+ <!doctype html>
+<html lang="en">
+<head>
+<% 
+    var commitUrl = "";
+    var updateUrl = "";
+    var queType = ""
+    var verifyType = "";
+    var giv5Type = "";
+    var updateType = "";
+    var commitType = "";
+    var queTooltip = "";
+    if(pipe=="arrange"){
+        if(isNew){
+            queType="New Item Arrangement Question";
+        }else{
+            queType="Edit Item Arrangement Question";
+        }
+        var commitUrl = "/author_postArrg";
+        var updateUrl = "/author_updateArrgData";
+
+        var verifyType = "verify_arrange";
+        var giv5Type = "give5_arrange";
+        var updateType = "update_element_metadata";
+        var commitType = "commit_arrange";
+        queTooltip = tooltip.tooltipArrgQue01;
+
+    }else if(pipe=="mcq"){
+        if(isNew){
+            queType="New Multiple Choice Question";
+        }else{
+            queType="Edit Multiple Choice Question";
+        }
+        var commitUrl = "/author_postdata";
+        var updateUrl = "/author_updatedata";
+
+        var verifyType = "verify_mcq";
+        var giv5Type = "give5_mcq";
+        var updateType = "update_element_metadata";
+        var commitType = "commit_mcq_new";
+        queTooltip = tooltip.tooltipMcqQue01;
+
+    }else if(pipe=="fillIn"){
+        if(isNew){
+            queType="New Fill in Question";
+        }else{
+            queType="Edit Fill in Question";
+        }
+        var commitUrl = "/author_postFillIn";
+        var updateUrl = "/author_updateFillData";
+
+        var verifyType = "verify_fillin";
+        var giv5Type = "give5_fillin";
+        var updateType = "update_element_metadata";
+        var commitType = "commit_fillin";
+        queTooltip = tooltip.tooltipFillInst01;
+    }else if(pipe=="info"){
+        if(isNew){
+            queType="New Information Content";
+        }else{
+            queType="Edit Information Content";
+        }
+
+        var commitUrl = "/author_postInfo";
+        var updateUrl = "/author_updateInfoData";
+        var updateType = "update_element_metadata";
+        var verifyType = "verify_info";
+        var giv5Type = "give5_info";
+        var commitType = "commit_info";
+       
+    }else if(pipe=="sub"){
+        if(isNew){
+            queType="New Subjective Question";
+        }else{
+            queType="Edit Subjective Question";
+        }
+        var commitUrl = "/author_postSub";
+        var updateUrl = "/author_updateSubData";
+
+        var verifyType = "verify_sub";
+        var giv5Type = "give5_sub";
+        var updateType = "update_element_metadata";
+        var commitType = "commit_sub";
+        queTooltip = tooltip.tooltipSubQues01;
+    }else{}
+%>
+<!-- 
+
+queTooltip = tooltip.tooltipFillInst01; -->
+
+    <%- include('../parts/allCSS'); %>
+    <script src="author_public/PaperDashBoard/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="author_public/css/jquery.edittable.min.css">
+    
+    <link rel="stylesheet" href="author_public/css/author_questions.css">
+    <link rel="stylesheet" type="text/css" href="author_public/css/author.css">
+    <link rel="stylesheet" href="author_public/css/author_basket.css">
+    
+</head>
+<body class="sidebar-mini">
+     
+    <div class="wrapper">
+        <%- include ../parts/leftNavBar %>
+        <div class="main-panel">
+        <%- include quesParts/topNavBarNewQuestion %>
+        <div class="content" style="padding-top:5px;">
+            <div class="container-fluid">
+                <div class='row'>
+                    <div class='col-lg-7 col-sm-12 outer'>
+                        <div class="card card-big">
+                            <%- include quesParts/newContentCard %>
+                            <div class="card-content" style="padding-right:2px;">
+                                <div class="nav-tabs-navigation">
+                                    <div class="nav-tabs-wrapper">
+                                        <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+                                            <li class="active"><a href="#metadata" data-toggle="tab">Metadata</a></li>
+                                            <% if(pipe=="arrange" ||pipe=="mcq" ||pipe=="fillIn" || pipe=="sub"){ %>
+                                                <li><a href="#question" data-toggle="tab">Question</a></li>
+                                            <% } %>
+                                            <% if(pipe=="arrange"){ %>
+                                                <li><a href="#arrangeItems" data-toggle="tab">Items</a></li>
+                                            <% }else if(pipe=="fillIn"){%>
+                                                <li><a href="#fillAnswers" data-toggle="tab">Answer</a></li>
+                                                <!-- <li><a href="#fillStatement" data-toggle="tab">Statement</a></li> -->
+                                                <!-- <li><a href="#fillSuggestion" data-toggle="tab">Suggestion</a></li> -->
+                                            <% }else if(pipe=="sub"){%>
+                                                <li><a href="#subAnswers" data-toggle="tab">Answer</a></li>
+                                            <% }else if(pipe=="mcq"){ %>
+                                                <li><a href="#mcqOption" data-toggle="tab">Options</a></li>
+                                            <% } %>
+                                            <% if(pipe=="arrange" ||pipe=="mcq" ||pipe=="fillIn" || pipe=="sub"){ %>
+                                            <li><a href="#help" data-toggle="tab">Help</a></li>
+                                            <% } %>
+                                            <% if(pipe=="info"){ %>
+                                                <li><a href="#content" data-toggle="tab">Content</a></li>
+                                            <%}%>
+                                            <li><a href="#parameters" data-toggle="tab">Parameters</a></li>
+                                            <li><a href="#definitions" data-toggle="tab">Definitions</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div id="edit-que-content" class="tab-content">
+                                    <%- include quesParts/newMetadataDiv %>
+                                    <%- include quesParts/newQuestionDiv %>
+                                    <%- include quesParts/newArrangeItems %>
+                                    <%- include quesParts/newFillinStatement %>
+                                    <%- include quesParts/newFillinSuggestion %>
+                                    <%- include quesParts/newFillinAnswer %>
+                                    <%- include quesParts/newSubAnswer %>
+                                    <%- include quesParts/newMcqOption %>
+                                    <%- include quesParts/newHintDiv%> 
+                                    <%- include quesParts/newInfoHeaderDiv %>
+                                    <%- include quesParts/newParametersDiv %>
+                                    <%- include quesParts/newDefinitionDiv %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        <%- include quesParts/preview %>
+                </div>
+            </div>
+        </div>
+        <%- include ../parts/footer %>
+    </div>
+</div>
+</body>
+<%- include ../parts/allJS %>
+<%- include('../parts/codemirrorJS'); %>
+<script type="text/javascript" src="author_public/js/jquery.edittable.js"></script>
+
+    <script src="author_public/js/author_questions.js"></script>
+</html>
