@@ -267,7 +267,7 @@
                                                                                         <%if(sectionsDta[i].pool.length==0){%>
                                                                                             <fieldset>
                                                                                                 <div class="col-md-12">
-                                                                                                    <span id="delPlErr" class="text-warning" style="font-weight:bold;"><i class="fa fa-exclamation-triangle"></i>&nbsp;The selected playlist was either modified or deleted.</span>
+                                                                                                    <span id="delPlErr" class="text-warning" style="font-weight:bold;"><i class="fa fa-exclamation-triangle"></i>&nbsp;<%-plMsg%></span>
                                                                                                 </div>
                                                                                             </fieldset>
                                                                                         <%}%>
@@ -278,6 +278,8 @@
                                                                                                     <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipD05%>"><i class="ti-help-alt fa-lg"></i></button></label>
                                                                                                     <% 
                                                                                                         var pl= sectionsDta[i].playlist;
+                                                                                                        var plName1= pl.split("~#~");
+                                                                                                       
                                                                                                     %>
                                                                                                     <script>
                                                                                                         function getPlayListDta(idx){
@@ -286,15 +288,18 @@
                                                                                                             var res = str.split(" - ");
                                                                                                             var queIds = res[0];
                                                                                                             var playlistName = res[1];
-                                                                                                            var playlistId = res[res.length-1];
+                                                                                                            var playlistId = res[2];
+                                                                                                            var playlistUpdt = res[3];
                                                                                                             $('#maxquesId'+idx).html("");
-                                                                                                            document.getElementById('playlist_name_hidden'+idx).value = playlistName;
+                                                                                                            document.getElementById('playlist_name_hidden'+idx).value = playlistName+"~#~id:"+playlistId+"~#~updateId:"+playlistUpdt;
                                                                                                             var authorname= document.getElementById('authorname').value;
 
                                                                                                             var user_dataAuth = new Object;
                                                                                                             user_dataAuth.name = playlistName;
                                                                                                             user_dataAuth.author = authorname;
                                                                                                             user_dataAuth.author = playlistId;
+                                                                                                            user_dataAuth.playlistUpdt = playlistUpdt;
+                                                                                                            
                                                                                                             $('#authError'+idx).html("");
                                                                                                             $('#playlist_name'+idx).removeClass('error');
                                                                                                             $("#section_name"+idx).removeAttr('disabled');
@@ -330,11 +335,13 @@
                                                                                                             var res = plname.split(" - ");
                                                                                                             var queIds = res[0];
                                                                                                             var playlistName = res[1];
-                                                                                                            var playlistId = res[res.length-1];
+                                                                                                            var playlistId = res[2];
+                                                                                                            var playlistUpdt = res[3];
                                                                                                             if (plname != '') {
                                                                                                                 var user_data2 = new Object;
                                                                                                                 user_data2.name = playlistName;
                                                                                                                 user_data2.playlistId = playlistId;
+                                                                                                                user_data2.playlistUpdt = playlistUpdt;
 
                                                                                                                 $.post("/author_getSectionsList", user_data2, function (data) {
                                                                                                                     if (data.status == 'success') {
@@ -411,7 +418,7 @@
                                                                                                                 ques.push(content[k].item);
                                                                                                             }
                                                                                                         %>
-                                                                                                        <option value="<%-ques%> - <%-playlist1[1]%> - <%-playlist1[2]%>" <%if(pl== playlist1[1]){%> selected="selected" <%}%> ><%-playlist1[1]%></option>
+                                                                                                        <option value="<%-ques%> - <%-playlist1[1]%> - <%-playlist1[2]%> - <%-playlist1[6]%>" <%if(plName1[0]== playlist1[1]){%> selected="selected" <%}%> ><%-playlist1[1]%></option>
                                                                                                         <%}%>
                                                                                                         
                                                                                                         <%for(var a=0; a<collb1.length;a++){
@@ -424,7 +431,7 @@
                                                                                                             }
                                     
                                                                                                             %>
-                                                                                                            <option value="<%-ques1%> - <%-strcollb1[1]%> - <%-strcollb1[2]%>" <%if(pl== strcollb1[1]){%> selected="selected" <%}%> ><%-strcollb1[1]%></option>
+                                                                                                            <option value="<%-ques1%> - <%-strcollb1[1]%> - <%-strcollb1[2]%> - <%-strcollb1[6]%>" <%if(plName1[0]== strcollb1[1]){%> selected="selected" <%}%> ><%-strcollb1[1]%></option>
                                                                                                             <%}%>
                                                                                     
                                                                                                             <%for(var a=0; a<collb2.length;a++){
@@ -436,7 +443,7 @@
                                                                                                             ques2.push(content2[k].item);
                                                                                                             }
                                                                                                             %>
-                                                                                                            <option value="<%-ques2%> - <%-strcollb2[1]%> - <%-strcollb2[2]%>" <%if(pl== strcollb2[1]){%> selected="selected" <%}%> ><%-strcollb2[1]%></option>
+                                                                                                            <option value="<%-ques2%> - <%-strcollb2[1]%> - <%-strcollb2[2]%> - <%-strcollb2[6]%>" <%if(plName1[0]== strcollb2[1]){%> selected="selected" <%}%> ><%-strcollb2[1]%></option>
                                                                                                             <%}%>
                                                                                                             
                                                                                                     </select>
@@ -672,7 +679,7 @@
                                                                                                     ques.push(content[k].item);
                                                                                                     }
                                                                                                 %>
-                                                                                                    <option value="<%-ques%> - <%-playlist1[1]%> - <%-playlist1[2]%>">
+                                                                                                    <option value="<%-ques%> - <%-playlist1[1]%> - <%-playlist1[2]%> - <%-playlist1[6]%>">
                                                                                                     <%-playlist1[1]%>
                                                                                                     </option>
                                                                                                 <%}%>
@@ -687,7 +694,7 @@
                                                                                                     }
 
                                                                                                     %>
-                                                                                                    <option value="<%-ques1%> - <%-strcollb1[1]%> - <%-strcollb1[2]%>">
+                                                                                                    <option value="<%-ques1%> - <%-strcollb1[1]%> - <%-strcollb1[2]%> - <%-strcollb1[6]%>">
                                                                                                     <%-strcollb1[1]%>
                                                                                                     </option>
                                                                                                     <%}%>
@@ -701,7 +708,7 @@
                                                                                                     ques2.push(content2[k].item);
                                                                                                     }
                                                                                                     %>
-                                                                                                    <option value="<%-ques2%> - <%-strcollb2[1]%> - <%-strcollb2[2]%>">
+                                                                                                    <option value="<%-ques2%> - <%-strcollb2[1]%> - <%-strcollb2[2]%> - <%-strcollb2[6]%>">
                                                                                                     <%-strcollb2[1]%>
                                                                                                     </option>
                                                                                                     <%}%>

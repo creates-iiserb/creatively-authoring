@@ -48,16 +48,22 @@
                               <label><button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipQuiz19%>"><i class="ti-help-alt fa-lg" style="font-size:1.5em;"></i></button></label>
                           </h4>
                           <br>
-                        
+                         <!--  <p>&nbsp;&nbsp;<input type="checkbox" onchange="checkAll(this)" id="chkall" name="chk[]"
+                            /> &nbsp;&nbsp;&nbsp;&nbsp;<b>Select All</b></p> -->
+                            <!-- <div class="form-group"> -->
+                              <!-- <div class='col-sm-12'> -->
                                 <div class="checkbox">
                                   <input type="checkbox" onchange="checkAll(this)" id="chkall" name="chk[]"/> 
                                   <label for="chkall" style="font-size:16px;font-weight:bold;">
                                     Select All
                                   </label>
                                 </div>
-                             
+                              <!-- </div> -->
+                            <!-- </div> -->
                           <table id="table" class="table table-center">
-                           
+                            <!-- <tr>
+                                  <th>Quiz Id</th><td><%-data._id%></td>
+                                </tr> -->
                             <tr>
                               <th>
                                 <div class="form-group">
@@ -180,7 +186,22 @@
                                 </td>
                               </tr>
                               
-                              
+                              <!-- <tr>
+                                <th>
+                                  <div class="form-group">
+                                    <div class='col-sm-12'>
+                                      <div class="checkbox">
+                                        <input type="checkbox" id="chkbox_ids" name="chkbox_ids" class="chkbox" value="section_playlist" />
+                                        <label for="chkbox_ids"></label>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </th>
+                                <th>Section Playlist</th>
+                                <td>
+                                  <%-data.playlist%>
+                                </td>
+                              </tr> -->
                                 <tr>
                                 <th>
                                   <div class="form-group">
@@ -391,7 +412,9 @@
                                   </th>
                                   <th style="width:200px;">Quiz Sections</th>
                                   <td>
-                                    <% var sections =  data.sections; %>
+                                    <% var sections =  data.sections; 
+                                      
+                                    %>
                                     <% for(var i =0;i<sections.length;i++){ %>
                                       <div class="row" id="sectdiv_old-<%-i%>">
                                         <div id="acordeon" class="col-md-11">
@@ -417,10 +440,22 @@
                                                           <th>Section Title</th>
                                                           <td><%-sections[i].title%></td>
                                                         </tr>
-                                                        <tr>
-                                                          <th>Playlist / Section Name</th>
-                                                          <td><%-sections[i].playlist%> / <%-sections[i].sectionName%></td>
-                                                        </tr>
+                                                        <% 
+                                                          var pl = sections[i].playlist;
+                                                          var plname = pl.split("~#~");
+                                                          if(plname == undefined){
+                                                        %>
+                                                          <tr>
+                                                            <th>Playlist / Section Name</th>
+                                                            <td><%-sections[i].playlist%> / <%-sections[i].sectionName%></td>
+                                                          </tr>
+
+                                                        <% }else{ %>
+                                                            <tr>
+                                                             <th>Playlist / Section Name</th>
+                                                             <td><%-plname[0] %> / <%-sections[i].sectionName%></td>
+                                                            </tr>
+                                                        <% }%>
                                                         <tr>
                                                           <th>Order of items</th>
                                                           <td><%-sections[i].arrangement%></td>
