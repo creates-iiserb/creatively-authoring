@@ -706,7 +706,7 @@
                                                                                 </a>
 
                                                                                 <% if(itmD11['public']==true || itmD11['author']== short ){%>
-                                                                                <!-- aak add to basket -->
+                                                                                <!--  add to basket -->
                                                                                 <a class="btn btn-info btn-icon btn-simple btnsmall basket"  title="Add to basket" rel="tooltip" onclick="AddtoBasket('ad<%-itm2.item%>','<%-itm2.item%>','Not')" style="display:auto;" id="ad<%-itm2.item%>" >
                                                                                     <i class="fa fa-shopping-basket" ></i>
                                                                                 </a>
@@ -905,7 +905,7 @@
                                                                     var ordernumber = j;
 
                                                                  %>
-                                                                 <!-- aak basket start -->
+                                                                 <!--  basket start -->
                                                                  <script>   
                                                                     var basketdata = (sessionStorage['basketitems']!=undefined)?JSON.parse(sessionStorage['basketitems']):[];
                                                                     console.log(basketdata);    
@@ -918,7 +918,7 @@
                                                                         
                                                                     }
                                                                 </script>
-                                                                <!-- aak basket end -->
+                                                                <!--  basket end -->
 
                                                                 <li id="<%-ques%>" <% if(unauthcon>-1){%> style="border:2px solid #EB5E28;background-color: #f39f7f2e;"<% }%> >
                                                                     <div class="row">
@@ -961,7 +961,7 @@
                                                                             </a>
 
                                                                             <% if(itmDt22.public==true || itmDt22.author == short ){%>
-                                                                                 <!-- aak add to basket -->
+                                                                                 <!--  add to basket -->
                                                                                 <a class="btn btn-info btn-icon btn-simple btnsmall basket"  title="Add to basket" rel="tooltip" onclick="AddtoBasket('ad<%-ques%>','<%-ques%>','NOT')" style="display:auto;" id="ad<%-ques%>" >
                                                                                     <i class="fa fa-shopping-basket" ></i>
                                                                                 </a>
@@ -1263,7 +1263,7 @@
             // $("#unsectionlist").sortable();
             // var idArr=$( "#unsectionlist" ).sortable( "toArray" );
             // jQuery(".IdList").text(idArr.join());
-            var oldparent; //aak ordering
+            var oldparent; // ordering
             
                 $("#Section0").sortable({
                 connectWith: ".connectedSortable",
@@ -1277,7 +1277,7 @@
                     // console.log("unsectionlist==="+idArr);
                     document.getElementById('arrange_ids').disabled = false;
                     
-                    //aak ordering
+                    // ordering
                     var newparent = $(ui.item[0]).parent();
                     var parentId =  newparent.attr('id');
                     var orderchilds = newparent.find('.orderNumber');
@@ -1298,8 +1298,8 @@
                         });
 
                     }                    
-                    //end of aak ordering
-                    setMaxH(); //aak
+                    //end of  ordering
+                    setMaxH(); //
                     
                 },
                 start: function( event, ui ) {
@@ -1318,7 +1318,7 @@
 
                     document.getElementById('arrange_ids').disabled = false;
 
-                    //aak ordering
+                    // ordering
                     var newparent = $(ui.item[0]).parent();
                     var parentId =  newparent.attr('id');                    
                     var orderchilds = newparent.find('.orderNumber');
@@ -1341,8 +1341,8 @@
                     
                     
 
-                    //end of aak ordering
-                    setMaxH(); //aak
+                    //end of  ordering
+                    setMaxH(); //
                 },
                 start: function( event, ui ) {
                     oldparent = $(ui.item[0]).parent();  
