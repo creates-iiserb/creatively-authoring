@@ -12,7 +12,7 @@ consideration of benefits the Licensor receives from making the
 Licensed Material available under these terms and conditions.
 
 
-**Section 1 -- Definitions.**
+**Section 1 - Definitions.**
 
   a. **Adapted Material** means material subject to Copyright and Similar
      Rights that is derived from or based upon the Licensed Material
@@ -76,7 +76,7 @@ Licensed Material available under these terms and conditions.
      under this Public License. **Your** has a corresponding meaning.
 
 
-**Section 2 -- Scope.**
+**Section 2 - Scope.**
 
 a. License grant.
 
@@ -289,7 +289,7 @@ Rights include other Copyright and Similar Rights.
      independent of the terms and conditions of this Public License.
 
 
-**Section 8 -- Interpretation.**
+**Section 8 - Interpretation.**
 
   a. For the avoidance of doubt, this Public License does not, and
      shall not be interpreted to, reduce, limit, restrict, or impose
