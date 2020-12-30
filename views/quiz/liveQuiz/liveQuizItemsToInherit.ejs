@@ -269,10 +269,23 @@
                                                           <th>Section Title</th>
                                                           <td><%-sections[i].title%></td>
                                                         </tr>
+                                                        <% 
+                                                          var pl = sections[i].playlist;
+                                                          var plname = pl.split("~#~");
+                                                          if(plname == undefined){
+                                                        %>
                                                         <tr>
                                                           <th>Playlist / Section Name</th>
                                                           <td><%-sections[i].playlist%> / <%-sections[i].sectionName%></td>
                                                         </tr>
+
+                                                        <% }else{ %>
+                                                            <tr>
+                                                            <th>Playlist / Section Name</th>
+                                                            <td><%-plname[0] %> / <%-sections[i].sectionName%></td>
+                                                            </tr>
+                                                        <% }%>
+                                                        
                                                        
                                                         <tr>
                                                           <th>Help Level Selector</th>

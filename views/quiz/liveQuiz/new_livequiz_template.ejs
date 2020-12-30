@@ -265,7 +265,7 @@
                                                                                                 <%if(sectionsDta[i].pool.length==0){%>
                                                                                                     <fieldset>
                                                                                                         <div class="col-md-12">
-                                                                                                            <span id="delPlErr" class="text-warning" style="font-weight:bold;"><i class="fa fa-exclamation-triangle"></i>&nbsp;The selected playlist was either modified or deleted.</span>
+                                                                                                            <span id="delPlErr" class="text-warning" style="font-weight:bold;"><i class="fa fa-exclamation-triangle"></i>&nbsp;<%-plMsg%></span>
                                                                                                         </div>
                                                                                                     </fieldset>
                                                                                                 <%}%>
@@ -276,6 +276,7 @@
                                                                                                             <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="<%-tooltip.tooltipD05%>"><i class="ti-help-alt fa-lg"></i></button></label>
                                                                                                             <% 
                                                                                                                 var pl= sectionsDta[i].playlist;
+                                                                                                                var plName1= pl.split("~#~");
                                                                                                             %>
                                                                                                             
                                                                                                             
@@ -290,7 +291,7 @@
                                                                                                                         ques.push(content[k].item);
                                                                                                                     }
                                                                                                                 %>
-                                                                                                                <option value="<%-ques%> - <%-playlist1[1]%> - <%-playlist1[2]%>" <%if(pl== playlist1[1]){%> selected="selected" <%}%> ><%-playlist1[1]%></option>
+                                                                                                                <option value="<%-ques%> - <%-playlist1[1]%> - <%-playlist1[2]%> - <%-playlist1[6]%>" <%if(plName1[0]== playlist1[1]){%> selected="selected" <%}%> ><%-playlist1[1]%></option>
                                                                                                                 <%}%>
                                                                                                                 
                                                                                                                 <%for(var a=0; a<collb1.length;a++){
@@ -303,7 +304,7 @@
                                                                                                                     }
                                             
                                                                                                                     %>
-                                                                                                                    <option value="<%-ques1%> - <%-strcollb1[1]%> - <%-strcollb1[2]%>" <%if(pl== strcollb1[1]){%> selected="selected" <%}%> ><%-strcollb1[1]%></option>
+                                                                                                                    <option value="<%-ques1%> - <%-strcollb1[1]%> - <%-strcollb1[2]%> - <%-strcollb1[6]%>" <%if(plName1[0]== strcollb1[1]){%> selected="selected" <%}%> ><%-strcollb1[1]%></option>
                                                                                                                     <%}%>
                                                                                             
                                                                                                                     <%for(var a=0; a<collb2.length;a++){
@@ -315,11 +316,12 @@
                                                                                                                     ques2.push(content2[k].item);
                                                                                                                     }
                                                                                                                     %>
-                                                                                                                    <option value="<%-ques2%> - <%-strcollb2[1]%> - <%-strcollb2[2]%>" <%if(pl== strcollb2[1]){%> selected="selected" <%}%> ><%-strcollb2[1]%></option>
+                                                                                                                    <option value="<%-ques2%> - <%-strcollb2[1]%> - <%-strcollb2[2]%> - <%-strcollb2[6]%>" <%if(plName1[0]== strcollb2[1]){%> selected="selected" <%}%> ><%-strcollb2[1]%></option>
                                                                                                                     <%}%>
                                                                                                                     
                                                                                                             </select>
                                                                                                             <span id="authError<%-i%>" class="text-danger checkAuthError"></span>
+                                                                                                            
                                                                                                             <input type="hidden" id="playlist_name_hidden<%-i%>" name="playlist_name_hidden<%-i%>" value="<%-sectionsDta[i].playlist%>">
                                                                                                         </div>
                                                                                                     </div>
@@ -534,7 +536,7 @@
                                                                                                             ques.push(content[k].item);
                                                                                                             }
                                                                                                         %>
-                                                                                                            <option value="<%-ques%> - <%-playlist1[1]%> - <%-playlist1[2]%>"><%-playlist1[1]%></option>
+                                                                                                            <option value="<%-ques%> - <%-playlist1[1]%> - <%-playlist1[2]%> - <%-playlist1[6]%>"><%-playlist1[1]%></option>
                                                                                                         <%}%>
         
                                                                                                         <%for(var i=0; i<collb1.length;i++){
@@ -547,7 +549,7 @@
                                                                                                             }
         
                                                                                                             %>
-                                                                                                            <option value="<%-ques1%> - <%-strcollb1[1]%> - <%-strcollb1[2]%>"><%-strcollb1[1]%></option>
+                                                                                                            <option value="<%-ques1%> - <%-strcollb1[1]%> - <%-strcollb1[2]%> - <%-strcollb1[6]%>"><%-strcollb1[1]%></option>
                                                                                                             <%}%>
                                                                                     
                                                                                                             <%for(var i=0; i<collb2.length;i++){
@@ -559,7 +561,7 @@
                                                                                                             ques2.push(content2[k].item);
                                                                                                             }
                                                                                                             %>
-                                                                                                            <option value="<%-ques2%> - <%-strcollb2[1]%> - <%-strcollb2[2]%>"><%-strcollb2[1]%></option>
+                                                                                                            <option value="<%-ques2%> - <%-strcollb2[1]%> - <%-strcollb2[2]%> - <%-strcollb2[6]%>"><%-strcollb2[1]%></option>
                                                                                                             <%}%>
         
         
@@ -889,7 +891,7 @@
                                                                             <select class="form-control valid" data-style="btn-default" id="selectuserIdCol" name="selectuserIdCol" required>
                                                                                 <option value='' data-col="">Identify Username Column</option>
                                                                                 <option value='0' data-col="A">Column A</option>
-                                                                                <option value='1' data-col="B">Column A</option>
+                                                                                <option value='1' data-col="B">Column B</option>
                                                                                 <option value='2' data-col="C">Column C</option>
                                                                             </select>
                                                                         </div>

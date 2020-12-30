@@ -165,10 +165,23 @@
                                                   <td><b>Instruction: </b></td>
                                                   <td><%-SecSummary[i].displayInstruction%></td>
                                               </tr>
+                                              <% 
+                                                var pl = SecSummary[i].playlist;
+                                                var plname = pl.split("~#~");
+                                                if(plname == undefined){
+                                              %>
                                               <tr>
                                                   <td><b>Playlist / Section Name: </b></td>
                                                   <td><%-SecSummary[i].playlist%> / <%-SecSummary[i].sectionName%></td>
                                               </tr>
+
+                                              <% }else{ %>
+                                                  <tr>
+                                                  <th>Playlist / Section Name</th>
+                                                  <td><%-plname[0] %> / <%-SecSummary[i].sectionName%></td>
+                                                  </tr>
+                                              <% }%>
+                                              
                                               <tr>
                                                   <td><b>Items in the playlist: </b></td>
                                                   <td><%-SecSummary[i].pool.length%></td>
