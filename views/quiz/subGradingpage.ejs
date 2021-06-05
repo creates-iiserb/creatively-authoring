@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <%- include('../parts/allCSS'); %>
+    <script type="text/x-mathjax-config">
+       
+
+        MathJax.Hub.Config({
+            showMathMenu: false,
+            menuSettings: { zoom: "Double-Click",zscale: "150%"},
+            CommonHTML: { linebreaks: { automatic: true } },
+            "HTML-CSS": { linebreaks: { automatic: true } },
+            SVG: { linebreaks: { automatic: true } },
+            tex2jax: {
+              inlineMath: [["$","$"],["\\(","\\)"]]
+            }
+        });
+    </script>
+    <script type="text/javascript" src="author_public/MathJax/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+    <script src="author_public/PaperDashBoard/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+    <style>
+        .category {
+            font-size: 14px;
+            font-weight: 400;
+            color: #9A9A9A;
+            margin-bottom: 0px;
+        }
+        .orderNumber{
+            font-size: 16px;
+            font-weight: bold;
+            color: #eb5e28;
+            vertical-align: top;
+        }
+        .disableGradeDiv {
+            
+            /* font-weight: normal; */
+            color:#ccc5b9;
+            cursor: not-allowed;
+        }
+        .progress{
+            background-color: #cfcfca;
+            border-radius: 10px;
+            box-shadow: none;
+            height: 18px;
+        }
+
+        .cardGrader{
+            padding: 0px 0px 0px 5px !important;
+            border:1px solid #cfcfca; 
+            border-radius: 10px;
+        }
+        .box-info{
+            border-left:5px solid #429cb6;
+        }
+        .positiveScore{
+            background-color: #def0e5;
+            
+        }
+        .negitiveScore{
+            background-color: #fad8cb;
+        }
+        
+    </style>
+</head>
+
+<body ng-app="subGradingApp" ng-controller="subGradingContoller" ng-init="initData('<%-token%>')" ng-cloak>
+    <div class="wrapper" >
+        <div class="ld ld-ring ld-spin"></div>
+        <%- include('../parts/leftNavBar'); %>
+        <div class="main-panel" style="display:none;" id="mainPanelDiv">
+            <%- include('../parts/topNavBarPart1'); %>Subjective Grading (Quiz Id: <%-token%>,  {{exMetaData.credentialsCount}} Participants) <br />
+
+            <%- include('../parts/topNavBarPart2'); %>
+            <div class="content">
+                <div class="container-fluid">
+                    
+                    <div class="row" ng-show="exMetaData.showLiveSub==false">
+                        <div class="col-md-12">
+                            <div class="row animated zoomIn delay-2s">
+                                <div class="col-lg-12">
+                                  <div class="warningAlert boxShadow">
+                                  <p>Subjective grading is not allowed since this quiz is not finalized.</p></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='row' ng-show="exMetaData.showLiveSub==true">
+                        <div class='col-md-10 col-md-offset-1 ' >
+                            <div class="row animated zoomIn delay-2s" ng-show="showWarnDiv==true">
+                                <div class="col-lg-12">
+                                  <div class="errorAlert boxShadow">
+                                  <p><i class="fa fa-exclamation-triangle"></i>The deadline of this quiz is not yet over. Some participants might not have submitted yet.</p></div>
+                                </div>
+                            </div>
+
+                            <div class="row " ng-show="subData.subFinalized==true">
+                                <div class="col-lg-12">
+                                  <div class="warningAlert boxShadow">
+                                  <p>Finalization was done on {{utcToLocal(subData.subGrading.finalizedOn)}}. You cannot make any changes now.</p></div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                    <div class="card-header clearfix">
+                                        <div class="pull-left">
+                                            <form role="form" name="frmback" id="frmback" method="post" action="/author_getQuizControlData" enctype="multipart/form-data">
+                                                <input type="hidden" name="quizid" id="quizid" value="<%-token%>">
+                                                <button class="btn btn-wd btn-default btn-move-left" id="back"><span class="btn-label"><i class="ti-angle-left"></i></span>Back</button>
+                                            </form>
+                                        </div>
+                                        <form id="frmgrade"  name="frmgrade" class="form-horizontal" method="post" ng-submit="updateGrade(frmgrade)" ng-validate="validationOptions">
+                                        <div class="pull-right" >
+                                            <div class='col-sm-4 col-xs-12' ng-hide="subData.subFinalized==true">
+                                                <!-- <form role="form" name="wbSheets" id="wbSheets" method="post" action="" enctype="multipart/form-data" class='inline'> -->
+                                                    <button type='button' class="btn btn-success btn-fill btn-wd btnmargin"   ng-click="finalized('<%-token%>',stats.totalGradedQues,stats.totalSubQues)" ng-disabled="disableFinalize==true" id="finalizeBtn" name="finalizeBtn">
+                                                       Finalize
+                                                    </button>
+                                                <!-- </form> -->
+                                            </div>
+                                            <div class='col-sm-4 col-xs-12'>
+                                                <!-- <form role="form" name="wbSheets" id="wbSheets" method="post" action="" enctype="multipart/form-data" class='inline'> -->
+                                                    <button type='button' class="btn btn-primary btn-fill btn-wd btnmargin" ng-click="sendLinkEmail('<%-token%>','<%-graderLinkURL%>',gradersDta,exMetaData.authorName, exMetaData.authorEmail,subData.subFinalized)" id="sndLinkBtn" name="sndLinkBtn">
+                                                        Send Links
+                                                    </button>
+                                                <!-- </form> -->
+                                            </div>
+                                            <div class='col-sm-4 col-xs-12' ng-hide="subData.subFinalized==true">
+                                                <!-- <form role="form" name="wbDelete" id="wbDelete" method="post" action="" enctype="multipart/form-data" class='inline'> -->
+                                                    <button type='submit' class="btn btn-warning btn-fill btn-wd btnmargin" id="updateGradingBtn" name="updateGradingBtn" ng-disabled="disableUpdate==true">
+                                                        Update
+                                                    </button>
+                                                <!-- </form> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="card-content">
+                                        <div class="row">
+                                            <div class="col-lg-4" >
+                                                <div class="form-group" ng-hide="subData.subFinalized==true">
+                                                    <label class="control-label">Enable Subjective Grading 
+                                                        <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                                        <i class="ti-help-alt fa-lg"></i>
+                                                        </button>
+                                                    </label>
+                                                    <input type="checkbox" bs-switch id="enableGrading" name="enableGrading" ng-change="changeEnableSub()" ng-model="subData.subGrading.enabled"> 
+                                                    <!-- <input type="checkbox" class="switch"  ng-model="subData.subGrading.enabled"> -->
+                                                </div>
+                                            </div>
+                                            <div  class="col-lg-4">
+                                                <div class="form-group" ng-hide="subData.subFinalized==true">
+                                                    <label class="control-label"><b class=" text-danger">{{subCount}}/{{exMetaData.credentialsCount}}</b> <span>participants submitted the quiz</span></label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="row">
+                                                    <div class="col-md-6 col-sm-12 col-xs-12">
+                                                        <label class="control-label">Question Graded:
+                                                            <!-- <b>{{stats.totalGradedQues}}/{{stats.totalSubQues}}</b> -->
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-md-6  col-sm-12  col-xs-12">
+                                                        <!-- <b>&nbsp;</b> -->
+                                                            <uib-progressbar max="stats.totalSubQues" value="stats.totalGradedQues" type="success">{{stats.totalGradedQues}}/{{stats.totalSubQues}}</uib-progressbar>
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class=" col-lg-12" >
+                                                    <!-- <h4>Subjective Questions</h4> -->
+                                                    <!-- <small class="text-danger">Note: Click on Update button to save changes.</small> -->
+                                            </div>
+                                            <div class=" col-lg-12"  ng-repeat="itms in output  track by $index">
+                                                <div class="card1 ">
+                                                    <div class="card-content">
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                <a class="btn btn-info btn-icon btn-simple btnsmall pd-l0px" id="sample" data-item="{{itms.ref}}" tooltip-placement="top" uib-tooltip="Inside section(s): {{refWithSec[itms.ref].join()}}.  Click to view question sample">
+                                                                  <b id="ques" style="font-size:25px;">{{itms.ref}}</b><br>
+                                                                  <span  class="text-danger">{{ (stats["progress"][itms.ref]["totalGrade"])?stats["progress"][itms.ref]["totalGrade"]:0 }} of {{(stats["progress"][itms.ref]["total"])?stats["progress"][itms.ref]["total"]:0  }} graded</span>
+                                                                </a>
+                                                            </div>
+                                                            
+                                                            <div class="col-md-6" ng-hide="subData.subFinalized==true">
+                                                                <label class="col-lg-4 control-label">Select Graders
+                                                                    <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                                                    <i class="ti-help-alt fa-lg"></i>
+                                                                    </button>
+                                                                </label>
+                                                                <select selectpicker class="col-lg-7" ng-model="itms.gradersSel" ng-change="changeGraders($index,itms.gradersSel,itms)" id="graders" name="graders" ng-options="gname.id as gname.val for gname in graders" multiple  data-max-options="3" required>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-md-3 text-right" ng-hide="subData.subFinalized==true">
+                                                                <button type='button' style="display:auto;" class="btn btn-info btn-fill btn-wd btnmargin" id="rubricMdlBtn" name="rubricMdlBtn"  ng-click="getrubricData(itms.ref,'<%-author%>',subData._id)">
+                                                                    Grading Rubric
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <br>
+
+                                                        <div class="row">
+                                                            <div class="col-lg-3 col-md-6 col-sm-12" ng-repeat="gradeTbl in itms.gradingMap |  orderBy: '-enabled'">
+                                                                <div class="card cardGrader {{ (gradeTbl.enabled==false)?'':'box-info' }}" >
+                                                                    <div class="card-content " >
+                                                                        <div class="row">
+                                                                            <div class="col-lg-8">
+                                                                                <b class="{{ (gradeTbl.enabled==false)?'disableGradeDiv':'text-info' }}" style="font-size:20px;"  tooltip-placement="top" uib-tooltip=" {{gradeTbl.grader}}">{{gradeTbl.grader  | limitTo: 12}} {{gradeTbl.grader.length > 12 ? '...': ''}}</b><br>
+                                                                                <span class="text-success"> {{(stats["progress"][gradeTbl.ref][gradeTbl.grader]["graded"])?stats["progress"][gradeTbl.ref][gradeTbl.grader]["graded"]:0  }}  graded</span><br>
+                                                                                <span class="text-warning" ng-show='stats["progress"][gradeTbl.ref][gradeTbl.grader]["ungraded"]>0'>{{stats["progress"][gradeTbl.ref][gradeTbl.grader]["ungraded"]}} assigned</span>
+                                                                            </div>
+                                                                            <div class="col-lg-3" style="border-left:1px solid #cfcfca"> 
+                                                                                <button class="btn btn-warning btn-simple btnCopy" id="btn_copy" ng-disabled="gradeTbl.enabled==false" data-copy="<%-graderLinkURL%>token={{gradeTbl.token}}"  tooltip-placement="top" uib-tooltip="Copy Grader Link" value="">
+                                                                                    <i class="ti-files"></i>
+                                                                                </button>
+                                                                                <input type="hidden" name="tokenLink"  ng-modal="gradeTbl.token" id="tokenLink" value="{{gradeTbl.token}}">
+                                                                                <button class="btn btn-info btn-simple btnResetLink" ng-hide="subData.subFinalized==true" id="resetLink" ng-disabled="gradeTbl.enabled==false" ng-click="randomLink($index,gradeTbl)" tooltip-placement="top" uib-tooltip="Reset Email Link" value="">
+                                                                                    <i class="fa fa-repeat"></i>
+                                                                                </button>
+                                                                                 <!-- <button class="btn btn-danger btn-simple" ng-disabled="gradeTbl.enabled==false" id="delGraders" ng-click="disableGrader($index,gradeTbl,itm)"  tooltip-placement="top" uib-tooltip="Disable Grader" value="">
+                                                                                    <i class="fa fa-lock"></i>
+                                                                                </button> -->
+                                                                                 <!-- <button class="btn btn-danger btn-simple" ng-disabled="gradeTbl.enabled==false" id="delGradingBtn" ng-click="discardGrading($index,'<%-token%>',gradeTbl.grader,itms.ref)"  tooltip-placement="top" uib-tooltip="Discard Grading" value="">
+                                                                                <i class="fa fa-trash"></i>
+                                                                                </button> -->
+                                                                            </div>
+                                                                        </div>
+                                                                        
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+<!-- 
+                                                            <table class="table" id="grade-tbl">
+                                                                <thead>
+                                                                    <th data-field="grader" data-sortable="true">Grader</th>
+                                                                    <th data-field="progress"> Questions Graded</th>
+                                                                    <th data-field="action" class="text-center">Actions</th>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr ng-show="itms.gradingMap.length==0"> 
+                                                                        <td colspan="3" class="text-muted" align="center">No Grader Selected</td>
+                                                                    </tr>
+                                                                    <tr ng-repeat="gradeTbl in itms.gradingMap" > 
+                                                                        <td><b class="{{ (gradeTbl.enabled==false)?'disableGradeDiv':'text-info' }}">{{gradeTbl.grader}}</b></td>
+                                                                        <td>
+                                                                            {{stats["progress"][gradeTbl.ref][gradeTbl.grader]["graded"]}} <span  ng-show='stats["progress"][gradeTbl.ref][gradeTbl.grader]["ungraded"]>0'>+ {{stats["progress"][gradeTbl.ref][gradeTbl.grader]["ungraded"]}} pending</span>
+                                                                        </td>
+                                                                        <td class="td-actions text-center">
+                                                                            <button class="btn btn-warning btn-simple btnCopy" id="btn_copy" ng-disabled="gradeTbl.enabled==false" data-copy="<%-graderLinkURL%>token={{gradeTbl.token}}"  tooltip-placement="top" uib-tooltip="Copy Email Link" value="">
+                                                                                <i class="ti-files"></i>
+                                                                            </button>
+                                                                            <input type="hidden" name="tokenLink"  ng-modal="gradeTbl.token" id="tokenLink" value="{{gradeTbl.token}}">
+                                                                            <button class="btn btn-info btn-simple btnResetLink" id="resetLink" ng-disabled="gradeTbl.enabled==false" ng-click="randomLink($index,gradeTbl)" tooltip-placement="top" uib-tooltip="Reset Email Link" value="">
+                                                                                <i class="fa fa-repeat"></i>
+                                                                            </button>
+
+                                                                            <button class="btn btn-danger btn-simple" ng-disabled="gradeTbl.enabled==false" id="delGradingBtn" ng-click="discardGrading($index,'<%-token%>',gradeTbl.grader,itms.ref)"  tooltip-placement="top" uib-tooltip="Discard Grading" value="">
+                                                                                <i class="fa fa-trash"></i>
+                                                                            </button>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="text-danger"><b>Ungraded Question </b></td>
+                                                                        <td colspan="2" class="text-danger">{{ (stats["progress"][itms.ref]["ungraded"]["ungraded"])?stats["progress"][itms.ref]["ungraded"]["ungraded"]:0 }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="text-primary"><b>Total Locked Question </b></td>
+                                                                        <td colspan="2" class="text-primary">{{ stats["progress"][itms.ref]["total"] }}</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table> -->
+                                                        </div>
+                                                        
+                                                        <!-- Modal to add new playlist-->
+                                                        <div class="modal fade" id="rubricMdl" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                            <div class="modal-dialog modal-lg">
+                                                            <div class="modal-content">
+                                                                <!-- Modal Header -->
+                                                                <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                    <span class="sr-only">Close</span>
+                                                                </button>
+                                                                <h4 class="modal-title" id="myModalLabel"><b>Grading Rubric (Id: {{queRef}})</b></h4>
+                                                                </div>
+                                                                <!-- Modal Body -->
+                                                                <div class="modal-body">
+                                                                    <input type="hidden" id="queItm" name="queItm" value="queRef" />
+                                                                    <div class="row">
+                                                                        <div class="col-lg-6" >
+                                                                            <div class="form-group">
+                                                                                <label class="control-label">Enable Adjustment 
+                                                                                    <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                                                                    <i class="ti-help-alt fa-lg"></i>
+                                                                                    </button>
+                                                                                </label>
+                                                                                <input type="checkbox" bs-switch id="enableGrading" name="enableGrading"  ng-change="changeEnableadj()" ng-model="rubrics.adjEnabled"> 
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-lg-6" >
+                                                                            <div class="form-group">
+                                                                                <label class="control-label">Enable Edit 
+                                                                                    <button type="button" data-toggle="popover"  class="btn btn-info btn-simple btn-xs" data-content="">
+                                                                                    <i class="ti-help-alt fa-lg"></i>
+                                                                                    </button>
+                                                                                </label>
+                                                                                <input type="checkbox" bs-switch id="enableGrading" name="enableGrading" ng-change="changeEnableEdit()" ng-model="rubrics.editable"> 
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <legend class="scheduler-border">Edit Rules</legend>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <div class="table-responsive">
+                                                                            <form  id="empform"  >
+                                                                                <table  class="table" id="tbl_rules">
+                                                                                    <thead>
+                                                                                        <th>Id</th>
+                                                                                        <th>Annotation</th>
+                                                                                        <th>Value</th>
+                                                                                        <th>Created By</th>
+                                                                                        <th>Updated By</th>
+                                                                                        <th>Actions</th>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                                        <tr ng-repeat="rub in rubrics.rules track by $index" class="{{ (rub.deleted==true)?'disableGradeDiv':'' }}" ng-show="rub.deleted==false">
+                                                                                            <td><span class="sn">{{rub.id}}</span></td>
+                                                                                            <td>
+                                                                                                <span class="sn" ng-hide="enabledEdit[{{$index}}]" subjectmath="{{rub.text}}"></span>
+                                                                                                <textarea  class="form-control" rows="3" cols="30" name="rubText{{$index}}" ng-model="rub.text" maxlength="350" ng-keyup="getEditText($index)" ng-hide="!enabledEdit[{{$index}}]" ng-disabled="!enabledEdit[{{$index}}]"></textarea>
+                                                                                                <!-- <input type="text" name="rubText{{$index}}" ng-model="rub.text" maxlength="350" ng-keyup="getEditText($index)" ng-hide="!enabledEdit[{{$index}}]" ng-disabled="!enabledEdit[{{$index}}]"/> -->
+                                                                                            </td>
+                                                                                            <td class="{{rub.value>0?'positiveScore':'negitiveScore'}} text-center">
+                                                                                                <span class="sn" ng-hide="enabledEdit[{{$index}}]">{{rub.value>0?'+'+(+rub.value):rub.value }}</span>
+                                                                                                <input  class="form-control"  style="width:70px" type="number" name="rubVal{{$index}}" ng-model="rub.value"  maxlength="6"  ng-keyup="getEditVal($index)" ng-hide="!enabledEdit[{{$index}}]" ng-disabled="!enabledEdit[{{$index}}]"/>
+                                                                                                <br><small class="text-danger" style="display:none;" id="valErr{{$index}}">Value cannot be 0 or a text</small>
+                                                                                            </td>
+                                                                                            <td>{{rub.added.by}} <br><b class="text-muted">on {{utcToLocal(rub.added.on)}}</b> </td>
+                                                                                            <td>{{rub.update.by}} <br><b  class="text-muted">on {{utcToLocal(rub.update.on)}}</b></td>
+                                                                                            <td>
+                                                                                                <div class="buttons">
+                                                                                                    <button class="btn btn-primary btn-simple" ng-disabled="rub.deleted==true" id="editRulesBtn" ng-hide="enabledEdit[{{$index}}]" ng-click="editRubricRules($index)"><i class="fa fa-pencil"></i></button>
+                                                                                                    <button class="btn btn-danger btn-simple" ng-disabled="rub.deleted==true" id="delRulesBtn" ng-click="removeRubricRules($index)"> <i class="fa fa-close"></i></button>
+                                                                                                </div> 
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                                <span class="text-danger" style="display:none;" id="textErr">* Some duplicate annotation exists</span><br><br>
+                                                                                <button type="button" class="btn btn-info" ng-click="addRubricRules()">Add</button>
+                                                                                <!-- <input type="button" class="btn btn-primary" ng-click="submitEmployee()" value="Submit" /> -->
+                                                                            </form>
+                                                                                <div class="clearfix"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- Modal Footer -->
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-default btn-fill" data-dismiss="modal">Close</button>
+                                                                    <button type="button" class="btn btn-success btn-fill" id="saveRubricBtn" ng-disabled="disablesaveRub==true" ng-click="saveRubric(rubrics,queRef)">Save</button>
+                                                                </div>
+                                                            </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- modal view sample -->
+                                                        <div class="">
+                                                            <div class="modal fade" id="bsModal3" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                                                                <div class="modal-dialog modal-lg">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                                        <h4 class="modal-title" id="mySmallModalLabel">View Sample
+                                                                        </h4>
+                                                                    </div>
+                                                                    <div class="modal-body" id="viewModalContent">
+                                                                        <p></p>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                                        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                                                                    </div>
+                                                                </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- modal close-->
+                                                    </div>
+                                                </div><hr>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <small>Last Updated On: {{(subData.subGrading.lastUpdate== undefined?'':utcToLocal(subData.subGrading.lastUpdate))}}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <%- include('../parts/footer'); %>
+        </div>
+    </div>
+
+   
+
+</body>
+<%- include('../parts/allJS'); %>
+<script type="text/javascript">
+    $(function(){
+      $("body"). on("click" , ".btnCopy", function(){
+       var element = $(this).attr("data-copy");
+       var $temp = $("<input>");
+       $("body").append($temp);
+       $temp.val(element).select();
+       document.execCommand("copy");
+       $temp.remove();
+       console.log("Copied");
+       $.notify({
+            icon: "ti-info",
+            message: "Link copied to clipboard"
+          },{
+            type: "warning",
+            timer: 1000,
+            delay: 700,
+            placement: {
+                from: 'top',
+                align: 'center'
+            }
+          });
+      });
+    })
+
+    $(document).ready(function () {
+        $("body").on("click", "#sample", function () {
+            var quesItm = $(this).attr("data-item");
+            $.ajax({
+            type: 'get',
+            url: '/author_getCommittedSampleQue?id=' + quesItm,
+            cache: false,
+            success: function (returndata) {
+                if (returndata) {
+                // $('#bsModal3 .modal-body p').modal('show'); // Please right this in your Code
+                // console.log(returndata);
+                
+                  $('#bsModal3 .modal-body p').html(returndata);
+                  MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+                  $('#bsModal3').modal('show');
+                } else {
+                // other code
+                }
+            },
+                error: function () {
+                console.error('Failed to process ajax !');
+                }
+            });
+        });
+      });
+  </script>
+<script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.1.3/ui-bootstrap-tpls.min.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/angular-ui-utils/0.1.1/angular-ui-utils.min.js'></script>
+<script src="author_public/angularControllers/subGradingController.js"></script>
+<script src="author_public/angularControllers/customdirective/bsSwitch.js"></script>
+<script src="author_public/angularControllers/customdirective/selectpicker.js"></script>   
+</html>

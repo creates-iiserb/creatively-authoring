@@ -1,5 +1,5 @@
 var fs = require('fs');
-var staticObj = require('./config.js').merge_output;
+var staticObj = require('./config.js').merge_output; 
 var express = require('express');
 var https = require('https');
 var app = express();
@@ -144,6 +144,7 @@ async function gateway(req, res, next) {
               let counterData = {
                 tickets: 0,
                 basket: udata.basket.length,
+                basketQues:udata.basket,
                 newAuthorReq:0,
                 newWbPublishReq:0
               }
@@ -507,7 +508,6 @@ app.get('/author_getAllRecentViewQuestions', recentView.getAllRecentViewQuestion
 app.get('/author_allrecentviewquestions', recentView.allRecentViewQuestions);//all recent view page
 app.post('/author_addrecentviewquestion', recentView.addToRecenteViewQuestion);//add recent view
 
-//=====================================================================Question Ticket Raised =====================================================================
 var ticketRaise = require('./routes/ticketRaise.js');
 app.post('/author_addTicket', ticketRaise.addTicket);
 app.get('/author_questionTickets', ticketRaise.questionTickets);
@@ -522,8 +522,8 @@ app.post('/author_isIssueTicket',ticketRaise.isIssueTicket);
 var upload = require('./routes/mediaUpload.js');
 app.post('/author_media_upload', upload.mediaUploads);
 app.post('/author_uploadmedia', upload.postMedia);
-app.post('/author_updateMediaUpload', upload.updateMediaUpload); 
-app.get('/author_edituploadmedia', upload.editMediaUpload); 
+app.post('/author_updateMediaUpload', upload.updateMediaUpload);
+app.get('/author_edituploadmedia', upload.editMediaUpload);
 app.get('/author_mediaGallery', upload.mediaGallery);
 app.get('/author_removeImage', upload.removeImage);
 
@@ -533,12 +533,12 @@ app.post('/author_plot_new_graph', plotGraph.plotNewGraph);
 app.post('/author_updategraph', plotGraph.updatePlotGraph);
 app.post('/author_updateadvgraph', plotGraph.updateAdvPlotGraph);
 app.post('/author_advanced_plot_graph', plotGraph.advancedPlot);
-app.get('/author_editadvanceplot', plotGraph.editadvancePlot); 
+app.get('/author_editadvanceplot', plotGraph.editadvancePlot);
 app.get('/author_editplotgraph', plotGraph.editPlotGraph);
 app.post('/author_plot_new_advChart', plotGraph.newAdvPlot);
 app.get('/author_removechart', plotGraph.removeChart);
 
-//=============ytvideo Upload===================// 
+//=============ytvideo Upload===================//
 var ytvideo = require('./routes/ytvideo.js');
 app.post('/author_new_ytvideo', ytvideo.newYtvideo);
 app.post('/author_uploadytvideo', ytvideo.postYtvideo);
@@ -551,9 +551,17 @@ app.get('/author_removevideo', ytvideo.removeVideo);
 var pdfdoc = require('./routes/pdfDocument.js');
 app.post('/author_new_pdfDoc', pdfdoc.newPdfDoc);
 app.post('/author_uploadPdfDoc', pdfdoc.postPdfDoc);
-app.post('/author_updatePdfDoc', pdfdoc.updatePdfDoc); 
-app.get('/author_edituploadPdfDoc', pdfdoc.editPdfDoc); 
+app.post('/author_updatePdfDoc', pdfdoc.updatePdfDoc);
+app.get('/author_edituploadPdfDoc', pdfdoc.editPdfDoc);
 app.get('/author_removepdfDoc', pdfdoc.removepdfDoc);
+
+//=============drawing doc Upload===================
+var drawdoc = require('./routes/drawingUpload.js');
+app.post('/author_new_drawingDoc', drawdoc.newdrawingDoc);
+app.get('/author_edituploadDrawDoc', drawdoc.editDrawingDoc); 
+app.post('/author_uploadDrawDoc', drawdoc.postDrawDoc);
+app.post('/author_updateDrawDoc', drawdoc.updateDrawDoc); 
+app.get('/author_removeDrawDoc', drawdoc.removeDrawDoc);
 
 // =====================================================================Quiz routes=====================================================================
 var quiz = require('./routes/quiz.js');
@@ -584,7 +592,6 @@ app.post('/author_updateSecQuizControlBoard', quiz_control.updateSecQuizControlB
 app.post('/author_quizItemsToInherit', quiz_control.quizItemsToInherit);
 app.post('/author_createNewQuizTemplate', quiz_control.createNewQuizTemplate);
 app.post('/author_getTakersData', quiz_control.getTakersData);
-app.get('/author_getTakersData1', quiz_control.getTakersData1); 
 app.post('/author_getLiveQuizManagePage', quiz_control.getLiveQuizManagePage);//live quiz manage page
 app.post('/author_getLiveQuizData', quiz_control.getLiveQuizData);//live quiz data
 app.post('/author_liveQuizAddToQuea', quiz_control.liveQuizAddToQuea); //live quiz add to queue
@@ -607,11 +614,21 @@ app.post('/author_toggle_quiz_status', quiz_control.toggleQuizStatus);
 app.get('/author_delQuiz', quiz_control.delQuiz);
 app.get('/author_downloadPwd', quiz_control.downloadPwdList);
 app.get('/author_summaryCSV', quiz_control.summaryCSV);
+app.get('/author_quesWiseSummary', quiz_control.quesWiseSummary);
 app.post('/author_quizResponse', quiz_control.quizResponse); 
 app.post('/author_dwnLoginCredential', quiz_control.dwnLoginCredential);
 app.get('/author_quizLogCSV', quiz_control.quizLogCSV);
 app.post('/author_quizStdSubmitData',quiz_control.quizStdSubmitData);
 
+//subjective grading
+app.get('/author_subGradingPage', quiz_control.subGradingPage);
+app.post('/author_subGradingPageData', quiz_control.subGradingPageData);
+app.post('/author_updaterubric', quiz_control.updaterubric);
+app.post('/author_getLatestrubric', quiz_control.getLatestrubric);
+app.post('/author_updateSubGrading', quiz_control.updateSubGrading);
+app.post('/author_sendEmailSubGrading', quiz_control.sendEmailSubGrading);
+app.post('/author_getGradingProgress', quiz_control.getGradingProgress);
+app.post('/author_finalizedSubGrading', quiz_control.finalizedSubGrading);
 
 //==========================================================public list ====================================================================
 var publist = require('./routes/pubList.js');
@@ -700,7 +717,10 @@ app.post('/author_adminWbRequestDetails',adminCtrl.adminWbRequestDetails);
 //admin analylics 
 let adminAny = require('./routes/adminAnalytics.js');
 app.get('/author_adminAnalyticsPage',adminAny.adminAnalyticsPage);
+app.post('/author_adminAnalyticsPageData',adminAny.adminAnalyticsPageData);
+app.post('/author_adminAnalyticsPage',adminAny.adminAnalyticsPage);
 app.post('/author_adminAnalyticsData',adminAny.adminAnalyticsData);
+app.post('/author_adminAnalyticsDomain',adminAny.adminAnalyticsDomain);
 
 
 // catch 404 and forward to error handler
